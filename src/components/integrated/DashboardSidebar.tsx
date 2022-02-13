@@ -21,6 +21,7 @@ import { UIContext } from '../../contexts/UIContext';
 
 // Hooks
 import useShowHideAnimation from '../../hooks/useShowHideAnimation';
+import { useUIContext } from '../../hooks/useCustomContext';
 
 export default function DashboardBar() {
 
@@ -47,7 +48,7 @@ export default function DashboardBar() {
           square={true}
         />
       </div>
-      <OptionsList/>
+      <OptionsList switchAnimation={switchAnimation}/>
     </div>
   )
 }
@@ -58,12 +59,16 @@ const containerClass = `
   custom-scrollbar-dashboard
 `
 
-function OptionsList () {
+type OptionsListProps = {
+  switchAnimation: () => void
+}
+
+function OptionsList ({ switchAnimation }:OptionsListProps) {
   return ( 
     <div 
       className={containerClass}>
       {options.map((option) => (
-        <OptionElement option={option} key={option.id}/>
+        <OptionElement option={option} key={option.id} switchAnimation={switchAnimation}/>
       ))}
     </div>
   )
@@ -74,18 +79,43 @@ type OptionElementProps = {
     id: number;
     text: string;
     icon: IconDefinition;
-  }
+  };
+  switchAnimation: () => void;
 }
 
-function OptionElement ({ option }:OptionElementProps) {
+function OptionElement ({ option, switchAnimation }:OptionElementProps) {
 
   const {
+    id,
     text,
     icon,
   } = option;
 
+  const { setDashboardScreen } = useUIContext();
+
+  function changeScreen () {
+    switchAnimation();
+    switch (id) {
+      case 1:
+        setDashboardScreen('events');
+        break;
+      case 2:
+        setDashboardScreen('news');
+        break;
+      case 3:
+        setDashboardScreen('users');
+        break;
+      case 4:
+        setDashboardScreen('expositores');
+        break;
+    }
+  }
+
   return (
-    <div className='flex justify-between items-center p-3 pl-4 rounded bg-gray-700 border-2 border-gray-700 hover:border-gray-600 cursor-pointer'>
+    <div 
+      className='flex justify-between items-center p-3 pl-4 rounded bg-gray-700 border-2 border-gray-700 hover:border-gray-600 cursor-pointer'
+      onClick={changeScreen}
+    >
       <span className='font-semibold text-white'>{text}</span>
       <RoundedButton
         color='gray-800'

@@ -4,6 +4,8 @@ import { faEllipsis, faSpinner, IconDefinition } from '@fortawesome/free-solid-s
 
 // Types
 import { EventType } from '../../api';
+import RoundedButton from './RoundedButton';
+import { Dispatch, SetStateAction, useState } from 'react';
 
 type Props = {
   title:string;
@@ -20,16 +22,24 @@ export default function InformationContainer({
   loading,
   data
 }:Props) {
+
+  const [currentOptionsIndex, setCurrentOptionsIndex] = useState(0);
+
   return (
     <div className='rounded'> 
-      <div className={`rounded-t px-4 py-3 flex items-center justify-between ${titleColor && `bg-${titleColor}`} text-white`}>
+      <div className={`rounded-t px-4 py-3 flex items-center justify-between ${titleColor && `${titleColor}`} text-white`}>
         <h2>{title}</h2>
         {titleIcon && <FontAwesomeIcon icon={titleIcon}/>}
       </div>
       <div className='p-4 bg-white rounded-b drop-shadow flex justify-center'>
         {loading 
         ? <FontAwesomeIcon icon={faSpinner} className='fa-spin' />
-        : <EventList data={data} titleColor={titleColor}/>
+        : 
+          <EventList 
+            data={data} 
+            currentOptionsIndex={currentOptionsIndex} 
+            setCurrentOptionsIndex={setCurrentOptionsIndex}
+          />
         }
       </div>
     </div>
@@ -38,20 +48,26 @@ export default function InformationContainer({
 
 type EventListProps = {
   data:EventType[];
-  titleColor:string
+  currentOptionsIndex:number;
+  setCurrentOptionsIndex:Dispatch<SetStateAction<number>>
 }
 
-function EventList ({ data, titleColor }:EventListProps) {
+function EventList ({ data, setCurrentOptionsIndex }:EventListProps) {
   return (
     <div className='flex flex-col gap-6 w-full overflow-y-auto scrollbar-thin scrollbar-thumb-gray-400 scrollbar-track-gray-200 pr-6' style={{ maxHeight:200 }}>
-      {data.map((event) => (
-        <div className='flex flex-col border border-gray-200 rounded p-4 w-full'>
-          <div className='mb-4 flex justify-between'>
+      {data.map((event, index) => (
+        <div className='flex flex-col border border-gray-200 rounded p-4 pt-2 w-full' key={index}>
+          <div className='mb-4 flex justify-between items-center'>
             <h2 className='font-semibold'>{event.eventName}</h2>
-            <FontAwesomeIcon icon={faEllipsis}/>
+            <RoundedButton
+              color='transparent'
+              icon={faEllipsis}
+              square={true}
+              action={() => setCurrentOptionsIndex(index)}
+            />
           </div>
           <div className='flex items-center'>
-            <img src={event.image} style={{ height:50, width:50, borderRadius:100 }} className={`border border-${titleColor}`}/>
+            <img src={event.image} style={{ height:50, width:50, borderRadius:100 }} className='border border-gray-400'/>
             <div className='flex flex-col px-4'>
               <small className='text-sm'>{event.name}</small>
             </div>

@@ -1,5 +1,6 @@
 // Modules
-import { Dispatch, RefObject, SetStateAction, useEffect, useRef, useState } from 'react';
+import Select from 'react-select'
+import { RefObject, useRef } from 'react';
 import {
   faToolbox,
   faPlus,
@@ -20,12 +21,13 @@ import {
   useGetTalleres, 
   useGetConferencias, 
   useGetCursos, 
-  useGetPonencias 
+  useGetPonencias, 
+  useGetExpositores
 } from '../../hooks/useGetData';
-import useOnScreen from '../../hooks/useOnScreen';
 
 // Classes
 import { lightInput } from '../../classes';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 export default function Events() {
 
@@ -81,28 +83,28 @@ function EventsContainer () {
       <InformationContainer
         title='Talleres'
         titleIcon={faToolbox}
-        titleColor='red-600'
+        titleColor='bg-red-600'
         loading={isLoadingTalleres}
         data={dataTalleres || []}
       />
       <InformationContainer
         title='Conferencias'
         titleIcon={faMicrophone}
-        titleColor='teal-600'
+        titleColor='bg-teal-600'
         loading={isLoadingConferencias}
         data={dataConferencias || []}
       />
       <InformationContainer
         title='Cursos'
         titleIcon={faCubes}
-        titleColor='green-700'
+        titleColor='bg-green-700'
         loading={isLoadingCursos}
         data={dataCursos || []}
       />
       <InformationContainer
         title='Ponencias'
         titleIcon={faPeopleCarry}
-        titleColor='yellow-500'
+        titleColor='bg-yellow-500'
         loading={isLoadingPonencias}
         data={dataPonencias || []}
       />
@@ -120,6 +122,7 @@ function NewEventContainer ({formRef}:NewEventContainerProps) {
     <div className='rounded'> 
       <div className={`rounded-t px-4 py-3 flex items-center justify-between bg-gray-800 text-white`}>
         <h2>Crear nuevo evento</h2>
+        <FontAwesomeIcon icon={faPlus}/>
       </div>
       <div className='p-4 bg-white flex flex-col lg:grid rounded-b drop-shadow gap-6'>
         <NewEventForm formRef={formRef}/>
@@ -137,6 +140,15 @@ function NewEventForm ({formRef}:NewEventFormProps) {
 
   const { state } = useUIContext();
   const { showDashboardBar } = state;
+  const { data } = useGetExpositores();
+
+  function mapExpositoresName () {
+    if (data) return data.map(expositor => ({
+      value: expositor.id, 
+      label: expositor.name
+    }));
+    else return [];
+  }
 
   return (
     <div className={`flex flex-col md:grid gap-6 ${showDashboardBar ? 'lg:grid-cols-2' : 'md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3'}`}>
@@ -150,16 +162,8 @@ function NewEventForm ({formRef}:NewEventFormProps) {
       </div>
       <div className='flex flex-col'>
         <Label>Expositor</Label>
-        <input className={lightInput}/>
+        <Select options={mapExpositoresName()} placeholder='Selecciona un expositor'/>
         <small className='underline mt-2 cursor-pointer'>Agregar nuevo expositor</small>
-      </div>
-      <div className='flex flex-col'>
-        <Label>Fecha</Label>
-        <input className={lightInput}/>
-      </div>
-      <div className='flex flex-col'>
-        <Label>Hora</Label>
-        <input className={lightInput}/>
       </div>
     </div>
   )

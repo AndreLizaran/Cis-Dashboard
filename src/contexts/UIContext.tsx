@@ -21,7 +21,7 @@ export type UIContextType = {
   setDashboardScreen: (payload:DashboardScreen) => void
 }
 
-export type DashboardScreen = 'events' | 'news';
+export type DashboardScreen = 'events' | 'news' | 'users' | 'expositores';
 
 const initialState:UIStateType = {
   showDashboardBar:true,

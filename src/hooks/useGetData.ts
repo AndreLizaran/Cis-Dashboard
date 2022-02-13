@@ -7,6 +7,7 @@ import {
   EventType,
   getConferenciasApi,
   getCursosApi, 
+  getExpositoresApi, 
   getPonenciasApi, 
   getTalleresApi 
 } from '../api';
@@ -31,6 +32,12 @@ export function useGetCursos() {
 
 export function useGetPonencias() {
   return useQuery('get-cursos', getPonenciasApi, {
+    select: (data) => data.data
+  });
+}
+
+export function useGetExpositores() {
+  return useQuery('get-cursos', getExpositoresApi, {
     select: (data) => data.data
   });
 }

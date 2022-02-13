@@ -1,5 +1,5 @@
 {
-  "expositores": [
+  "talleres": [
     {
       "id": 1,
       "name": "Janet Weaver",
@@ -39,6 +39,159 @@
       "eventName": "Event test #5",
       "day": "17/02/2022",
       "hour": "16:00"
+    }
+  ],
+  "cursos": [
+    {
+      "id": 1,
+      "name": "Janet Weaver",
+      "image": "https://reqres.in/img/faces/2-image.jpg",
+      "eventName": "Event test #1",
+      "day": "17/02/2022",
+      "hour": "16:00"
+    },
+    {
+      "id": 2,
+      "name": "Emma Wong",
+      "image": "https://reqres.in/img/faces/3-image.jpg",
+      "eventName": "Event test #2",
+      "day": "17/02/2022",
+      "hour": "16:00"
+    },
+    {
+      "id": 3,
+      "name": "Eve Holt",
+      "image": "https://reqres.in/img/faces/4-image.jpg",
+      "eventName": "Event test #3",
+      "day": "17/02/2022",
+      "hour": "16:00"
+    },
+    {
+      "id": 4,
+      "name": "Charles Morris",
+      "image": "https://reqres.in/img/faces/5-image.jpg",
+      "eventName": "Event test #4",
+      "day": "17/02/2022",
+      "hour": "16:00"
+    },
+    {
+      "id": 5,
+      "name": "Tracey Ramos",
+      "image": "https://reqres.in/img/faces/6-image.jpg",
+      "eventName": "Event test #5",
+      "day": "17/02/2022",
+      "hour": "16:00"
+    }
+  ],
+  "ponencias": [
+    {
+      "id": 1,
+      "name": "Janet Weaver",
+      "image": "https://reqres.in/img/faces/2-image.jpg",
+      "eventName": "Event test #1",
+      "day": "17/02/2022",
+      "hour": "16:00"
+    },
+    {
+      "id": 2,
+      "name": "Emma Wong",
+      "image": "https://reqres.in/img/faces/3-image.jpg",
+      "eventName": "Event test #2",
+      "day": "17/02/2022",
+      "hour": "16:00"
+    },
+    {
+      "id": 3,
+      "name": "Eve Holt",
+      "image": "https://reqres.in/img/faces/4-image.jpg",
+      "eventName": "Event test #3",
+      "day": "17/02/2022",
+      "hour": "16:00"
+    },
+    {
+      "id": 4,
+      "name": "Charles Morris",
+      "image": "https://reqres.in/img/faces/5-image.jpg",
+      "eventName": "Event test #4",
+      "day": "17/02/2022",
+      "hour": "16:00"
+    },
+    {
+      "id": 5,
+      "name": "Tracey Ramos",
+      "image": "https://reqres.in/img/faces/6-image.jpg",
+      "eventName": "Event test #5",
+      "day": "17/02/2022",
+      "hour": "16:00"
+    }
+  ],
+  "conferencias": [
+    {
+      "id": 1,
+      "name": "Janet Weaver",
+      "image": "https://reqres.in/img/faces/2-image.jpg",
+      "eventName": "Event test #1",
+      "day": "17/02/2022",
+      "hour": "16:00"
+    },
+    {
+      "id": 2,
+      "name": "Emma Wong",
+      "image": "https://reqres.in/img/faces/3-image.jpg",
+      "eventName": "Event test #2",
+      "day": "17/02/2022",
+      "hour": "16:00"
+    },
+    {
+      "id": 3,
+      "name": "Eve Holt",
+      "image": "https://reqres.in/img/faces/4-image.jpg",
+      "eventName": "Event test #3",
+      "day": "17/02/2022",
+      "hour": "16:00"
+    },
+    {
+      "id": 4,
+      "name": "Charles Morris",
+      "image": "https://reqres.in/img/faces/5-image.jpg",
+      "eventName": "Event test #4",
+      "day": "17/02/2022",
+      "hour": "16:00"
+    },
+    {
+      "id": 5,
+      "name": "Tracey Ramos",
+      "image": "https://reqres.in/img/faces/6-image.jpg",
+      "eventName": "Event test #5",
+      "day": "17/02/2022",
+      "hour": "16:00"
+    }
+  ],
+  "expositores": [
+    {
+      "id": 1,
+      "name": "Janet Weaver",
+      "image": "https://reqres.in/img/faces/2-image.jpg"
+    },
+    {
+      "id": 2,
+      "name": "Emma Wong",
+      "image": "https://reqres.in/img/faces/3-image.jpg"
+    },
+    {
+      "id": 3,
+      "name": "Eve Holt",
+      "image": "https://reqres.in/img/faces/4-image.jpg"
+    },
+    {
+      "id": 4,
+      "name": "Charles Morris",
+      "image": "https://reqres.in/img/faces/5-image.jpg"
+    },
+    {
+      "id": 5,
+      "name": "Tracey Ramos",
+      "image": "https://reqres.in/img/faces/6-image.jpg"
     }
   ]
 }
