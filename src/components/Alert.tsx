@@ -4,13 +4,13 @@ import { faTimes } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 // Classes
-import { fadeInUp, fadeOutDown } from '../../classes';
+import { fadeInUp, fadeOutDown } from '../classes';
 
 // Contexts
-import { UIContext } from '../../contexts/UIContext';
+import { UIContext } from '../contexts/UIContext';
 
 // Hooks
-import useShowHideAnimation from '../../hooks/useShowHideAnimation';
+import useShowHideAnimation from '../hooks/useShowHideAnimation';
 
 export default function Alert() {
 

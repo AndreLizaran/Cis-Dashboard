@@ -34,7 +34,7 @@ export default function RoundedButton({
       case 'red-600':
         return `bg-red-600 text-white ${hover && 'hover:bg-red-500'}`;
       case 'gray-100':
-        return `bg-gray-100 text-white ${hover && 'hover:bg-gray-50'}`;
+        return `bg-gray-100 text-black ${hover && 'hover:bg-gray-50'}`;
       case 'purple-600':
         return `bg-purple-600 text-white ${hover && 'hover:bg-purple-500'}`;
       case 'gray-800':
@@ -48,7 +48,7 @@ export default function RoundedButton({
 
   return (
     <button 
-      className={`rounded font-semibold ocus:outline-none ${!square && 'px-4 py-2'} ${buttonColors.current} ${className}`}
+      className={`rounded font-semibold focus:outline-none transition ${!square && 'px-4 py-2'} ${buttonColors.current} ${className}`}
       style={square ? { height:40, width:40, ...style } : { ...style }}
       type={type}
       onClick={() => action()}

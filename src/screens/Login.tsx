@@ -1,5 +1,5 @@
 import { lightInput } from '../classes';
-import RoundedButton from '../components/simple/RoundedButton';
+import RoundedButton from '../components/RoundedButton';
 
 export default function Login() {
   return (

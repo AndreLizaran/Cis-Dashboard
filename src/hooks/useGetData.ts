@@ -1,10 +1,8 @@
 // Modules
-import { AxiosResponse } from 'axios';
 import { useQuery } from 'react-query';
 
 // Endpoints
 import { 
-  EventType,
   getConferenciasApi,
   getCursosApi, 
   getExpositoresApi, 
@@ -31,13 +29,13 @@ export function useGetCursos() {
 }
 
 export function useGetPonencias() {
-  return useQuery('get-cursos', getPonenciasApi, {
+  return useQuery('get-ponencias', getPonenciasApi, {
     select: (data) => data.data
   });
 }
 
 export function useGetExpositores() {
-  return useQuery('get-cursos', getExpositoresApi, {
-    select: (data) => data.data
+  return useQuery('get-expositores', getExpositoresApi, {
+    select: (data) => data.data || []
   });
 }

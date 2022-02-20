@@ -6,9 +6,9 @@ import { faBars } from '@fortawesome/free-solid-svg-icons';
 import { fadeIn, fadeOut } from '../classes';
 
 // Components
-import Alert from '../components/simple/Alert';
-import RoundedButton from '../components/simple/RoundedButton';
-import DashboardSidebar from '../components/integrated/DashboardSidebar';
+import Alert from '../components/Alert';
+import RoundedButton from '../components/RoundedButton';
+import DashboardSidebar from '../components/DashboardSidebar';
 
 // Contexts
 import { UIContext } from '../contexts/UIContext';
@@ -18,9 +18,9 @@ import useShowHideAnimation from '../hooks/useShowHideAnimation';
 
 // Screens
 import News from '../screens/dashboard/News';
+import Users from '../screens/dashboard/Users';
 import Events from '../screens/dashboard/Events';
 import Expositores from '../screens/dashboard/Expositores';
-import Users from '../screens/dashboard/Users';
 
 export default function Dashboard() {  
 

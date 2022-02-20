@@ -1,19 +1,22 @@
 // Modules
-import Select from 'react-select'
-import { RefObject, useRef } from 'react';
+import { RefObject, useRef, useState } from 'react';
 import {
   faToolbox,
   faPlus,
   faCubes,
   faMicrophone,
-  faPeopleCarry
+  faUserCheck,
+  faSpinner,
+  faEllipsis,
+  faUpload
 } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+
 
 // Components
-import H2 from '../../components/simple/H2';
-import Label from '../../components/simple/Label';
-import RoundedButton from '../../components/simple/RoundedButton';
-import InformationContainer from '../../components/simple/InformationContainer';
+import H2 from '../../components/H2';
+import RoundedButton from '../../components/RoundedButton';
+import InformationContainer from '../../components/InformationContainer';
 
 // Hooks
 import { useUIContext } from '../../hooks/useCustomContext';
@@ -27,7 +30,8 @@ import {
 
 // Classes
 import { lightInput } from '../../classes';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { EventType } from '../../api';
+import NewElementForm from '../../components/NewElementForm';
 
 export default function Events() {
 
@@ -48,7 +52,16 @@ export default function Events() {
         />
       </div>
       <EventsContainer/>
-      <NewEventContainer formRef={formRef}/>
+      <div className={`flex flex-col gap-6 ${showDashboardBar ? '2xl:grid 2xl:grid-cols-2' : 'lg:grid lg:grid-cols-2'}`}>
+        <InformationContainer
+          headerColor='bg-gray-800'
+          headerText='Registrar nuevo evento'
+          headerIcon={faPlus}
+          maxHeight={false}
+        >
+          <NewEventForm formRef={formRef}/>
+        </InformationContainer>
+      </div>
     </>
   )
 }
@@ -78,56 +91,118 @@ function EventsContainer () {
     data:dataPonencias
   } = useGetPonencias();
 
+  const infoContainers = [
+    { 
+      headerColor: 'bg-red-600', 
+      headerIcon: faToolbox, 
+      headerText: 'Talleres',
+      data: dataTalleres || [],
+      isLoading: isLoadingTalleres
+    },
+    { 
+      headerColor: 'bg-teal-700', 
+      headerIcon: faMicrophone, 
+      headerText: 'Conferencias',
+      data: dataConferencias || [],
+      isLoading: isLoadingConferencias
+    },
+    { 
+      headerColor: 'bg-green-800', 
+      headerIcon: faCubes, 
+      headerText: 'Cursos',
+      data: dataCursos || [],
+      isLoading: isLoadingCursos
+    },
+    { 
+      headerColor: 'bg-yellow-500', 
+      headerIcon: faUserCheck, 
+      headerText: 'Ponencias',
+      data: dataPonencias || [],
+      isLoading: isLoadingPonencias
+    },
+  ]
+
   return (
     <div className={`flex flex-col gap-6 mb-6 sm:grid ${!showDashboardBar ? 'md:grid-cols-2 xl:grid-cols-3' : 'lg:grid-cols-2'} `}>
-      <InformationContainer
-        title='Talleres'
-        titleIcon={faToolbox}
-        titleColor='bg-red-600'
-        loading={isLoadingTalleres}
-        data={dataTalleres || []}
-      />
-      <InformationContainer
-        title='Conferencias'
-        titleIcon={faMicrophone}
-        titleColor='bg-teal-600'
-        loading={isLoadingConferencias}
-        data={dataConferencias || []}
-      />
-      <InformationContainer
-        title='Cursos'
-        titleIcon={faCubes}
-        titleColor='bg-green-700'
-        loading={isLoadingCursos}
-        data={dataCursos || []}
-      />
-      <InformationContainer
-        title='Ponencias'
-        titleIcon={faPeopleCarry}
-        titleColor='bg-yellow-500'
-        loading={isLoadingPonencias}
-        data={dataPonencias || []}
-      />
+      {infoContainers.map(({ headerColor, headerIcon, headerText, isLoading, data }, index) => (
+        <InformationContainer
+          headerColor={headerColor}
+          headerIcon={headerIcon}
+          headerText={headerText} 
+          key={index}
+        >
+          {
+            isLoading 
+            ? 
+            <FontAwesomeIcon icon={faSpinner} className='fa-spin'/>
+            :
+            <EventsList data={data} />
+          }
+        </InformationContainer>
+      ))}
     </div>
   )
 }
 
-type NewEventContainerProps = {
-  formRef: RefObject<HTMLInputElement>
+type EventListProps = {
+  data:EventType[];
 }
 
-function NewEventContainer ({formRef}:NewEventContainerProps) {
+function EventsList ({ data }:EventListProps) {
+
+  const [optionToShow, setOptionToShow] = useState<null | number>(null);
+
+  function switchElementTab (index:number) {
+    if (optionToShow === index) setOptionToShow(null)
+    else setOptionToShow(index)
+  }
 
   return (
-    <div className='rounded'> 
-      <div className={`rounded-t px-4 py-3 flex items-center justify-between bg-gray-800 text-white`}>
-        <h2>Crear nuevo evento</h2>
-        <FontAwesomeIcon icon={faPlus}/>
-      </div>
-      <div className='p-4 bg-white flex flex-col lg:grid rounded-b drop-shadow gap-6'>
-        <NewEventForm formRef={formRef}/>
-        <RoundedButton color='red-600' text='Guardar nuevo evento'/>
-      </div>
+    <>
+      {data.map((event, index) => (
+        <div className='flex flex-col border border-gray-200 rounded w-full' key={index}>
+          <img 
+            src='https://www.incimages.com/uploaded_files/image/1920x1080/getty_660582997_412145.jpg' 
+            className='rounded-t'
+            style={{ maxHeight:80 }}
+          />
+          <div className='flex flex-col items-center' style={{ top:-30, position:'relative' }}>
+            <img
+              src={event.image}
+              style={{ height:60, width:60, borderRadius:100 }}
+              className='border border-gray-400 self-center mb-3'
+            />
+            <div className='flex flex-col text-center items-center'>
+              <h2>{event.eventName}</h2>
+              <small>{event.name}</small>
+              <div className='flex gap-3 mt-1 mb-4 text-gray-400'>
+                <small>Día: {event.day}</small>
+                <small>Hora: {event.hour}</small>
+              </div>
+              <RoundedButton
+                color='gray-100'
+                icon={faEllipsis}
+                square={true}
+                action={() => switchElementTab(index)}
+              />
+            </div>
+          </div>
+          {index === optionToShow && <EventElementTabs/>}
+        </div>
+      ))}
+    </>
+  )
+}
+
+
+function EventElementTabs () {
+  return (
+    <div 
+      className='bg-white p-2 rounded drop-shadow flex flex-col border'
+      style={{ position:'absolute', right:110 }}
+    >
+      <span className='px-4 py-2 hover:bg-gray-200 rounded cursor-pointer'>Editar evento</span>
+      <span className='px-4 py-2 hover:bg-gray-200 rounded cursor-pointer'>Eliminar evento</span>
     </div>
   )
 }
@@ -139,32 +214,45 @@ type NewEventFormProps = {
 function NewEventForm ({formRef}:NewEventFormProps) {
 
   const { state } = useUIContext();
-  const { showDashboardBar } = state;
   const { data } = useGetExpositores();
-
-  function mapExpositoresName () {
-    if (data) return data.map(expositor => ({
-      value: expositor.id, 
-      label: expositor.name
-    }));
-    else return [];
-  }
-
+  
   return (
-    <div className={`flex flex-col md:grid gap-6 ${showDashboardBar ? 'lg:grid-cols-2' : 'md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3'}`}>
+    <NewElementForm saveButtonText='Guardar evento' saveFunction={() => {}}>
       <div className='flex flex-col'>
-        <Label>Título</Label>
+        <label>Título</label>
         <input className={lightInput} ref={formRef}/>
       </div>
       <div className='flex flex-col'>
-        <Label>Descripción</Label>
+        <label>Descripción</label>
         <input className={lightInput}/>
       </div>
       <div className='flex flex-col'>
-        <Label>Expositor</Label>
-        <Select options={mapExpositoresName()} placeholder='Selecciona un expositor'/>
+        <label>Expositor</label>
+        <select className='focus:outline-none px-4 py-2 rounded border border-gray-400 mt-1'>
+          {data && data.map(({ name, id }) => <option key={id}>{name}</option>)}
+        </select>
         <small className='underline mt-2 cursor-pointer'>Agregar nuevo expositor</small>
       </div>
-    </div>
+      <div className='flex flex-col'>
+        <label>Tipo de evento</label>
+        <select className='focus:outline-none px-4 py-2 rounded border border-gray-400 mt-1'>
+          <option value='taller'>Taller</option>
+          <option value='conferencia'>Conferencia</option>
+          <option value='curso'>Curso</option>
+          <option value='ponencia'>Ponencia</option>
+        </select>
+      </div>
+      <div className='flex flex-col'>
+        <label className='mb-1'>Imagen del evento</label>
+        <div className='flex gap-6 items-center'>
+          <RoundedButton color='blue-500' icon={faUpload} className='w-6/12'/>
+          <small className='w-6/12'>No has seleccionado algún archivo</small>
+        </div>
+      </div>
+    </NewElementForm>
   )
+}
+
+const eventType = {
+
 }

@@ -12,7 +12,9 @@ export type EventType = {
 export type Expositor = {
   id:number;
   name:string;
+  description:string;
   image:string;
+  bgImage:string;
 }
 
 export function getTalleresApi () {
