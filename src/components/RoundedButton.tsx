@@ -4,7 +4,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { IconDefinition } from '@fortawesome/free-solid-svg-icons';
 
 type Props = {
-  color:'red-600' | 'gray-100' | 'purple-600' | 'gray-800' | 'blue-500' | 'transparent';
+  color:'red-600' | 'gray-100' | 'purple-600' | 'gray-800' | 'blue-500' | 'gray-300' | 'transparent';
   type?:'button' | 'submit';
   text?:string;
   icon?:IconDefinition;
@@ -35,6 +35,8 @@ export default function RoundedButton({
         return `bg-red-600 text-white ${hover && 'hover:bg-red-500'}`;
       case 'gray-100':
         return `bg-gray-100 text-black ${hover && 'hover:bg-gray-50'}`;
+      case 'gray-300':
+        return `bg-gray-300 text-black ${hover && 'hover:bg-gray-200'}`;
       case 'purple-600':
         return `bg-purple-600 text-white ${hover && 'hover:bg-purple-500'}`;
       case 'gray-800':
