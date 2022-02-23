@@ -9,4 +9,5 @@ export const fadeOutLeft = `${animate} animate__fadeOutLeft`;
 
 // Input
 export const lightInput = 'rounded border border-gray-400 px-4 py-2 text-md mt-1 focus:outline-none';
+export const lightGrayInput = 'rounded border bg-gray-200 border-gray-400 px-4 py-2 text-md mt-1 focus:outline-none';
 

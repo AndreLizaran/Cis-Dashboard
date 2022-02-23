@@ -2,7 +2,7 @@
 import { Dispatch, RefObject, SetStateAction, useRef, useState } from 'react';
 // @ts-ignore
 import InputFiles from 'react-input-files';
-import { faEllipsisH, faImage, faPlus, faTimes, faUpload, faUserCheck } from '@fortawesome/free-solid-svg-icons'
+import { faImage, faPencil, faPlus, faTimes, faTrash, faUpload, faUserCheck } from '@fortawesome/free-solid-svg-icons'
 
 // Api
 import { Expositor } from '../../api';
@@ -82,7 +82,11 @@ function NewExpositorForm ({ setImg, formRef }:NewExpositorFormProps) {
   const { getImageFromFileInput } = useProcessImage();
   const { mutate, isLoading } = useSaveNewExpositor();
   const { setAlertInformation } = useUIContext();
-  const [{ name, description, profilePic, backgroundPic }, setNewExpositor] = useState(initialState);
+  const [newExpositor, setNewExpositor] = useState(initialState);
+
+  const {
+    name, description, profilePic, backgroundPic
+  } = newExpositor;
 
   function saveNewExpositor () {
     if (!name || !description || !profilePic || !backgroundPic) {
@@ -111,17 +115,17 @@ function NewExpositorForm ({ setImg, formRef }:NewExpositorFormProps) {
     const imageProcessed = await getImageFromFileInput(event) as string;
     (image === 'bg' && imageProcessed) 
       ?
-      setNewExpositor(prev => ({ ...prev, backgroundPic:imageProcessed }))
+      setNewExpositor({ ...newExpositor, backgroundPic:imageProcessed })
       : 
-      setNewExpositor(prev => ({ ...prev, profilePic:imageProcessed }));
+      setNewExpositor({ ...newExpositor, profilePic:imageProcessed })
   }
 
   function cleanImage (image: 'pp' | 'bg') {
     (image === 'bg') 
       ?
-      setNewExpositor(prev => ({ ...prev, backgroundPic:'' }))
-      : 
-      setNewExpositor(prev => ({ ...prev, profilePic:'' }));
+      setNewExpositor({ ...newExpositor, backgroundPic:'' })
+      :
+      setNewExpositor({ ...newExpositor, profilePic:'' })
   }
 
   return (
@@ -158,7 +162,7 @@ function NewExpositorForm ({ setImg, formRef }:NewExpositorFormProps) {
       <div className='flex flex-col'>
         <label className='mb-1'>Foto de portada</label>
         <div className='flex gap-6'>
-          <InputFiles onChange={(files:any, event:any) => processImage(event, 'bg')}s style={{ width:'33%' }}>
+          <InputFiles   onChange={(files:any, event:any) => processImage(event, 'bg')}s style={{ width:'33%' }}>
             <RoundedButton color='blue-500' icon={faUpload} className='w-full'/>
           </InputFiles>
           {backgroundPic && <RoundedButton color='gray-300' icon={faImage} className='w-4/12' action={() => setImg(backgroundPic)}/>}
@@ -173,7 +177,7 @@ function ExpositoresList () {
   const { data } = useGetExpositores();
   const { state:{ showDashboardBar }} = useUIContext();
   return (
-    <div className={`flex flex-col gap-6 ${!showDashboardBar && 'xl:grid xl:grid-cols-2'}`}>
+    <div className={`flex flex-col gap-6 ${!showDashboardBar ? 'xl:grid xl:grid-cols-2' : ''}`}>
       {data?.map((expositor, index) => <ExpositorCard expositor={expositor} key={index}/>)}
     </div>
   )
@@ -198,7 +202,10 @@ function ExpositorCard ({ expositor:{ name, image, description, bgImage }}:Expos
         />
         <span>{name}</span>
         <small className='text-gray-400 mb-3'>{description}</small>
-        <RoundedButton color='gray-100' icon={faEllipsisH} square={true}/>
+        <div className='flex gap-3'>
+          <RoundedButton color='gray-100' icon={faTrash} square={true} style={{ fontSize:12 }}/>
+          <RoundedButton color='gray-100' icon={faPencil} square={true} style={{ fontSize:12 }}/>
+        </div>
       </div>
     </div>
   )

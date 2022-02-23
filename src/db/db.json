@@ -4,6 +4,7 @@
       "id": 1,
       "name": "Janet Weaver",
       "image": "https://reqres.in/img/faces/2-image.jpg",
+      "bgImage": "https://www.hostinger.com/tutorials/wp-content/uploads/sites/2/2021/08/learn-coding-online-for-free.png",
       "eventName": "Event test #1",
       "day": "17/02/2022",
       "hour": "16:00"
@@ -12,6 +13,7 @@
       "id": 2,
       "name": "Emma Wong",
       "image": "https://reqres.in/img/faces/3-image.jpg",
+      "bgImage": "https://www.propatel.com/wp-content/uploads/2019/09/coding-and-testing-programming-of-software.jpg",
       "eventName": "Event test #2",
       "day": "17/02/2022",
       "hour": "16:00"
@@ -20,6 +22,7 @@
       "id": 3,
       "name": "Eve Holt",
       "image": "https://reqres.in/img/faces/4-image.jpg",
+      "bgImage": "https://kinsta.com/wp-content/uploads/2020/04/code-review-tools.png",
       "eventName": "Event test #3",
       "day": "17/02/2022",
       "hour": "16:00"
@@ -28,6 +31,7 @@
       "id": 4,
       "name": "Charles Morris",
       "image": "https://reqres.in/img/faces/5-image.jpg",
+      "bgImage": "https://static.techspot.com/images2/news/bigimage/2019/10/2019-10-25-image-5.jpg",
       "eventName": "Event test #4",
       "day": "17/02/2022",
       "hour": "16:00"
@@ -36,6 +40,7 @@
       "id": 5,
       "name": "Tracey Ramos",
       "image": "https://reqres.in/img/faces/6-image.jpg",
+      "bgImage": "https://www.elegantthemes.com/blog/wp-content/uploads/2019/01/web-design-blog.png",
       "eventName": "Event test #5",
       "day": "17/02/2022",
       "hour": "16:00"
@@ -43,18 +48,20 @@
   ],
   "cursos": [
     {
-      "id": 1,
-      "name": "Janet Weaver",
-      "image": "https://reqres.in/img/faces/2-image.jpg",
-      "eventName": "Event test #1",
+      "id": 2,
+      "name": "Emma Wong",
+      "image": "https://reqres.in/img/faces/3-image.jpg",
+      "bgImage": "https://www.propatel.com/wp-content/uploads/2019/09/coding-and-testing-programming-of-software.jpg",
+      "eventName": "Event test #2",
       "day": "17/02/2022",
       "hour": "16:00"
     },
     {
-      "id": 2,
-      "name": "Emma Wong",
-      "image": "https://reqres.in/img/faces/3-image.jpg",
-      "eventName": "Event test #2",
+      "id": 1,
+      "name": "Janet Weaver",
+      "image": "https://reqres.in/img/faces/2-image.jpg",
+      "bgImage": "https://www.elegantthemes.com/blog/wp-content/uploads/2019/01/web-design-blog.png",
+      "eventName": "Event test #1",
       "day": "17/02/2022",
       "hour": "16:00"
     },
@@ -62,6 +69,7 @@
       "id": 3,
       "name": "Eve Holt",
       "image": "https://reqres.in/img/faces/4-image.jpg",
+      "bgImage": "https://kinsta.com/wp-content/uploads/2020/04/code-review-tools.png",
       "eventName": "Event test #3",
       "day": "17/02/2022",
       "hour": "16:00"
@@ -70,6 +78,7 @@
       "id": 4,
       "name": "Charles Morris",
       "image": "https://reqres.in/img/faces/5-image.jpg",
+      "bgImage": "https://static.techspot.com/images2/news/bigimage/2019/10/2019-10-25-image-5.jpg",
       "eventName": "Event test #4",
       "day": "17/02/2022",
       "hour": "16:00"
@@ -78,6 +87,7 @@
       "id": 5,
       "name": "Tracey Ramos",
       "image": "https://reqres.in/img/faces/6-image.jpg",
+      "bgImage": "https://www.elegantthemes.com/blog/wp-content/uploads/2019/01/web-design-blog.png",
       "eventName": "Event test #5",
       "day": "17/02/2022",
       "hour": "16:00"
@@ -85,9 +95,19 @@
   ],
   "ponencias": [
     {
+      "id": 3,
+      "name": "Eve Holt",
+      "image": "https://reqres.in/img/faces/4-image.jpg",
+      "bgImage": "https://kinsta.com/wp-content/uploads/2020/04/code-review-tools.png",
+      "eventName": "Event test #3",
+      "day": "17/02/2022",
+      "hour": "16:00"
+    },
+    {
       "id": 1,
       "name": "Janet Weaver",
       "image": "https://reqres.in/img/faces/2-image.jpg",
+      "bgImage": "https://www.elegantthemes.com/blog/wp-content/uploads/2019/01/web-design-blog.png",
       "eventName": "Event test #1",
       "day": "17/02/2022",
       "hour": "16:00"
@@ -96,15 +116,8 @@
       "id": 2,
       "name": "Emma Wong",
       "image": "https://reqres.in/img/faces/3-image.jpg",
+      "bgImage": "https://static.techspot.com/images2/news/bigimage/2019/10/2019-10-25-image-5.jpg",
       "eventName": "Event test #2",
-      "day": "17/02/2022",
-      "hour": "16:00"
-    },
-    {
-      "id": 3,
-      "name": "Eve Holt",
-      "image": "https://reqres.in/img/faces/4-image.jpg",
-      "eventName": "Event test #3",
       "day": "17/02/2022",
       "hour": "16:00"
     },
@@ -112,6 +125,7 @@
       "id": 4,
       "name": "Charles Morris",
       "image": "https://reqres.in/img/faces/5-image.jpg",
+      "bgImage": "https://www.propatel.com/wp-content/uploads/2019/09/coding-and-testing-programming-of-software.jpg",
       "eventName": "Event test #4",
       "day": "17/02/2022",
       "hour": "16:00"
@@ -120,6 +134,7 @@
       "id": 5,
       "name": "Tracey Ramos",
       "image": "https://reqres.in/img/faces/6-image.jpg",
+      "bgImage": "https://www.hostinger.com/tutorials/wp-content/uploads/sites/2/2021/08/learn-coding-online-for-free.png",
       "eventName": "Event test #5",
       "day": "17/02/2022",
       "hour": "16:00"
@@ -127,9 +142,19 @@
   ],
   "conferencias": [
     {
+      "id": 4,
+      "name": "Charles Morris",
+      "image": "https://reqres.in/img/faces/5-image.jpg",
+      "bgImage": "https://www.hostinger.com/tutorials/wp-content/uploads/sites/2/2021/08/learn-coding-online-for-free.png",
+      "eventName": "Event test #4",
+      "day": "17/02/2022",
+      "hour": "16:00"
+    },
+    {
       "id": 1,
       "name": "Janet Weaver",
       "image": "https://reqres.in/img/faces/2-image.jpg",
+      "bgImage": "https://www.elegantthemes.com/blog/wp-content/uploads/2019/01/web-design-blog.png",
       "eventName": "Event test #1",
       "day": "17/02/2022",
       "hour": "16:00"
@@ -138,6 +163,7 @@
       "id": 2,
       "name": "Emma Wong",
       "image": "https://reqres.in/img/faces/3-image.jpg",
+      "bgImage": "https://www.elegantthemes.com/blog/wp-content/uploads/2019/01/web-design-blog.png",
       "eventName": "Event test #2",
       "day": "17/02/2022",
       "hour": "16:00"
@@ -146,15 +172,8 @@
       "id": 3,
       "name": "Eve Holt",
       "image": "https://reqres.in/img/faces/4-image.jpg",
+      "bgImage": "https://kinsta.com/wp-content/uploads/2020/04/code-review-tools.png",
       "eventName": "Event test #3",
-      "day": "17/02/2022",
-      "hour": "16:00"
-    },
-    {
-      "id": 4,
-      "name": "Charles Morris",
-      "image": "https://reqres.in/img/faces/5-image.jpg",
-      "eventName": "Event test #4",
       "day": "17/02/2022",
       "hour": "16:00"
     },
@@ -162,6 +181,7 @@
       "id": 5,
       "name": "Tracey Ramos",
       "image": "https://reqres.in/img/faces/6-image.jpg",
+      "bgImage": "https://www.propatel.com/wp-content/uploads/2019/09/coding-and-testing-programming-of-software.jpg",
       "eventName": "Event test #5",
       "day": "17/02/2022",
       "hour": "16:00"
@@ -173,35 +193,35 @@
       "name": "Janet Weaver",
       "description": "Demo description",
       "image": "https://reqres.in/img/faces/2-image.jpg",
-      "bgImage":"https://www.hostinger.com/tutorials/wp-content/uploads/sites/2/2021/08/learn-coding-online-for-free.png"
+      "bgImage": "https://www.hostinger.com/tutorials/wp-content/uploads/sites/2/2021/08/learn-coding-online-for-free.png"
     },
     {
       "id": 2,
       "name": "Emma Wong",
       "description": "Demo description",
       "image": "https://reqres.in/img/faces/3-image.jpg",
-      "bgImage":"https://www.propatel.com/wp-content/uploads/2019/09/coding-and-testing-programming-of-software.jpg"
+      "bgImage": "https://www.propatel.com/wp-content/uploads/2019/09/coding-and-testing-programming-of-software.jpg"
     },
     {
       "id": 3,
       "name": "Eve Holt",
       "description": "Demo description",
       "image": "https://reqres.in/img/faces/4-image.jpg",
-      "bgImage":"https://kinsta.com/wp-content/uploads/2020/04/code-review-tools.png"
+      "bgImage": "https://kinsta.com/wp-content/uploads/2020/04/code-review-tools.png"
     },
     {
       "id": 4,
       "name": "Charles Morris",
       "description": "Demo description",
       "image": "https://reqres.in/img/faces/5-image.jpg",
-      "bgImage":"https://static.techspot.com/images2/news/bigimage/2019/10/2019-10-25-image-5.jpg"
+      "bgImage": "https://static.techspot.com/images2/news/bigimage/2019/10/2019-10-25-image-5.jpg"
     },
     {
       "id": 5,
       "name": "Tracey Ramos",
       "description": "Demo description",
       "image": "https://reqres.in/img/faces/6-image.jpg",
-      "bgImage":"https://www.elegantthemes.com/blog/wp-content/uploads/2019/01/web-design-blog.png"
+      "bgImage": "https://www.elegantthemes.com/blog/wp-content/uploads/2019/01/web-design-blog.png"
     }
   ]
 }

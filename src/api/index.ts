@@ -4,6 +4,7 @@ export type EventType = {
   id:number;
   name:string;
   image:string;
+  bgImage:string;
   eventName:string;
   day:string;
   hour:string;

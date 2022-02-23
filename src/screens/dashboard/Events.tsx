@@ -8,7 +8,9 @@ import {
   faUserCheck,
   faSpinner,
   faEllipsis,
-  faUpload
+  faUpload,
+  faTrash,
+  faPencil
 } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
@@ -93,28 +95,28 @@ function EventsContainer () {
 
   const infoContainers = [
     { 
-      headerColor: 'bg-red-600', 
+      headerColor: 'bg-gray-800', 
       headerIcon: faToolbox, 
       headerText: 'Talleres',
       data: dataTalleres || [],
       isLoading: isLoadingTalleres
     },
     { 
-      headerColor: 'bg-teal-700', 
+      headerColor: 'bg-gray-800', 
       headerIcon: faMicrophone, 
       headerText: 'Conferencias',
       data: dataConferencias || [],
       isLoading: isLoadingConferencias
     },
     { 
-      headerColor: 'bg-green-800', 
+      headerColor: 'bg-gray-800', 
       headerIcon: faCubes, 
       headerText: 'Cursos',
       data: dataCursos || [],
       isLoading: isLoadingCursos
     },
     { 
-      headerColor: 'bg-yellow-500', 
+      headerColor: 'bg-gray-800', 
       headerIcon: faUserCheck, 
       headerText: 'Ponencias',
       data: dataPonencias || [],
@@ -161,10 +163,9 @@ function EventsList ({ data }:EventListProps) {
     <>
       {data.map((event, index) => (
         <div className='flex flex-col border border-gray-200 rounded w-full' key={index}>
-          <img 
-            src='https://www.incimages.com/uploaded_files/image/1920x1080/getty_660582997_412145.jpg' 
+          <div 
             className='rounded-t'
-            style={{ maxHeight:80 }}
+            style={{ width:'100%', backgroundImage:`url(${event.bgImage})`, height:150, backgroundPosition:'center', backgroundSize:'cover' }}
           />
           <div className='flex flex-col items-center' style={{ top:-30, position:'relative' }}>
             <img
@@ -179,12 +180,10 @@ function EventsList ({ data }:EventListProps) {
                 <small>Día: {event.day}</small>
                 <small>Hora: {event.hour}</small>
               </div>
-              <RoundedButton
-                color='gray-100'
-                icon={faEllipsis}
-                square={true}
-                action={() => switchElementTab(index)}
-              />
+              <div className='flex gap-3'>
+                <RoundedButton color='gray-100' icon={faTrash} square={true} style={{ fontSize:12 }}/>
+                <RoundedButton color='gray-100' icon={faPencil} square={true} style={{ fontSize:12 }}/>
+              </div>
             </div>
           </div>
           {index === optionToShow && <EventElementTabs/>}
@@ -224,18 +223,18 @@ function NewEventForm ({formRef}:NewEventFormProps) {
       </div>
       <div className='flex flex-col'>
         <label>Descripción</label>
-        <input className={lightInput}/>
+        <textarea className={lightInput} rows={6} style={{ resize:'none' }}/>
       </div>
       <div className='flex flex-col'>
         <label>Expositor</label>
-        <select className='focus:outline-none px-4 py-2 rounded border border-gray-400 mt-1'>
+        <select className='focus:outline-none px-4 py-2 rounded border bg-gray-50 border-gray-400 mt-1'>
           {data && data.map(({ name, id }) => <option key={id}>{name}</option>)}
         </select>
         <small className='underline mt-2 cursor-pointer'>Agregar nuevo expositor</small>
       </div>
       <div className='flex flex-col'>
         <label>Tipo de evento</label>
-        <select className='focus:outline-none px-4 py-2 rounded border border-gray-400 mt-1'>
+        <select className='focus:outline-none px-4 py-2 rounded border bg-gray-50 border-gray-400 mt-1'>
           <option value='taller'>Taller</option>
           <option value='conferencia'>Conferencia</option>
           <option value='curso'>Curso</option>
@@ -251,8 +250,4 @@ function NewEventForm ({formRef}:NewEventFormProps) {
       </div>
     </NewElementForm>
   )
-}
-
-const eventType = {
-
 }
