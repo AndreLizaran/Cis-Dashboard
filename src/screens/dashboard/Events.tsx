@@ -152,13 +152,6 @@ type EventListProps = {
 
 function EventsList ({ data }:EventListProps) {
 
-  const [optionToShow, setOptionToShow] = useState<null | number>(null);
-
-  function switchElementTab (index:number) {
-    if (optionToShow === index) setOptionToShow(null)
-    else setOptionToShow(index)
-  }
-
   return (
     <>
       {data.map((event, index) => (
@@ -176,33 +169,20 @@ function EventsList ({ data }:EventListProps) {
             <div className='flex flex-col text-center items-center'>
               <h2>{event.eventName}</h2>
               <small>{event.name}</small>
-              <div className='flex gap-3 mt-1 mb-4 text-gray-400'>
+              <div className='flex gap-3 mt-1 mb-1 text-gray-400'>
                 <small>Día: {event.day}</small>
                 <small>Hora: {event.hour}</small>
               </div>
+              <small className='mb-3'>Asistentes: 100</small>
               <div className='flex gap-3'>
                 <RoundedButton color='gray-100' icon={faTrash} square={true} style={{ fontSize:12 }}/>
                 <RoundedButton color='gray-100' icon={faPencil} square={true} style={{ fontSize:12 }}/>
               </div>
             </div>
           </div>
-          {index === optionToShow && <EventElementTabs/>}
         </div>
       ))}
     </>
-  )
-}
-
-
-function EventElementTabs () {
-  return (
-    <div 
-      className='bg-white p-2 rounded drop-shadow flex flex-col border'
-      style={{ position:'absolute', right:110 }}
-    >
-      <span className='px-4 py-2 hover:bg-gray-200 rounded cursor-pointer'>Editar evento</span>
-      <span className='px-4 py-2 hover:bg-gray-200 rounded cursor-pointer'>Eliminar evento</span>
-    </div>
   )
 }
 
