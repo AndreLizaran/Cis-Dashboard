@@ -41,3 +41,11 @@ export function getExpositoresApi () {
 export function saveNewExpositorApi (data:Expositor ) {
   return axiosInstance.post('/expositores', data);
 }
+
+export function editExpositorApi (data:Expositor) {
+  return axiosInstance.put(`/expositores/${data.id}`, data);
+}
+
+export function deleteExpositor (id:string | number) {
+  return axiosInstance.delete(`/expositores/${id}`);
+}

@@ -1,5 +1,7 @@
 // Modules
-import { RefObject, useRef, useState } from 'react';
+import { RefObject, useRef } from 'react';
+
+// Icons
 import {
   faToolbox,
   faPlus,
@@ -7,13 +9,11 @@ import {
   faMicrophone,
   faUserCheck,
   faSpinner,
-  faEllipsis,
   faUpload,
   faTrash,
   faPencil
 } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-
 
 // Components
 import H2 from '../../components/H2';
@@ -27,7 +27,7 @@ import {
   useGetConferencias, 
   useGetCursos, 
   useGetPonencias, 
-  useGetExpositores
+  useGetData
 } from '../../hooks/useGetData';
 
 // Classes
@@ -173,7 +173,7 @@ function EventsList ({ data }:EventListProps) {
                 <small>Día: {event.day}</small>
                 <small>Hora: {event.hour}</small>
               </div>
-              <small className='mb-3'>Asistentes: 100</small>
+              <small className='mb-3w'>Asistentes: 100</small>
               <div className='flex gap-3'>
                 <RoundedButton color='gray-100' icon={faTrash} square={true} style={{ fontSize:12 }}/>
                 <RoundedButton color='gray-100' icon={faPencil} square={true} style={{ fontSize:12 }}/>
@@ -192,11 +192,19 @@ type NewEventFormProps = {
 
 function NewEventForm ({formRef}:NewEventFormProps) {
 
-  const { state } = useUIContext();
+  const { useGetExpositores } = useGetData();
   const { data } = useGetExpositores();
   
   return (
-    <NewElementForm saveButtonText='Guardar evento' saveFunction={() => {}}>
+    <NewElementForm 
+      saveButtonText='Guardar evento' 
+      saveFunction={() => {}} 
+      action='create' 
+      setAction={() => {}}
+      cleanAction={() => {}}
+      deleteAction={() => {}}
+      deleteText='Eliminar evento'
+    >
       <div className='flex flex-col'>
         <label>Título</label>
         <input className={lightInput} ref={formRef}/>

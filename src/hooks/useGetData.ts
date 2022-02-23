@@ -3,6 +3,8 @@ import { useMutation, useQuery, useQueryClient } from 'react-query';
 
 // Endpoints
 import { 
+  deleteExpositor,
+  editExpositorApi,
   getConferenciasApi,
   getCursosApi, 
   getExpositoresApi, 
@@ -35,17 +37,45 @@ export function useGetPonencias() {
   });
 }
 
-export function useGetExpositores() {
-  return useQuery('get-expositores', getExpositoresApi, {
-    select: (data) => data.data || []
-  });
-}
+export function useGetData () {
 
-export function useSaveNewExpositor () {
   const queryClient = useQueryClient();
-  return useMutation(saveNewExpositorApi, {
-    onMutate: () => {
-      queryClient.invalidateQueries('get-expositores');
-    }
-  });
+
+  function useEditExpositor () {
+    return useMutation(editExpositorApi, {
+      onSuccess: () => {
+        queryClient.invalidateQueries('get-expositores');
+      }
+    });
+  }
+
+  function useSaveNewExpositor () {
+    return useMutation(saveNewExpositorApi, {
+      onSuccess: () => {
+        queryClient.invalidateQueries('get-expositores');
+      }
+    });
+  }
+
+  function useGetExpositores() {
+    return useQuery('get-expositores', getExpositoresApi, {
+      select: (data) => data.data || []
+    });
+  }
+
+  function useDeleteExpositor() {
+    return useMutation(deleteExpositor, {
+      onSuccess: () => {
+        queryClient.invalidateQueries('get-expositores');
+      }
+    });
+  }
+
+  return {
+    useEditExpositor,
+    useSaveNewExpositor,
+    useGetExpositores,
+    useDeleteExpositor
+  }
+
 }

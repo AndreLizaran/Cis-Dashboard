@@ -29,10 +29,10 @@ function AppState () {
       <UIState>
         <App />
       </UIState>
-      {/* <ReactQueryDevtools 
+      <ReactQueryDevtools 
         initialIsOpen={false} 
         position='bottom-right'
-      /> */}
+      />
     </QueryClientProvider>
   )
 }

@@ -17,17 +17,27 @@ import ImageViewer from '../../components/ImageViewer';
 // Hooks
 import useProcessImage from '../../hooks/useProcessImage';
 import { useUIContext } from '../../hooks/useCustomContext';
-import { useGetExpositores, useSaveNewExpositor } from '../../hooks/useGetData';
+import { useGetData } from '../../hooks/useGetData';
 
 // Classes
 import { lightInput } from '../../classes';
+
+const initialState = {
+  id:0,
+  name:'',
+  description: '',
+  image: '',
+  bgImage: ''
+}
 
 export default function Expositores() {
 
   const { state } = useUIContext();
   const { showDashboardBar } = state;
   const [img, setImg] = useState('');
+  const [currentAction, setCurrentAction] = useState<'create' | 'edit'>('create');
   const formRef = useRef<HTMLInputElement>(null);
+  const [newExpositor, setNewExpositor] = useState<Expositor>(initialState);
 
   return (
     <>
@@ -48,15 +58,26 @@ export default function Expositores() {
             headerColor='bg-gray-800'
             headerIcon={faUserCheck}
           >
-            <ExpositoresList/>
+            <ExpositoresList 
+              setCurrentAction={setCurrentAction}
+              formRef={formRef}
+              setNewExpositor={setNewExpositor}
+            />
           </InformationContainer>
           <InformationContainer
-            headerText='Registrar nuevo expositor'
-            headerColor='bg-gray-800'
+            headerText={currentAction === 'create' ? 'Registrar nuevo expositor' : 'Editar expositor'}
+            headerColor={currentAction === 'create' ? 'bg-gray-800' : 'bg-blue-600'}
             headerIcon={faPlus}
             maxHeight={false}
           >
-            <NewExpositorForm setImg={setImg} formRef={formRef}/>
+            <NewExpositorForm 
+              setImg={setImg} 
+              formRef={formRef}
+              currentAction={currentAction}
+              setCurrentAction={setCurrentAction}
+              newExpositor={newExpositor}
+              setNewExpositor={setNewExpositor}
+            />
           </InformationContainer>
         </div>
       </div>
@@ -65,39 +86,37 @@ export default function Expositores() {
   )
 }
 
-const initialState = {
-  name:'',
-  description: '',
-  profilePic: '',
-  backgroundPic: ''
-}
 
 type NewExpositorFormProps = {
   setImg:Dispatch<SetStateAction<string>>
   formRef:RefObject<HTMLInputElement>
+  currentAction:'create' | 'edit'
+  setCurrentAction: Dispatch<SetStateAction<"create" | "edit">>
+  newExpositor: Expositor
+  setNewExpositor: Dispatch<SetStateAction<Expositor>>
 }
 
-function NewExpositorForm ({ setImg, formRef }:NewExpositorFormProps) {
+function NewExpositorForm ({ setImg, formRef, currentAction, setCurrentAction, newExpositor, setNewExpositor }:NewExpositorFormProps) {
 
+  const { name, description, image, bgImage, id } = newExpositor;
   const { getImageFromFileInput } = useProcessImage();
-  const { mutate, isLoading } = useSaveNewExpositor();
   const { setAlertInformation } = useUIContext();
-  const [newExpositor, setNewExpositor] = useState(initialState);
 
   const {
-    name, description, profilePic, backgroundPic
-  } = newExpositor;
+    useEditExpositor,
+    useSaveNewExpositor,
+    useDeleteExpositor
+  } = useGetData();
 
-  function saveNewExpositor () {
-    if (!name || !description || !profilePic || !backgroundPic) {
-      setAlertInformation({ 
-        alert:'Ingresa todos los datos del expositor', 
-        color:'bg-red-600', 
-      });
-      return;
-    }
+  const { mutateAsync:mutateEdit } = useEditExpositor();
+  const { mutateAsync:mutateCreate, isLoading } = useSaveNewExpositor();
+  const { mutateAsync:mutateDelete } = useDeleteExpositor();
+
+
+  async function saveNewExpositor () {
+    if (!validateExpositorInformation()) return;
     try {
-      mutate({ name, description, image:profilePic, bgImage:backgroundPic, id:7 });
+    await mutateCreate(newExpositor);
       setAlertInformation({
         alert:'Nuevo expositor guardado',
         color:'bg-blue-600',
@@ -111,25 +130,83 @@ function NewExpositorForm ({ setImg, formRef }:NewExpositorFormProps) {
     }
   }
 
+  function editExpositor () {
+    if (!validateExpositorInformation()) return;
+    try {
+      mutateEdit(newExpositor)
+      setAlertInformation({
+        alert:'Expositor editado',
+        color:'bg-blue-600',
+      });
+      setNewExpositor(initialState);
+      window.scrollTo({ top:0, behavior:'smooth' });
+      setCurrentAction('create');
+    } catch (error:any) {
+      setAlertInformation({ 
+        alert:'Ha ocurrido un error, inténtalo más tarde', 
+        color:'bg-red-600', 
+      });
+    }
+  }
+
+  async function deleteExpositor () {
+    try {
+      mutateDelete(id);
+      setAlertInformation({ 
+        alert:'Expositor eliminado', 
+        color:'bg-red-600', 
+      });
+      setNewExpositor(initialState);
+      window.scrollTo({ top:0, behavior:'smooth' });
+      setCurrentAction('create');
+    } catch (error:any) {
+      setAlertInformation({ 
+        alert:'Ha ocurrido un error, inténtalo más tarde', 
+        color:'bg-red-600', 
+      });
+    }
+  }
+
+  function validateExpositorInformation () {
+    if (!name || !description || !image || !bgImage) {
+      setAlertInformation({ 
+        alert:'Ingresa todos los datos del expositor', 
+        color:'bg-red-600', 
+      });
+      return false;
+    } else return true;
+  }
+
   async function processImage (event:any, image:'pp' | 'bg') {
     const imageProcessed = await getImageFromFileInput(event) as string;
     (image === 'bg' && imageProcessed) 
       ?
-      setNewExpositor({ ...newExpositor, backgroundPic:imageProcessed })
+      setNewExpositor({ ...newExpositor, bgImage:imageProcessed })
       : 
-      setNewExpositor({ ...newExpositor, profilePic:imageProcessed })
+      setNewExpositor({ ...newExpositor, image:imageProcessed })
   }
 
   function cleanImage (image: 'pp' | 'bg') {
     (image === 'bg') 
       ?
-      setNewExpositor({ ...newExpositor, backgroundPic:'' })
+      setNewExpositor({ ...newExpositor, bgImage:'' })
       :
-      setNewExpositor({ ...newExpositor, profilePic:'' })
+      setNewExpositor({ ...newExpositor, image:'' })
   }
 
+  function cleanForm () { setNewExpositor(initialState) }
+
   return (
-    <NewElementForm saveButtonText='Guardar expositor' saveFunction={() => saveNewExpositor()} isLoading={isLoading}>
+    <NewElementForm 
+      saveButtonText='Guardar expositor' 
+      saveFunction={currentAction === 'create' ? saveNewExpositor : editExpositor} 
+      isLoading={isLoading} 
+      action={currentAction}
+      setAction={setCurrentAction}
+      cleanAction={() => cleanForm()}
+      deleteAction={() => deleteExpositor()}
+      deleteText='Eliminar expositor'
+    >
       <div className='flex flex-col'>
         <label>Nombre</label>
         <input 
@@ -155,39 +232,58 @@ function NewExpositorForm ({ setImg, formRef }:NewExpositorFormProps) {
           <InputFiles onChange={(files:any, event:any) => processImage(event, 'pp')} style={{ width:'33%' }}>
             <RoundedButton color='blue-500' icon={faUpload} className='w-full'/>
           </InputFiles>
-          {profilePic && <RoundedButton color='gray-300' icon={faImage} className='w-4/12' action={() => setImg(profilePic)}/>}
-          {profilePic && <RoundedButton color='gray-800' icon={faTimes} className='w-4/12' action={() => cleanImage('pp')}/>}
+          {image && <RoundedButton color='gray-300' icon={faImage} className='w-4/12' action={() => setImg(image)}/>}
+          {image && <RoundedButton color='gray-800' icon={faTimes} className='w-4/12' action={() => cleanImage('pp')}/>}
         </div> 
       </div>
       <div className='flex flex-col'>
         <label className='mb-1'>Foto de portada</label>
         <div className='flex gap-6'>
-          <InputFiles   onChange={(files:any, event:any) => processImage(event, 'bg')}s style={{ width:'33%' }}>
+          <InputFiles onChange={(files:any, event:any) => processImage(event, 'bg')}s style={{ width:'33%' }}>
             <RoundedButton color='blue-500' icon={faUpload} className='w-full'/>
           </InputFiles>
-          {backgroundPic && <RoundedButton color='gray-300' icon={faImage} className='w-4/12' action={() => setImg(backgroundPic)}/>}
-          {backgroundPic && <RoundedButton color='gray-800' icon={faTimes} className='w-4/12' action={() => cleanImage('bg')}/>}
+          {bgImage && <RoundedButton color='gray-300' icon={faImage} className='w-4/12' action={() => setImg(bgImage)}/>}
+          {bgImage && <RoundedButton color='gray-800' icon={faTimes} className='w-4/12' action={() => cleanImage('bg')}/>}
         </div> 
       </div>
     </NewElementForm>
   )
 }
 
-function ExpositoresList () {
-  const { data } = useGetExpositores();
+type ExpositoresListProps = {
+  setCurrentAction: Dispatch<SetStateAction<"create" | "edit">>
+  formRef:RefObject<HTMLInputElement>
+  setNewExpositor:Dispatch<SetStateAction<Expositor>>
+}
+
+function ExpositoresList ({ setCurrentAction, formRef, setNewExpositor }:ExpositoresListProps) {
+  const { useGetExpositores } = useGetData();
   const { state:{ showDashboardBar }} = useUIContext();
+  const { data } = useGetExpositores();
   return (
     <div className={`flex flex-col gap-6 ${!showDashboardBar ? 'xl:grid xl:grid-cols-2' : ''}`}>
-      {data?.map((expositor, index) => <ExpositorCard expositor={expositor} key={index}/>)}
+      {data?.map((expositor, index) => (
+        <ExpositorCard 
+          expositor={expositor} 
+          key={index} 
+          setCurrentAction={setCurrentAction} 
+          formRef={formRef}
+          setNewExpositor={setNewExpositor}
+        />
+      ))}
     </div>
   )
 }
 
 type ExpositorCardProps = {
-  expositor:Expositor
+  expositor:Expositor;
+  setCurrentAction: Dispatch<SetStateAction<"create" | "edit">>
+  formRef:RefObject<HTMLInputElement>
+  setNewExpositor:Dispatch<SetStateAction<Expositor>>
 }
 
-function ExpositorCard ({ expositor:{ name, image, description, bgImage }}:ExpositorCardProps) {
+function ExpositorCard ({ expositor, setCurrentAction, formRef, setNewExpositor}:ExpositorCardProps) {
+  const { name, image, description, bgImage } = expositor;
   return (
     <div className='rounded border border-gray-200 flex flex-col'>
       <div 
@@ -204,7 +300,17 @@ function ExpositorCard ({ expositor:{ name, image, description, bgImage }}:Expos
         <small className='text-gray-400 mb-3'>{description}</small>
         <div className='flex gap-3'>
           <RoundedButton color='gray-100' icon={faTrash} square={true} style={{ fontSize:12 }}/>
-          <RoundedButton color='gray-100' icon={faPencil} square={true} style={{ fontSize:12 }}/>
+          <RoundedButton 
+            color='gray-100' 
+            icon={faPencil} 
+            square={true} 
+            style={{ fontSize:12 }} 
+            action={() => { 
+              setCurrentAction('edit'); 
+              formRef.current?.focus();
+              setNewExpositor(expositor);
+            }}
+          />
         </div>
       </div>
     </div>
