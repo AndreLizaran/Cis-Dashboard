@@ -1,7 +1,7 @@
 // Modules
 import { CSSProperties, useRef } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { IconDefinition } from '@fortawesome/free-solid-svg-icons';
+import { faSpinner, IconDefinition } from '@fortawesome/free-solid-svg-icons';
 
 type Props = {
   color:'red-600' | 'gray-100' | 'purple-600' | 'gray-800' | 'blue-500' | 'gray-300' | 'transparent';
@@ -13,6 +13,7 @@ type Props = {
   hover?: boolean;
   square?: boolean; 
   action?: () => void;
+  isLoading?: boolean;
 }
 
 export default function RoundedButton({ 
@@ -25,6 +26,7 @@ export default function RoundedButton({
   action = () => {},
   hover = true,
   square = false,
+  isLoading = false,
 }:Props) {
 
   const buttonColors = useRef(getColorButton());
@@ -54,9 +56,11 @@ export default function RoundedButton({
       style={square ? { height:40, width:40, ...style } : { ...style }}
       type={type}
       onClick={() => action()}
+      disabled={isLoading}
     >
-      { text && text }
-      { icon && <FontAwesomeIcon icon={icon}/> }
+      { (text && !isLoading) && text }
+      { (icon && !isLoading) && <FontAwesomeIcon icon={icon}/> }
+      { (isLoading) && <FontAwesomeIcon icon={faSpinner} className='fa-spin'/> }
     </button>
   )
 }

@@ -20,7 +20,6 @@ export default function uiReducer (state:UIStateType, action:ActionTypes):UIStat
         alert: {
           color: action.payload.color,
           alert: action.payload.alert,
-          cancelable: action.payload.cancelable,
         }
       }
     case 'SET_DASHBOARD_SCREEN': 

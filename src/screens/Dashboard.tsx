@@ -23,7 +23,6 @@ import Events from '../screens/dashboard/Events';
 import Expositores from '../screens/dashboard/Expositores';
 
 export default function Dashboard() {  
-
   const { state } = useContext(UIContext);
   const { showDashboardBar } = state;
 
@@ -32,7 +31,11 @@ export default function Dashboard() {
       <div className='flex flex-col w-full' style={{ minHeight:'100vh' }}>
         <DashboardSideBarSpace/>
         <div className='flex w-full'>
-          { showDashboardBar && <div className='sm:w-6/12 md:w-4/12 bg-gray-100'/> }
+          {  
+            showDashboardBar 
+            && 
+            <div className='sm:w-6/12 md:w-4/12 bg-gray-100'/>
+          }
           <main 
             className={`
               p-6 bg-gray-100 min-h-screen 
@@ -88,7 +91,6 @@ function DashboardSideBarSpace () {
 }
 
 function MainScreen () {
-
   const { state } = useContext(UIContext);
   const {
     dashboardScreen

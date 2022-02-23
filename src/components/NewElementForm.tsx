@@ -11,9 +11,10 @@ type Props = {
   children: ReactNode;
   saveButtonText: string;
   saveFunction: () => void;
+  isLoading?:boolean
 }
 
-export default function NewElementForm({ children, saveButtonText, saveFunction }:Props) {
+export default function NewElementForm({ children, saveButtonText, saveFunction, isLoading }:Props) {
 
   const { state } = useUIContext();
   const { showDashboardBar } = state;
@@ -23,7 +24,7 @@ export default function NewElementForm({ children, saveButtonText, saveFunction 
       <div className={`flex flex-col md:grid gap-6 ${showDashboardBar ? 'lg:grid-cols-2' : 'md:grid-cols-2'}`}>
         {children}
       </div>
-      <RoundedButton text={saveButtonText} color='red-600' type='submit'/>
+      <RoundedButton text={saveButtonText} color='red-600' type='submit' isLoading={isLoading}/>
     </form>
   )
 }

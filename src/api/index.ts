@@ -36,3 +36,7 @@ export function getPonenciasApi () {
 export function getExpositoresApi () {
   return axiosInstance.get<Expositor[]>('/expositores');
 }
+
+export function saveNewExpositorApi (data:Expositor ) {
+  return axiosInstance.post('/expositores', data);
+}

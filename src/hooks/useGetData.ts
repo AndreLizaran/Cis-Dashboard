@@ -1,5 +1,5 @@
 // Modules
-import { useQuery } from 'react-query';
+import { useMutation, useQuery, useQueryClient } from 'react-query';
 
 // Endpoints
 import { 
@@ -7,7 +7,8 @@ import {
   getCursosApi, 
   getExpositoresApi, 
   getPonenciasApi, 
-  getTalleresApi 
+  getTalleresApi, 
+  saveNewExpositorApi
 } from '../api';
 
 export function useGetTalleres() {
@@ -37,5 +38,14 @@ export function useGetPonencias() {
 export function useGetExpositores() {
   return useQuery('get-expositores', getExpositoresApi, {
     select: (data) => data.data || []
+  });
+}
+
+export function useSaveNewExpositor () {
+  const queryClient = useQueryClient();
+  return useMutation(saveNewExpositorApi, {
+    onMutate: () => {
+      queryClient.invalidateQueries('get-expositores');
+    }
   });
 }

@@ -9,7 +9,6 @@ export type UIStateType = {
   alert: {
     color:string,
     alert:string,
-    cancelable:boolean
   },
   dashboardScreen:DashboardScreen
 }
@@ -28,7 +27,6 @@ const initialState:UIStateType = {
   alert: {
     color:'',
     alert:'',
-    cancelable:true
   },
   dashboardScreen:'events'
 }
@@ -69,5 +67,4 @@ export default function UIState ({ children }:any) {
 export type SetAlertInformationParams = {
   color:string,
   alert:string,
-  cancelable:boolean
 }
