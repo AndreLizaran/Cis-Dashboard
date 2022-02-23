@@ -1,5 +1,5 @@
 // Modules
-import { useContext } from 'react';
+import { useContext, useEffect } from 'react';
 import { 
   faCalendar, 
   faNewspaper, 
@@ -25,7 +25,23 @@ import { useUIContext } from '../hooks/useCustomContext';
 
 export default function DashboardBar() {
 
-  const { switchShowDashboardBar, state } = useContext(UIContext);
+  const { switchShowDashboardBar, state, setDashboardScreen } = useContext(UIContext);
+
+  useEffect(() => {
+    let currentScreen = localStorage.getItem('current-dashboard-screen') as string;
+    if (!currentScreen) return;
+    switch (Number(currentScreen)) {
+      case 1:
+        setDashboardScreen('events');
+        break;
+      case 2:
+        setDashboardScreen('news');
+        break;
+      case 3:
+        setDashboardScreen('expositores');
+        break;
+    }
+  }, [])
   
   const { 
     animation, 
@@ -90,14 +106,17 @@ type OptionElementProps = {
 }
 
 function OptionElement ({ option, switchAnimation }:OptionElementProps) {
+
   const {
     id,
     text,
     icon,
   } = option;
   const { setDashboardScreen } = useUIContext();
+
   function changeScreen (hide:boolean) {
     hide && switchAnimation();
+    localStorage.setItem('current-dashboard-screen', id.toString());
     switch (id) {
       case 1:
         setDashboardScreen('events');
