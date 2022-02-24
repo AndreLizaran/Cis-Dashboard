@@ -2,7 +2,7 @@
 import { Dispatch, RefObject, SetStateAction, useRef, useState } from 'react';
 // @ts-ignore
 import InputFiles from 'react-input-files';
-import { faImage, faPencil, faPlus, faTimes, faTrash, faUpload, faUserCheck } from '@fortawesome/free-solid-svg-icons'
+import { faImage, faPencil, faPlus, faTimes, faUpload, faUserCheck } from '@fortawesome/free-solid-svg-icons'
 
 // Api
 import { Expositor } from '../../api';
@@ -100,7 +100,7 @@ function NewExpositorForm ({ setImg, formRef, currentAction, setCurrentAction, n
 
   const { name, description, image, bgImage, id } = newExpositor;
   const { getImageFromFileInput } = useProcessImage();
-  const { setAlertInformation } = useUIContext();
+  const { switchAlert } = useUIContext();
 
   const {
     useEditExpositor,
@@ -116,14 +116,14 @@ function NewExpositorForm ({ setImg, formRef, currentAction, setCurrentAction, n
   async function saveNewExpositor () {
     if (!validateExpositorInformation()) return;
     try {
-    await mutateCreate(newExpositor);
-      setAlertInformation({
+      await mutateCreate(newExpositor);
+      switchAlert({
         alert:'Nuevo expositor guardado',
         color:'bg-blue-600',
       });
       setNewExpositor(initialState);
     } catch (error:any) {
-      setAlertInformation({ 
+      switchAlert({ 
         alert:'Ha ocurrido un error, inténtalo más tarde', 
         color:'bg-red-600', 
       });
@@ -134,7 +134,7 @@ function NewExpositorForm ({ setImg, formRef, currentAction, setCurrentAction, n
     if (!validateExpositorInformation()) return;
     try {
       mutateEdit(newExpositor)
-      setAlertInformation({
+      switchAlert({
         alert:'Expositor editado',
         color:'bg-blue-600',
       });
@@ -142,7 +142,7 @@ function NewExpositorForm ({ setImg, formRef, currentAction, setCurrentAction, n
       window.scrollTo({ top:0, behavior:'smooth' });
       setCurrentAction('create');
     } catch (error:any) {
-      setAlertInformation({ 
+      switchAlert({ 
         alert:'Ha ocurrido un error, inténtalo más tarde', 
         color:'bg-red-600', 
       });
@@ -152,7 +152,7 @@ function NewExpositorForm ({ setImg, formRef, currentAction, setCurrentAction, n
   async function deleteExpositor () {
     try {
       mutateDelete(id);
-      setAlertInformation({ 
+      switchAlert({ 
         alert:'Expositor eliminado', 
         color:'bg-red-600', 
       });
@@ -160,7 +160,7 @@ function NewExpositorForm ({ setImg, formRef, currentAction, setCurrentAction, n
       window.scrollTo({ top:0, behavior:'smooth' });
       setCurrentAction('create');
     } catch (error:any) {
-      setAlertInformation({ 
+      switchAlert({ 
         alert:'Ha ocurrido un error, inténtalo más tarde', 
         color:'bg-red-600', 
       });
@@ -169,7 +169,7 @@ function NewExpositorForm ({ setImg, formRef, currentAction, setCurrentAction, n
 
   function validateExpositorInformation () {
     if (!name || !description || !image || !bgImage) {
-      setAlertInformation({ 
+      switchAlert({ 
         alert:'Ingresa todos los datos del expositor', 
         color:'bg-red-600', 
       });

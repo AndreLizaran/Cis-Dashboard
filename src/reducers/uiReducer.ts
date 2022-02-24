@@ -2,17 +2,24 @@
 import { DashboardScreen, SetAlertInformationParams, UIStateType } from '../contexts/UIContext';
 
 type ActionTypes = 
+  // Dashboard
   { type:'SWITCH_SHOW_DASHBOARD_BAR' } |
-  { type:'SET_ALERT_INFORMATION', payload:SetAlertInformationParams } |
-  { type:'SET_DASHBOARD_SCREEN', payload:DashboardScreen } 
+  { type:'SET_DASHBOARD_SCREEN', payload:DashboardScreen } |
+  // Alert
+  { type:'SET_ALERT_ANIMATION', payload:boolean } |
+  { type:'SET_ALERT_INFORMATION', payload:SetAlertInformationParams }
 
 export default function uiReducer (state:UIStateType, action:ActionTypes):UIStateType {
-
   switch (action.type) {
     case 'SWITCH_SHOW_DASHBOARD_BAR': 
       return {
         ...state,
         showDashboardBar:!state.showDashboardBar
+      }
+    case 'SET_DASHBOARD_SCREEN': 
+      return {
+        ...state,
+        dashboardScreen: action.payload
       }
     case 'SET_ALERT_INFORMATION': 
       return {
@@ -22,13 +29,15 @@ export default function uiReducer (state:UIStateType, action:ActionTypes):UIStat
           alert: action.payload.alert,
         }
       }
-    case 'SET_DASHBOARD_SCREEN': 
+    case 'SET_ALERT_ANIMATION': 
       return {
         ...state,
-        dashboardScreen: action.payload
+        animations: {
+          ...state.animations,
+          alertAnimation: action.payload
+        }
       }
     default:
       return state;
   }
-
 }

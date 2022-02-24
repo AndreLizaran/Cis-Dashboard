@@ -18,7 +18,7 @@ export default function useSwitchShowComponents(
   switchShowComponentAction:any,
   extraOptions?:any,
 ) {
-  const [animation, setAnimation] = useState(initialAnimation)
+  const [animation, setAnimation] = useState(initialAnimation);
 
   function switchAnimation () {
     if (currentShowComponents) {

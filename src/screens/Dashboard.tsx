@@ -25,42 +25,21 @@ import Expositores from '../screens/dashboard/Expositores';
 
 export default function Dashboard() {  
 
-  const { state, setAlertInformation } = useUIContext();
+  const { state } = useUIContext();
   const { showDashboardBar } = state;
-  const { alert } = state;
-
-  const { 
-    animation, 
-    switchAnimation
-  } = useShowHideAnimation(
-    fadeInUp, 
-    fadeOutDown, 
-    alert.alert ? true : false, 
-    setAlertInformation,
-    { alert:'', color:'' }
-  );
 
   return (
     <>
       <div className='flex flex-col w-full' style={{ minHeight:'100vh' }}>
         <DashboardSideBarSpace/>
         <div className='flex w-full'>
-          {  
-            showDashboardBar 
-            && 
-            <div className='sm:w-6/12 md:w-4/12 bg-gray-100'/>
-          }
-          <main 
-            className={`
-              p-6 bg-gray-100 min-h-screen 
-              ${showDashboardBar ? 'w-full sm:w-6/12 md:w-8/12' : 'w-full'}
-            `}
-          >
+          {showDashboardBar && <div className='sm:w-6/12 md:w-4/12 bg-gray-100'/>}
+          <main className={`p-6 bg-gray-100 min-h-screen ${showDashboardBar ? 'w-full sm:w-6/12 md:w-8/12' : 'w-full'}`}>
             <MainScreen/>
           </main>
         </div>
       </div>
-      <Alert animation={animation} switchAnimation={switchAnimation}/>
+      <Alert/>
     </>
   )
 }

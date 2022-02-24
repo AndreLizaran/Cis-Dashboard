@@ -10,7 +10,11 @@ export type UIStateType = {
     color:string,
     alert:string,
   },
-  dashboardScreen:DashboardScreen
+  dashboardScreen:DashboardScreen,
+  animations: {
+    dashboardSidebarAnimation:boolean,
+    alertAnimation:boolean
+  }
 }
 
 export type UIContextType = {
@@ -18,9 +22,12 @@ export type UIContextType = {
   switchShowDashboardBar: () => void,
   setAlertInformation: (payload:SetAlertInformationParams) => void,
   setDashboardScreen: (payload:DashboardScreen) => void
+  switchAlert: (payload:SwitchAlertParams) => void
 }
 
 export type DashboardScreen = 'events' | 'news' | 'users' | 'expositores';
+
+export type SwitchAlertParams = { color:string, alert:string } | null
 
 const initialState:UIStateType = {
   showDashboardBar:true,
@@ -28,7 +35,11 @@ const initialState:UIStateType = {
     color:'',
     alert:'',
   },
-  dashboardScreen:'events'
+  dashboardScreen:'events',
+  animations: {
+    dashboardSidebarAnimation:true,
+    alertAnimation:true
+  }
 }
 
 export const UIContext = createContext({} as UIContextType);
@@ -37,25 +48,42 @@ export default function UIState ({ children }:any) {
 
   const [state, dispatch] = useReducer(uiReducer, initialState);
 
+  // Dashboard
   function switchShowDashboardBar () {
     dispatch({ type:'SWITCH_SHOW_DASHBOARD_BAR' });
-  }
-
-  function setAlertInformation (payload:SetAlertInformationParams) {
-    dispatch({ type:'SET_ALERT_INFORMATION', payload });
   }
 
   function setDashboardScreen (payload:DashboardScreen) {
     dispatch({ type:'SET_DASHBOARD_SCREEN', payload });
   }
 
+  // Alert
+  function setAlertInformation (payload:SetAlertInformationParams) {
+    dispatch({ type:'SET_ALERT_INFORMATION', payload });
+  }
+
+  function setAlertAnimation (payload:boolean) {
+    dispatch({ type:'SET_ALERT_ANIMATION', payload });
+  }
+
+  function switchAlert (payload:SwitchAlertParams) {
+    if (payload === null) {
+      setAlertAnimation(false);
+      setTimeout(() => {
+        setAlertInformation({ alert:'', color:'' });
+        setAlertAnimation(true);
+      }, 500);
+    } else setAlertInformation(payload);
+  }
+  
   return (
     <UIContext.Provider 
       value={{ 
         state,
         switchShowDashboardBar,
         setAlertInformation,
-        setDashboardScreen
+        setDashboardScreen,
+        switchAlert
       }}
     >
       {children}
