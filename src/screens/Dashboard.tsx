@@ -3,7 +3,7 @@ import { useContext } from 'react';
 import { faBars } from '@fortawesome/free-solid-svg-icons';
 
 // Classes
-import { fadeIn, fadeOut } from '../classes';
+import { fadeIn, fadeInUp, fadeOut, fadeOutDown } from '../classes';
 
 // Components
 import Alert from '../components/Alert';
@@ -15,6 +15,7 @@ import { UIContext } from '../contexts/UIContext';
 
 // Hooks
 import useShowHideAnimation from '../hooks/useShowHideAnimation';
+import { useUIContext } from '../hooks/useCustomContext';
 
 // Screens
 import News from '../screens/dashboard/News';
@@ -23,8 +24,21 @@ import Events from '../screens/dashboard/Events';
 import Expositores from '../screens/dashboard/Expositores';
 
 export default function Dashboard() {  
-  const { state } = useContext(UIContext);
+
+  const { state, setAlertInformation } = useUIContext();
   const { showDashboardBar } = state;
+  const { alert } = state;
+
+  const { 
+    animation, 
+    switchAnimation
+  } = useShowHideAnimation(
+    fadeInUp, 
+    fadeOutDown, 
+    alert.alert ? true : false, 
+    setAlertInformation,
+    { alert:'', color:'' }
+  );
 
   return (
     <>
@@ -46,12 +60,12 @@ export default function Dashboard() {
           </main>
         </div>
       </div>
-      <Alert/>
+      <Alert animation={animation} switchAnimation={switchAnimation}/>
     </>
   )
 }
 
-function DashboardSideBarSpace () {
+function  DashboardSideBarSpace () {
 
   const { state, switchShowDashboardBar } = useContext(UIContext);
   const {

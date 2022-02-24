@@ -2,27 +2,17 @@
 import { faTimes } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
-// Classes
-import { fadeInUp, fadeOutDown } from '../classes';
-
 // Hooks
 import { useUIContext } from '../hooks/useCustomContext';
-import useShowHideAnimation from '../hooks/useShowHideAnimation';
 
-export default function Alert() {
+type Props = {
+  animation:string;
+  switchAnimation: () => void;
+}
 
-  const { state:{ showDashboardBar, alert }, setAlertInformation } = useUIContext();
+export default function Alert({ animation, switchAnimation }:Props) {
 
-  const { 
-    animation, 
-    switchAnimation
-  } = useShowHideAnimation(
-    fadeInUp, 
-    fadeOutDown, 
-    alert.alert ? true : false, 
-    setAlertInformation,
-    { alert:'', color:'', cancelable:true }
-  );
+  const { state:{ showDashboardBar, alert } } = useUIContext();
 
   if (alert.alert) {
     return (

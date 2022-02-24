@@ -50,7 +50,7 @@ export default function NewElementForm({ children, saveButtonText, saveFunction,
               }}
             />
             <RoundedButton
-              text={saveButtonText}
+              text={deleteText}
               color='red-600'
               type='button'
               isLoading={isLoading}

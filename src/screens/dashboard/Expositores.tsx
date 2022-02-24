@@ -261,7 +261,7 @@ function ExpositoresList ({ setCurrentAction, formRef, setNewExpositor }:Exposit
   const { state:{ showDashboardBar }} = useUIContext();
   const { data } = useGetExpositores();
   return (
-    <div className={`flex flex-col gap-6 ${!showDashboardBar ? 'xl:grid xl:grid-cols-2' : ''}`}>
+    <div className={`flex flex-col gap-6 ${!showDashboardBar ? 'md:grid md:grid-cols-2 lg:flex 2xl:grid' : 'lg:grid lg:grid-cols-2 2xl:flex'}`}>
       {data?.map((expositor, index) => (
         <ExpositorCard 
           expositor={expositor} 
@@ -298,20 +298,17 @@ function ExpositorCard ({ expositor, setCurrentAction, formRef, setNewExpositor}
         />
         <span>{name}</span>
         <small className='text-gray-400 mb-3'>{description}</small>
-        <div className='flex gap-3'>
-          <RoundedButton color='gray-100' icon={faTrash} square={true} style={{ fontSize:12 }}/>
-          <RoundedButton 
-            color='gray-100' 
-            icon={faPencil} 
-            square={true} 
-            style={{ fontSize:12 }} 
-            action={() => { 
-              setCurrentAction('edit'); 
-              formRef.current?.focus();
-              setNewExpositor(expositor);
-            }}
-          />
-        </div>
+        <RoundedButton 
+          color='gray-100' 
+          icon={faPencil} 
+          square={true} 
+          style={{ fontSize:12 }} 
+          action={() => { 
+            setCurrentAction('edit'); 
+            formRef.current?.focus();
+            setNewExpositor(expositor);
+          }}
+        />
       </div>
     </div>
   )

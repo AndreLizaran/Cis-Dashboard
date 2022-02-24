@@ -125,7 +125,7 @@ function EventsContainer () {
   ]
 
   return (
-    <div className={`flex flex-col gap-6 mb-6 sm:grid ${!showDashboardBar ? 'md:grid-cols-2 xl:grid-cols-3' : 'lg:grid-cols-2'} `}>
+    <div className={`flex flex-col gap-6 mb-6 sm:grid ${!showDashboardBar ? 'md:grid-cols-2 xl:grid-cols-3' : 'xl:grid-cols-2'} `}>
       {infoContainers.map(({ headerColor, headerIcon, headerText, isLoading, data }, index) => (
         <InformationContainer
           headerColor={headerColor}
@@ -173,7 +173,7 @@ function EventsList ({ data }:EventListProps) {
                 <small>Día: {event.day}</small>
                 <small>Hora: {event.hour}</small>
               </div>
-              <small className='mb-3w'>Asistentes: 100</small>
+              <small className='mb-3'>Asistentes: 100</small>
               <div className='flex gap-3'>
                 <RoundedButton color='gray-100' icon={faTrash} square={true} style={{ fontSize:12 }}/>
                 <RoundedButton color='gray-100' icon={faPencil} square={true} style={{ fontSize:12 }}/>

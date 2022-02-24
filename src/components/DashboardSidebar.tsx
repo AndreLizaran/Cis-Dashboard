@@ -167,11 +167,6 @@ const options = [
     icon: faCalendar
   },
   {
-    id:2,
-    text:'Comunicados',
-    icon: faNewspaper
-  },
-  {
     id:3,
     text:'Expositores',
     icon: faUserCheck
