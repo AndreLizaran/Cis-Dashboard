@@ -50,7 +50,21 @@ export default function UIState ({ children }:any) {
 
   // Dashboard
   function switchShowDashboardBar () {
-    dispatch({ type:'SWITCH_SHOW_DASHBOARD_BAR' });
+    if (state.showDashboardBar) {
+      setDashboardBarAnimation(false);
+      setTimeout(() => {
+        setShowDashboard(false);
+        setDashboardBarAnimation(true);
+      }, 500);
+    } else setShowDashboard(true);
+  }
+
+  function setShowDashboard (payload:boolean) {
+    dispatch({ type:'SET_SHOW_DASHBOARD_BAR', payload });
+  }
+
+  function setDashboardBarAnimation (payload:boolean) {
+    dispatch({ type:'SET_DASHBOARD_BAR_ANIMATION', payload });
   }
 
   function setDashboardScreen (payload:DashboardScreen) {

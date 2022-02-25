@@ -3,18 +3,27 @@ import { DashboardScreen, SetAlertInformationParams, UIStateType } from '../cont
 
 type ActionTypes = 
   // Dashboard
-  { type:'SWITCH_SHOW_DASHBOARD_BAR' } |
-  { type:'SET_DASHBOARD_SCREEN', payload:DashboardScreen } |
+  { type:'SET_DASHBOARD_SCREEN', payload:DashboardScreen } | 
+  { type:'SET_SHOW_DASHBOARD_BAR', payload:boolean } |
+  { type:'SET_DASHBOARD_BAR_ANIMATION', payload:boolean } |
   // Alert
   { type:'SET_ALERT_ANIMATION', payload:boolean } |
   { type:'SET_ALERT_INFORMATION', payload:SetAlertInformationParams }
 
 export default function uiReducer (state:UIStateType, action:ActionTypes):UIStateType {
   switch (action.type) {
-    case 'SWITCH_SHOW_DASHBOARD_BAR': 
+    case 'SET_DASHBOARD_BAR_ANIMATION': 
       return {
         ...state,
-        showDashboardBar:!state.showDashboardBar
+        animations: {
+          ...state.animations,
+          dashboardSidebarAnimation: action.payload
+        }
+      }
+    case 'SET_SHOW_DASHBOARD_BAR': 
+      return {
+        ...state,
+        showDashboardBar: action.payload
       }
     case 'SET_DASHBOARD_SCREEN': 
       return {

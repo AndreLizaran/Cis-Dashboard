@@ -18,6 +18,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 // Components
 import H2 from '../../components/H2';
 import RoundedButton from '../../components/RoundedButton';
+import NewElementForm from '../../components/NewElementForm';
 import InformationContainer from '../../components/InformationContainer';
 
 // Hooks
@@ -31,9 +32,10 @@ import {
 } from '../../hooks/useGetData';
 
 // Classes
-import { lightInput } from '../../classes';
+import { fadeInUp, lightInput } from '../../classes';
+
+// Types
 import { EventType } from '../../api';
-import NewElementForm from '../../components/NewElementForm';
 
 export default function Events() {
 
@@ -53,16 +55,18 @@ export default function Events() {
           action={() => formRef.current?.focus()}
         />
       </div>
-      <EventsContainer/>
-      <div className={`flex flex-col gap-6 ${showDashboardBar ? '2xl:grid 2xl:grid-cols-2' : 'lg:grid lg:grid-cols-2'}`}>
-        <InformationContainer
-          headerColor='bg-gray-800'
-          headerText='Registrar nuevo evento'
-          headerIcon={faPlus}
-          maxHeight={false}
-        >
-          <NewEventForm formRef={formRef}/>
-        </InformationContainer>
+      <div className={`flex flex-col ${fadeInUp}`}>
+        <EventsContainer/>
+        <div className={`flex flex-col gap-6 ${showDashboardBar ? '2xl:grid 2xl:grid-cols-2' : 'lg:grid lg:grid-cols-2'}`}>
+          <InformationContainer
+            headerColor='bg-gray-800'
+            headerText='Registrar nuevo evento'
+            headerIcon={faPlus}
+            maxHeight={false}
+          >
+            <NewEventForm formRef={formRef}/>
+          </InformationContainer>
+        </div>
       </div>
     </>
   )
@@ -125,7 +129,7 @@ function EventsContainer () {
   ]
 
   return (
-    <div className={`flex flex-col gap-6 mb-6 sm:grid ${!showDashboardBar ? 'md:grid-cols-2 xl:grid-cols-3' : 'xl:grid-cols-2'} `}>
+    <div className={`flex flex-col gap-6 mb-6 sm:grid ${!showDashboardBar ? 'md:grid-cols-2 xl:grid-cols-3' : 'xl:grid-cols-2'}`}>
       {infoContainers.map(({ headerColor, headerIcon, headerText, isLoading, data }, index) => (
         <InformationContainer
           headerColor={headerColor}

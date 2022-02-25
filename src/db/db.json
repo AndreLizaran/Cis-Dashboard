@@ -212,13 +212,13 @@
     {
       "id": 4,
       "name": "Charles Morris",
-      "description": "Demo description",
+      "description": "Demo",
       "image": "https://reqres.in/img/faces/5-image.jpg",
       "bgImage": "https://static.techspot.com/images2/news/bigimage/2019/10/2019-10-25-image-5.jpg"
     },
     {
       "id": 5,
-      "name": "Tracey Ramos Ramos",
+      "name": "Tracey Ramos",
       "description": "Demo description",
       "image": "https://reqres.in/img/faces/6-image.jpg",
       "bgImage": "https://www.elegantthemes.com/blog/wp-content/uploads/2019/01/web-design-blog.png"

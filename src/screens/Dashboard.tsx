@@ -3,7 +3,7 @@ import { useContext } from 'react';
 import { faBars } from '@fortawesome/free-solid-svg-icons';
 
 // Classes
-import { fadeIn, fadeInUp, fadeOut, fadeOutDown } from '../classes';
+import { fadeIn, fadeOut } from '../classes';
 
 // Components
 import Alert from '../components/Alert';
@@ -14,7 +14,6 @@ import DashboardSidebar from '../components/DashboardSidebar';
 import { UIContext } from '../contexts/UIContext';
 
 // Hooks
-import useShowHideAnimation from '../hooks/useShowHideAnimation';
 import { useUIContext } from '../hooks/useCustomContext';
 
 // Screens
@@ -47,19 +46,8 @@ export default function Dashboard() {
 function  DashboardSideBarSpace () {
 
   const { state, switchShowDashboardBar } = useContext(UIContext);
-  const {
-    showDashboardBar
-  } = state;
-
-  const {
-    animation,
-    switchAnimation
-  } = useShowHideAnimation(
-    fadeIn, 
-    fadeOut, 
-    showDashboardBar, 
-    switchShowDashboardBar
-  );
+  const { showDashboardBar, animations } = state;
+  const { dashboardSidebarAnimation } = animations;
   
   return (
     <>
@@ -74,8 +62,8 @@ function  DashboardSideBarSpace () {
         color='blue-500' 
         icon={faBars} 
         style={{ right:24, top:24, position:'fixed', zIndex:2 }}
-        className={animation}
-        action={switchAnimation}
+        className={dashboardSidebarAnimation ? fadeIn : fadeOut}
+        action={switchShowDashboardBar}
         square={true}
       />
     }

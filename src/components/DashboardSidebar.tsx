@@ -1,8 +1,7 @@
 // Modules
 import { useContext, useEffect } from 'react';
 import { 
-  faCalendar, 
-  faNewspaper, 
+  faCalendar,  
   faBars, 
   IconDefinition,
   faUserCheck,
@@ -20,12 +19,13 @@ import RoundedButton from './RoundedButton';
 import { UIContext } from '../contexts/UIContext';
 
 // Hooks
-import useShowHideAnimation from '../hooks/useShowHideAnimation';
 import { useUIContext } from '../hooks/useCustomContext';
 
 export default function DashboardBar() {
 
-  const { switchShowDashboardBar, state, setDashboardScreen } = useContext(UIContext);
+  const { switchShowDashboardBar, setDashboardScreen, state } = useContext(UIContext);
+  const { animations } = state;
+  const { dashboardSidebarAnimation } = animations;
 
   useEffect(() => {
     let currentScreen = localStorage.getItem('current-dashboard-screen') as string;
@@ -41,31 +41,21 @@ export default function DashboardBar() {
         setDashboardScreen('expositores');
         break;
     }
-  }, [])
-  
-  const { 
-    animation, 
-    switchAnimation
-  } = useShowHideAnimation(
-    fadeInLeft, 
-    fadeOutLeft, 
-    state.showDashboardBar, 
-    switchShowDashboardBar
-  );
+  }, []);
 
   return (
-    <div className={`p-6 bg-gray-800 h-screen flex flex-col justify-between rounded-r w-full ${animation}`}>
+    <div className={`p-6 bg-gray-800 h-screen flex flex-col justify-between rounded-r w-full ${dashboardSidebarAnimation ? fadeInLeft: fadeOutLeft }`}>
       <div className='flex flex-col'>
         <div className='flex justify-between items-center mb-6'>
           <H2 className='text-white'>Panel de control</H2>
           <RoundedButton
             icon={faBars}
             color='blue-500'
-            action={() => switchAnimation()}
+            action={() => switchShowDashboardBar()}
             square={true}
           />
         </div>
-        <OptionsList switchAnimation={switchAnimation}/>
+        <OptionsList/>
       </div>
       <div className='flex justify-between items-center'>
         <H2 className='text-white'>André Lizarán</H2>
@@ -81,16 +71,12 @@ const containerClass = `
   custom-scrollbar-dashboard
 `
 
-type OptionsListProps = {
-  switchAnimation: () => void
-}
-
-function OptionsList ({ switchAnimation }:OptionsListProps) {
+function OptionsList () {
   return ( 
     <div 
       className={containerClass}>
       {options.map((option) => (
-        <OptionElement option={option} key={option.id} switchAnimation={switchAnimation}/>
+        <OptionElement option={option} key={option.id}/>
       ))}
     </div>
   )
@@ -102,20 +88,19 @@ type OptionElementProps = {
     text: string;
     icon: IconDefinition;
   };
-  switchAnimation: () => void;
 }
 
-function OptionElement ({ option, switchAnimation }:OptionElementProps) {
+function OptionElement ({ option }:OptionElementProps) {
 
   const {
     id,
     text,
     icon,
   } = option;
-  const { setDashboardScreen } = useUIContext();
+  const { setDashboardScreen, switchShowDashboardBar } = useUIContext();
 
   function changeScreen (hide:boolean) {
-    hide && switchAnimation();
+    hide && switchShowDashboardBar();
     localStorage.setItem('current-dashboard-screen', id.toString());
     switch (id) {
       case 1:
