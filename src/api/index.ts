@@ -2,12 +2,17 @@ import axiosInstance from '../utils/axios';
 
 export type EventType = {
   id:number;
-  name:string;
-  image:string;
+  idExpositor:number;
+  expositor: {
+    name:string,
+    image:string,
+  }
+  title:string;
   bgImage:string;
-  eventName:string;
+  description:string;
   day:string;
   hour:string;
+  eventType:number;
 }
 
 export type Expositor = {
