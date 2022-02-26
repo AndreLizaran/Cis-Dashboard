@@ -180,11 +180,8 @@ function NewExpositorForm ({ setImg, formRef, currentAction, setCurrentAction, n
 
   async function processImage (event:any, image:'pp' | 'bg') {
     const imageProcessed = await getImageFromFileInput(event) as string;
-    (image === 'bg' && imageProcessed) 
-      ?
-      setNewExpositor({ ...newExpositor, bgImage:imageProcessed })
-      : 
-      setNewExpositor({ ...newExpositor, image:imageProcessed })
+    if (image === 'bg' && imageProcessed) setNewExpositor({ ...newExpositor, bgImage:imageProcessed }) 
+    else if (image === 'pp' && imageProcessed) setNewExpositor({ ...newExpositor, image:imageProcessed })   
   }
 
   function cleanImage (image: 'pp' | 'bg') {

@@ -1,8 +1,12 @@
 // Modules
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { ReactQueryDevtools } from 'react-query/devtools'
+import { ReactQueryDevtools } from 'react-query/devtools';
 import { QueryClientProvider, QueryClient } from 'react-query';
+
+// @ts-ignore
+import { registerLocale } from  "react-datepicker";
+import es from 'date-fns/locale/es';
 
 // Components
 import App from './App';
@@ -13,6 +17,10 @@ import UIState from './contexts/UIContext';
 // Styles
 import 'animate.css';
 import './styles/index.css';
+import "react-datepicker/dist/react-datepicker.css";
+import 'rc-time-picker/assets/index.css';
+
+registerLocale('es', es);
 
 const queryClient = new QueryClient();
 

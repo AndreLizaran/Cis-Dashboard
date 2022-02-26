@@ -10,7 +10,7 @@ export type EventType = {
   title:string;
   bgImage:string;
   description:string;
-  day:string;
+  day:Date;
   hour:string;
   eventType:number;
 }

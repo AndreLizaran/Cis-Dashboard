@@ -1,5 +1,9 @@
 // Modules
 import { RefObject, useRef, useState } from 'react';
+// @ts-ignore
+import DatePicker from "react-datepicker";
+// @ts-ignore
+import TimePicker from 'rc-time-picker';
 
 // Icons
 import {
@@ -43,7 +47,7 @@ const initialState:EventType = {
   title:'',
   description:'',
   bgImage:'',
-  day:'',
+  day: new Date(),
   hour:'',
   expositor: {
     name:'',
@@ -62,6 +66,7 @@ export default function Events() {
     inputValues:eventFormValues, 
     setInputValues:setEventFormValues 
   } = useFormValues(initialState);
+  const [currentAction, setCurrentAction] = useState<'create' | 'edit'>('create');
 
   return (
     <>
@@ -76,15 +81,22 @@ export default function Events() {
         />
       </div>
       <div className={`flex flex-col ${fadeInUp}`}>
-        <EventsContainer setEventFormValues={setEventFormValues} formRef={formRef}/>
+        <EventsContainer setEventFormValues={setEventFormValues} formRef={formRef} setCurrentAction={setCurrentAction}/>
         <div className={`flex flex-col gap-6 ${showDashboardBar ? '2xl:grid 2xl:grid-cols-2' : 'lg:grid lg:grid-cols-2'}`}>
           <InformationContainer
-            headerColor='bg-gray-800'
-            headerText='Registrar nuevo evento'
+            headerColor={currentAction === 'create' ? 'bg-gray-800' : 'bg-blue-500'}
+            headerText={currentAction === 'create' ? 'Registrar nuevo evento' : 'Editar evento'}
             headerIcon={faPlus}
             maxHeight={false}
           >
-            <NewEventForm formRef={formRef} setEventFormValues={setEventFormValues} eventFormValues={eventFormValues} handleInputs={handleInputs}/>
+            <NewEventForm 
+              formRef={formRef} 
+              setEventFormValues={setEventFormValues} 
+              eventFormValues={eventFormValues} 
+              handleInputs={handleInputs}
+              currentAction={currentAction}
+              setCurrentAction={setCurrentAction}
+            />
           </InformationContainer>
         </div>
       </div>
@@ -93,11 +105,12 @@ export default function Events() {
 }
 
 type EventsContainerProps = {
-  setEventFormValues: React.Dispatch<React.SetStateAction<EventType>>
-  formRef:RefObject<HTMLInputElement>
+  setEventFormValues: React.Dispatch<React.SetStateAction<EventType>>;
+  formRef: RefObject<HTMLInputElement>;
+  setCurrentAction: React.Dispatch<React.SetStateAction<'create' | 'edit'>>
 }
 
-function EventsContainer ({ setEventFormValues, formRef }:EventsContainerProps) {
+function EventsContainer ({ setEventFormValues, formRef, setCurrentAction }:EventsContainerProps) {
 
   const { state } = useUIContext();
   const { showDashboardBar } = state;
@@ -193,7 +206,7 @@ function EventsContainer ({ setEventFormValues, formRef }:EventsContainerProps) 
                 ? 
                 <FontAwesomeIcon icon={faSpinner} className='fa-spin'/>
                 :
-                <EventsList data={data} setEventFormValues={setEventFormValues} formRef={formRef}/>
+                <EventsList data={data} setEventFormValues={setEventFormValues} formRef={formRef} setCurrentAction={setCurrentAction}/>
               }
             </InformationContainer>
           )
@@ -207,13 +220,14 @@ type EventListProps = {
   data:EventType[];
   setEventFormValues:React.Dispatch<React.SetStateAction<EventType>>;
   formRef:RefObject<HTMLInputElement>;
+  setCurrentAction: React.Dispatch<React.SetStateAction<'create' | 'edit'>>;
 }
 
-function EventsList ({ data, setEventFormValues, formRef }:EventListProps) {
+function EventsList ({ data, setEventFormValues, formRef, setCurrentAction }:EventListProps) {
   return (
     <div className='flex flex-col gap-6'>
       {data.map((event, index) => (
-        <EventCard key={index} event={event} setEventFormValues={setEventFormValues} formRef={formRef}/>
+        <EventCard key={index} event={event} setEventFormValues={setEventFormValues} formRef={formRef} setCurrentAction={setCurrentAction}/>
       ))}
     </div>
   )
@@ -223,9 +237,11 @@ type EventCardProps = {
   event:EventType;
   setEventFormValues:React.Dispatch<React.SetStateAction<EventType>>
   formRef:RefObject<HTMLInputElement>;
+  setCurrentAction: React.Dispatch<React.SetStateAction<'create' | 'edit'>>;
+
 }
 
-function EventCard ({ event, setEventFormValues, formRef }:EventCardProps) {
+function EventCard ({ event, setEventFormValues, formRef, setCurrentAction }:EventCardProps) {
 
   const { title, description, expositor } = event;
 
@@ -243,8 +259,8 @@ function EventCard ({ event, setEventFormValues, formRef }:EventCardProps) {
         />
         <div className='flex flex-col text-center items-center'>
           <h2>{title} - {expositor.name}</h2>
-          <small className='w-8/12'>{description}</small>
-          <div className='flex gap-3 mt-1 mb-1 text-gray-400'>
+          {/* <small className='w-8/12'>{description}</small> */}
+          <div className='flex gap-3 text-gray-400'>
             <small>Día: {event.day}</small>
             <small>Hora: {event.hour}</small>
           </div>
@@ -255,7 +271,7 @@ function EventCard ({ event, setEventFormValues, formRef }:EventCardProps) {
             square={true} 
             style={{ fontSize:12 }}
             action={() => {
-              console.log(event)
+              setCurrentAction('edit');
               setEventFormValues(event);
               formRef.current?.focus();
             }}
@@ -267,25 +283,29 @@ function EventCard ({ event, setEventFormValues, formRef }:EventCardProps) {
 }
 
 type NewEventFormProps = {
-  formRef:RefObject<HTMLInputElement>;
+  formRef: RefObject<HTMLInputElement>;
   eventFormValues: EventType;
-  setEventFormValues:React.Dispatch<React.SetStateAction<EventType>>;
-  handleInputs: (e: React.FormEvent<HTMLInputElement>) => void
+  setEventFormValues: React.Dispatch<React.SetStateAction<EventType>>;
+  handleInputs: (e: React.FormEvent<HTMLInputElement>) => void;
+  currentAction: 'create' | 'edit';
+  setCurrentAction: React.Dispatch<React.SetStateAction<'create' | 'edit'>>;
 }
 
-function NewEventForm ({ formRef, setEventFormValues, eventFormValues, handleInputs }:NewEventFormProps) {
+function NewEventForm ({ formRef, setEventFormValues, eventFormValues, handleInputs, currentAction, setCurrentAction }:NewEventFormProps) {
 
   const { useGetExpositores } = useGetData();
   const { data } = useGetExpositores();
   const { bgImage, day, title, hour, description, idExpositor, eventType } = eventFormValues;
+
+  function cleanForm () { setEventFormValues(initialState) }
   
   return (
     <NewElementForm 
       saveButtonText='Guardar evento' 
       saveFunction={() => {}} 
-      action='create' 
-      setAction={() => {}}
-      cleanAction={() => {}}
+      action={currentAction}
+      setAction={setCurrentAction}
+      cleanAction={() => cleanForm()}
       deleteAction={() => {}}
       deleteText='Eliminar evento'
     >
@@ -295,23 +315,46 @@ function NewEventForm ({ formRef, setEventFormValues, eventFormValues, handleInp
       </div>
       <div className='flex flex-col'>
         <label>Descripción</label>
-        <input className={lightInput} style={{ resize:'none' }} value={description} name='description' onChange={handleInputs}/>
+        {/* @ts-ignore */}
+        <textarea className={lightInput} style={{ resize:'none' }} rows={4} value={description} name='description' onChange={handleInputs}/>
       </div>
       <div className='flex flex-col'>
         <label>Expositor</label>
-        <select className='focus:outline-none px-4 py-2 rounded border bg-gray-50 border-gray-400 mt-1' value={idExpositor}>
+        <select 
+          className={lightInput}  
+          value={idExpositor}
+          onChange={(event) => setEventFormValues({ ...eventFormValues, idExpositor:Number(event.target.value) })}
+        >
           {data && data.map(({ name, id }) => <option key={id} value={id}>{name}</option>)}
         </select>
         <small className='underline mt-2 cursor-pointer'>Agregar nuevo expositor</small>
       </div>
       <div className='flex flex-col'>
         <label>Tipo de evento</label>
-        <select className='focus:outline-none px-4 py-2 rounded border bg-gray-50 border-gray-400 mt-1' value={eventType}>
+        <select 
+          className={lightInput} 
+          value={eventType}
+          onChange={(event) => setEventFormValues({ ...eventFormValues, eventType:Number(event.target.value) })}
+        >
           <option value={1}>Taller</option>
           <option value={2}>Conferencia</option>
           <option value={3}>Curso</option>
           <option value={4}>Ponencia</option>
         </select>
+      </div>
+      <div className='flex flex-col'>
+        <label>Fecha</label>
+        <DatePicker 
+          className={lightInput} 
+          selected={day} 
+          onChange={(date:Date) => setEventFormValues({ ...eventFormValues, day:date })} 
+          locale="es"
+          dateFormat="dd/MM/yyyy"
+        />
+      </div>
+      <div className='flex flex-col'>
+        <label>Hora</label>
+        <TimePicker className={lightInput} showSecond={false}/>
       </div>
       <div className='flex flex-col'>
         <label className='mb-1'>Imagen del evento</label>
