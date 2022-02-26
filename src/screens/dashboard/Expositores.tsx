@@ -121,6 +121,7 @@ function NewExpositorForm ({ setImg, formRef, currentAction, setCurrentAction, n
         alert:'Nuevo expositor guardado',
         color:'bg-blue-600',
       });
+      window.scrollTo({ top:0, behavior:'smooth' });
       setNewExpositor(initialState);
     } catch (error:any) {
       switchAlert({ 
