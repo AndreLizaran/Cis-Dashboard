@@ -39,8 +39,16 @@ export type Login = {
 }
 
 // Login
-export function loginUser (data:Login) {
+export function loginUserApi (data:Login) {
   return axiosInstance.post('/login', data);
+}
+
+export function validateTokenApi (data:String) {
+  return axiosInstance.get('/validate-token', {
+    headers: {
+      Authorization: `Bearer ${data}` 
+    }
+  })
 }
 
 // Expositores

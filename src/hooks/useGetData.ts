@@ -10,12 +10,13 @@ import {
   getExpositoresApi, 
   getPonenciasApi, 
   getTalleresApi, 
-  loginUser, 
+  loginUserApi, 
   saveNewConferencia, 
   saveNewCurso, 
   saveNewExpositorApi,
   saveNewPonencia,
-  saveNewTaller
+  saveNewTaller,
+  validateTokenApi
 } from '../api';
 
 export function useGetTalleres() {
@@ -48,7 +49,12 @@ export function useGetData () {
 
   // Login
   function useLoginUser () {
-    return useMutation(loginUser);
+    return useMutation(loginUserApi);
+  }
+
+  function useValidateToken () {
+    return useMutation(validateTokenApi);
+
   }
 
   // Expositores
@@ -124,7 +130,8 @@ export function useGetData () {
     useSaveNewConferencia,
     useSaveNewCurso,
     useSaveNewPonencia,
-    useLoginUser
+    useLoginUser,
+    useValidateToken
   }
 
 }

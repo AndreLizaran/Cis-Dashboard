@@ -7,6 +7,7 @@ import {
   faUserCheck,
   faSignOut,
 } from '@fortawesome/free-solid-svg-icons';
+import { useNavigate } from 'react-router-dom'
 
 // Classes
 import { fadeInLeft, fadeOutLeft } from '../classes';
@@ -26,6 +27,7 @@ export default function DashboardBar() {
   const { switchShowDashboardBar, setDashboardScreen, state } = useContext(UIContext);
   const { animations } = state;
   const { dashboardSidebarAnimation } = animations;
+  const navigation = useNavigate();
 
   useEffect(() => {
     let currentScreen = localStorage.getItem('current-dashboard-screen') as string;
@@ -59,7 +61,7 @@ export default function DashboardBar() {
       </div>
       <div className='flex justify-between items-center'>
         <H2 className='text-white'>André Lizarán</H2>
-        <RoundedButton color='red-600' icon={faSignOut} square={true}/>
+        <RoundedButton color='red-600' icon={faSignOut} square={true} action={() => { navigation('/login'); localStorage.removeItem('cis-dashboard-token'); }}/>
       </div>
     </div>
   )
