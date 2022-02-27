@@ -237,7 +237,7 @@ function NewExpositorForm ({ setImg, formRef, currentAction, setCurrentAction, n
       <div className='flex flex-col'>
         <label className='mb-1'>Foto de portada</label>
         <div className='flex gap-6'>
-          <InputFiles onChange={(files:any, event:any) => processImage(event, 'bg')}s style={{ width:'33%' }}>
+          <InputFiles onChange={(files:any, event:any) => processImage(event, 'bg')} style={{ width:'33%' }}>
             <RoundedButton color='blue-500' icon={faUpload} className='w-full'/>
           </InputFiles>
           {bgImage && <RoundedButton color='gray-300' icon={faImage} className='w-4/12' action={() => setImg(bgImage)}/>}

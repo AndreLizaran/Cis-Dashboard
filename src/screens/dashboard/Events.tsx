@@ -2,8 +2,9 @@
 import { RefObject, useRef, useState } from 'react';
 // @ts-ignore
 import DatePicker from "react-datepicker";
-// @ts-ignore
 import TimePicker from 'rc-time-picker';
+// @ts-ignore
+import InputFiles from 'react-input-files';
 
 // Icons
 import {
@@ -14,7 +15,9 @@ import {
   faUserCheck,
   faSpinner,
   faUpload,
-  faPencil
+  faPencil,
+  faImage,
+  faTimes
 } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
@@ -40,6 +43,8 @@ import { fadeInUp, lightInput } from '../../classes';
 
 // Types
 import { EventType } from '../../api';
+import ImageViewer from '../../components/ImageViewer';
+import useProcessImage from '../../hooks/useProcessImage';
 
 const initialState:EventType = {
   id:0,
@@ -47,7 +52,7 @@ const initialState:EventType = {
   title:'',
   description:'',
   bgImage:'',
-  day: new Date(),
+  day: '',
   hour:'',
   expositor: {
     name:'',
@@ -67,6 +72,7 @@ export default function Events() {
     setInputValues:setEventFormValues 
   } = useFormValues(initialState);
   const [currentAction, setCurrentAction] = useState<'create' | 'edit'>('create');
+  const [img, setImg] = useState('');
 
   return (
     <>
@@ -96,10 +102,12 @@ export default function Events() {
               handleInputs={handleInputs}
               currentAction={currentAction}
               setCurrentAction={setCurrentAction}
+              setImg={setImg}
             />
           </InformationContainer>
         </div>
       </div>
+      {img && <ImageViewer img={img} setImg={setImg}/>}
     </>
   )
 }
@@ -271,8 +279,9 @@ function EventCard ({ event, setEventFormValues, formRef, setCurrentAction }:Eve
             square={true} 
             style={{ fontSize:12 }}
             action={() => {
+              var date = new Date();
               setCurrentAction('edit');
-              setEventFormValues(event);
+              setEventFormValues({ ...event, day:date.toString() });
               formRef.current?.focus();
             }}
           />
@@ -289,20 +298,92 @@ type NewEventFormProps = {
   handleInputs: (e: React.FormEvent<HTMLInputElement>) => void;
   currentAction: 'create' | 'edit';
   setCurrentAction: React.Dispatch<React.SetStateAction<'create' | 'edit'>>;
+  setImg: React.Dispatch<React.SetStateAction<string>>;
 }
 
-function NewEventForm ({ formRef, setEventFormValues, eventFormValues, handleInputs, currentAction, setCurrentAction }:NewEventFormProps) {
+function NewEventForm ({ formRef, setEventFormValues, eventFormValues, handleInputs, currentAction, setCurrentAction, setImg }:NewEventFormProps) {
 
-  const { useGetExpositores } = useGetData();
+  const { bgImage, day, title, description, idExpositor, eventType, hour } = eventFormValues; 
+  const { switchAlert } = useUIContext();
+  const { getImageFromFileInput } = useProcessImage();
+  
+  const { 
+    useGetExpositores, 
+    useSaveNewConferencia, 
+    useSaveNewCurso, 
+    useSaveNewPonencia, 
+    useSaveNewTaller 
+  } = useGetData();
+
   const { data } = useGetExpositores();
-  const { bgImage, day, title, hour, description, idExpositor, eventType } = eventFormValues;
+  const { mutateAsync:saveTaller } = useSaveNewTaller();
+  const { mutateAsync:saveConferencia } = useSaveNewConferencia();
+  const { mutateAsync:saveCurso } = useSaveNewCurso();
+  const { mutateAsync:savePonencia } = useSaveNewPonencia();
 
   function cleanForm () { setEventFormValues(initialState) }
+
+  function saveEvent () {
+    if (!validateEventInformation()) return;
+    try {
+      const eventObject = {
+        id:0,
+        idExpositor,
+        bgImage,
+        title,
+        day,
+        hour,
+        description
+      }
+      switch(eventType) {
+        case 1:
+          saveTaller(eventObject);
+          break;
+        case 2:
+          saveConferencia(eventObject);
+          break;
+        case 3:
+          saveCurso(eventObject);
+          break;
+        case 4:
+          savePonencia(eventObject);
+          break;
+      }
+      switchAlert({
+        alert:'Evento creado',
+        color:'bg-blue-600',
+      });
+      setEventFormValues(initialState);
+      window.scrollTo({ top:0, behavior:'smooth' });
+    } catch (error) {
+      switchAlert({ 
+        alert:'Ha ocurrido un error, inténtalo más tarde', 
+        color:'bg-red-600', 
+      });
+    }
+  }
+
+  function validateEventInformation () {
+    if (!bgImage || !description || !title || !day || !idExpositor || !eventType) {
+      switchAlert({ 
+        alert:'Ingresa todos los datos del expositor', 
+        color:'bg-red-600', 
+      });
+      return false;
+    } else return true;
+  }
+
+  async function processImage (event:any) {
+    const imageProcessed = await getImageFromFileInput(event) as string;
+    if (imageProcessed) setEventFormValues({ ...eventFormValues, bgImage:imageProcessed });
+  }
+
+  function editEvent () {}
   
   return (
     <NewElementForm 
       saveButtonText='Guardar evento' 
-      saveFunction={() => {}} 
+      saveFunction={() => saveEvent()} 
       action={currentAction}
       setAction={setCurrentAction}
       cleanAction={() => cleanForm()}
@@ -346,21 +427,30 @@ function NewEventForm ({ formRef, setEventFormValues, eventFormValues, handleInp
         <label>Fecha</label>
         <DatePicker 
           className={lightInput} 
-          selected={day} 
-          onChange={(date:Date) => setEventFormValues({ ...eventFormValues, day:date })} 
+          selected={new Date} 
+          onChange={(date:Date) => setEventFormValues({ ...eventFormValues, day:date.toString() })} 
           locale="es"
           dateFormat="dd/MM/yyyy"
         />
       </div>
       <div className='flex flex-col'>
         <label>Hora</label>
-        <TimePicker className={lightInput} showSecond={false}/>
+        <TimePicker 
+          className={lightInput} 
+          showSecond={false} 
+          onChange={(value) => {
+            setEventFormValues({ ...eventFormValues, hour:`${value.hour()}:${value.minutes()}`});
+          }}
+        />
       </div>
       <div className='flex flex-col'>
         <label className='mb-1'>Imagen del evento</label>
-        <div className='flex gap-6 items-center'>
-          <RoundedButton color='blue-500' icon={faUpload} className='w-6/12'/>
-          <small className='w-6/12'>No has seleccionado algún archivo</small>
+        <div className='flex gap-6'>
+          <InputFiles onChange={(files:any, event:any) => processImage(event)} style={{ width:'33%' }}>
+            <RoundedButton color='blue-500' icon={faUpload} className='w-full'/>
+          </InputFiles>
+          {bgImage && <RoundedButton color='gray-300' icon={faImage} className='w-4/12' action={() => setImg(bgImage)}/>}
+          {bgImage && <RoundedButton color='gray-800' icon={faTimes} className='w-4/12' action={() => setEventFormValues({ ...eventFormValues, bgImage:'' })}/>}
         </div>
       </div>
     </NewElementForm>

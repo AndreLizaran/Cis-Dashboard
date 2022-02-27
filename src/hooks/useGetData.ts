@@ -10,7 +10,11 @@ import {
   getExpositoresApi, 
   getPonenciasApi, 
   getTalleresApi, 
-  saveNewExpositorApi
+  saveNewConferencia, 
+  saveNewCurso, 
+  saveNewExpositorApi,
+  saveNewPonencia,
+  saveNewTaller
 } from '../api';
 
 export function useGetTalleres() {
@@ -40,6 +44,8 @@ export function useGetPonencias() {
 export function useGetData () {
 
   const queryClient = useQueryClient();
+
+  // Expositores
 
   function useEditExpositor () {
     return useMutation(editExpositorApi, {
@@ -71,11 +77,49 @@ export function useGetData () {
     });
   }
 
+  // Eventos
+
+  function useSaveNewTaller () {
+    return useMutation(saveNewTaller, {
+      onSuccess: () => {
+        queryClient.invalidateQueries('save-taller');
+      }
+    })
+  }
+
+  function useSaveNewConferencia () {
+    return useMutation(saveNewConferencia, {
+      onSuccess: () => {
+        queryClient.invalidateQueries('save-conferencia');
+      }
+    })
+  }
+
+  function useSaveNewCurso () {
+    return useMutation(saveNewCurso, {
+      onSuccess: () => {
+        queryClient.invalidateQueries('save-curso');
+      }
+    })
+  }
+
+  function useSaveNewPonencia () {
+    return useMutation(saveNewPonencia, {
+      onSuccess: () => {
+        queryClient.invalidateQueries('save-ponencia');
+      }
+    })
+  }
+
   return {
     useEditExpositor,
     useSaveNewExpositor,
     useGetExpositores,
-    useDeleteExpositor
+    useDeleteExpositor,
+    useSaveNewTaller,
+    useSaveNewConferencia,
+    useSaveNewCurso,
+    useSaveNewPonencia
   }
 
 }

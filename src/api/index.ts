@@ -10,9 +10,19 @@ export type EventType = {
   title:string;
   bgImage:string;
   description:string;
-  day:Date;
+  day:string;
   hour:string;
   eventType:number;
+}
+
+export type CleanEventType = {
+  id:number;
+  idExpositor:number;
+  title:string;
+  bgImage:string;
+  description:string;
+  day:string;
+  hour:string;
 }
 
 export type Expositor = {
@@ -23,21 +33,7 @@ export type Expositor = {
   bgImage:string;
 }
 
-export function getTalleresApi () {
-  return axiosInstance.get<EventType[]>('/talleres');
-}
-
-export function getConferenciasApi () {
-  return axiosInstance.get<EventType[]>('/conferencias');
-}
-
-export function getCursosApi () {
-  return axiosInstance.get<EventType[]>('/cursos');
-}
-
-export function getPonenciasApi () {
-  return axiosInstance.get<EventType[]>('/ponencias');
-}
+// Expositores
 
 export function getExpositoresApi () {
   return axiosInstance.get<Expositor[]>('/expositores');
@@ -53,4 +49,40 @@ export function editExpositorApi (data:Expositor) {
 
 export function deleteExpositor (id:string | number) {
   return axiosInstance.delete(`/expositores/${id}`);
+}
+
+// Eventos get
+
+export function getTalleresApi () {
+  return axiosInstance.get<EventType[]>('/talleres');
+}
+
+export function getConferenciasApi () {
+  return axiosInstance.get<EventType[]>('/conferencias');
+}
+
+export function getCursosApi () {
+  return axiosInstance.get<EventType[]>('/cursos');
+}
+
+export function getPonenciasApi () {
+  return axiosInstance.get<EventType[]>('/ponencias');  
+}
+
+// Eventos post
+
+export function saveNewTaller (data:CleanEventType) {
+  return axiosInstance.post(`/talleres`, data);
+}
+
+export function saveNewConferencia (data:CleanEventType) {
+  return axiosInstance.post(`/conferencias`, data);
+}
+
+export function saveNewPonencia (data:CleanEventType) {
+  return axiosInstance.post(`/ponencias`, data);
+}
+
+export function saveNewCurso (data:CleanEventType) {
+  return axiosInstance.post(`/cursos`, data);
 }
