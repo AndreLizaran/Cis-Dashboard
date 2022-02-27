@@ -1,8 +1,8 @@
 // Modules
 import { RefObject, useRef, useState } from 'react';
+import TimePicker from 'rc-time-picker';
 // @ts-ignore
 import DatePicker from "react-datepicker";
-import TimePicker from 'rc-time-picker';
 // @ts-ignore
 import InputFiles from 'react-input-files';
 
@@ -23,13 +23,12 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 // Components
 import H2 from '../../components/H2';
+import ImageViewer from '../../components/ImageViewer';
 import RoundedButton from '../../components/RoundedButton';
 import NewElementForm from '../../components/NewElementForm';
 import InformationContainer from '../../components/InformationContainer';
 
 // Hooks
-import { useUIContext } from '../../hooks/useCustomContext';
-import useFormValues from '../../hooks/useFormValues';
 import { 
   useGetTalleres, 
   useGetConferencias, 
@@ -37,14 +36,15 @@ import {
   useGetPonencias, 
   useGetData
 } from '../../hooks/useGetData';
+import useFormValues from '../../hooks/useFormValues';
+import useProcessImage from '../../hooks/useProcessImage';
+import { useUIContext } from '../../hooks/useCustomContext';
 
 // Classes
 import { fadeInUp, lightInput } from '../../classes';
 
 // Types
 import { EventType } from '../../api';
-import ImageViewer from '../../components/ImageViewer';
-import useProcessImage from '../../hooks/useProcessImage';
 
 const initialState:EventType = {
   id:0,

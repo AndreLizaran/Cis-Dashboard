@@ -2,22 +2,31 @@
 import { Dispatch, RefObject, SetStateAction, useRef, useState } from 'react';
 // @ts-ignore
 import InputFiles from 'react-input-files';
-import { faImage, faPencil, faPlus, faTimes, faUpload, faUserCheck } from '@fortawesome/free-solid-svg-icons'
+
+// Icons
+import { 
+  faImage,
+  faPencil, 
+  faPlus, 
+  faTimes, 
+  faUpload, 
+  faUserCheck
+} from '@fortawesome/free-solid-svg-icons'
 
 // Api
 import { Expositor } from '../../api';
 
 // Components
 import H2 from '../../components/H2'
+import ImageViewer from '../../components/ImageViewer';
 import RoundedButton from '../../components/RoundedButton'
 import NewElementForm from '../../components/NewElementForm';
 import InformationContainer from '../../components/InformationContainer';
-import ImageViewer from '../../components/ImageViewer';
 
 // Hooks
+import { useGetData } from '../../hooks/useGetData';
 import useProcessImage from '../../hooks/useProcessImage';
 import { useUIContext } from '../../hooks/useCustomContext';
-import { useGetData } from '../../hooks/useGetData';
 
 // Classes
 import { fadeInUp, lightInput } from '../../classes';
