@@ -1,7 +1,16 @@
+// Modules
 import { useState } from 'react';
+
+// Classes
 import { lightInput } from '../classes';
+
+// Components
 import RoundedButton from '../components/RoundedButton';
+
+// Hooks
 import useFormValues from '../hooks/useFormValues';
+import { useGetData } from '../hooks/useGetData';
+import { useNavigate } from 'react-router-dom';
 
 export default function Login() {
   return (
@@ -25,8 +34,8 @@ export default function Login() {
 }
 
 const initialState = {
-  email:'',
-  password:''
+  email:'andrelizaran@gmail.com',
+  password:'12345678'
 }
 
 function LoginForm () {
@@ -35,10 +44,28 @@ function LoginForm () {
   const [errorInputs, setErrorInputs] = useState({ errorEmail:'', errorPassword:'' });
   const { errorEmail, errorPassword } = errorInputs;
   const { email, password } = inputValues;
+  const { useLoginUser } = useGetData();
+  const { mutateAsync, isLoading } = useLoginUser();
+  const [error500, setError500] = useState(false);
+  const navigation = useNavigate();
 
   function login () {
     if (!validateInformation()) return;
-    
+    try {
+      // mutateAsync(inputValues);
+      localStorage.setItem('cis-dashboard-token', 'token-super-secreto');
+      navigation('/');
+    } catch (error:any) {
+      setError500(true);
+    }
+  }
+
+  function ErrorAlert () {
+    return (
+      <div className='px-4 py-3 bg-red-500 text-white mb-4 rounded text-center'>
+        <span>Algo a salido mal, inténtalo más tarde</span>
+      </div>
+    )
   }
 
   function validateInformation () {
@@ -82,6 +109,7 @@ function LoginForm () {
 
   return (
     <form className='flex flex-col' onSubmit={(e) => { e.preventDefault(); login(); }}>
+      {error500 && <ErrorAlert/>}
       <label>Correo</label>   
       <input 
         className={`${lightInput}`} 
@@ -90,6 +118,7 @@ function LoginForm () {
         autoComplete='off' 
         type='email'
         name='email'
+        disabled={isLoading}
       />
       {errorEmail && <small className='text-red-500 mt-1'>{errorEmail}</small>}
       <label className='mt-4'>Contraseña</label> 
@@ -100,6 +129,7 @@ function LoginForm () {
         autoComplete='off'
         type='password'
         name='password'
+        disabled={isLoading}
       /> 
       {errorPassword && <small className='text-red-500 mt-1'>{errorPassword}</small>}
       <RoundedButton 
@@ -108,6 +138,7 @@ function LoginForm () {
         style={{ alignSelf:'start' }}
         type='submit'
         className='mt-6'
+        isLoading={isLoading}
       />
     </form>
   )

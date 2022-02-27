@@ -10,6 +10,7 @@ import {
   getExpositoresApi, 
   getPonenciasApi, 
   getTalleresApi, 
+  loginUser, 
   saveNewConferencia, 
   saveNewCurso, 
   saveNewExpositorApi,
@@ -45,8 +46,12 @@ export function useGetData () {
 
   const queryClient = useQueryClient();
 
-  // Expositores
+  // Login
+  function useLoginUser () {
+    return useMutation(loginUser);
+  }
 
+  // Expositores
   function useEditExpositor () {
     return useMutation(editExpositorApi, {
       onSuccess: () => {
@@ -78,7 +83,6 @@ export function useGetData () {
   }
 
   // Eventos
-
   function useSaveNewTaller () {
     return useMutation(saveNewTaller, {
       onSuccess: () => {
@@ -119,7 +123,8 @@ export function useGetData () {
     useSaveNewTaller,
     useSaveNewConferencia,
     useSaveNewCurso,
-    useSaveNewPonencia
+    useSaveNewPonencia,
+    useLoginUser
   }
 
 }

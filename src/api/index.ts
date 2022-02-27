@@ -33,8 +33,17 @@ export type Expositor = {
   bgImage:string;
 }
 
-// Expositores
+export type Login = {
+  email:string;
+  password:string;
+}
 
+// Login
+export function loginUser (data:Login) {
+  return axiosInstance.post('/login', data);
+}
+
+// Expositores
 export function getExpositoresApi () {
   return axiosInstance.get<Expositor[]>('/expositores');
 }
@@ -52,7 +61,6 @@ export function deleteExpositor (id:string | number) {
 }
 
 // Eventos get
-
 export function getTalleresApi () {
   return axiosInstance.get<EventType[]>('/talleres');
 }
@@ -70,7 +78,6 @@ export function getPonenciasApi () {
 }
 
 // Eventos post
-
 export function saveNewTaller (data:CleanEventType) {
   return axiosInstance.post(`/talleres`, data);
 }
