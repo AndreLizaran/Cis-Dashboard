@@ -73,6 +73,7 @@ export default function Events() {
   } = useFormValues(initialState);
   const [currentAction, setCurrentAction] = useState<'create' | 'edit'>('create');
   const [img, setImg] = useState('');
+  const [informationHelper, setInformationHelper] = useState({ idEvent:0, eventType:0 });
 
   return (
     <>
@@ -87,7 +88,12 @@ export default function Events() {
         />
       </div>
       <div className={`flex flex-col ${fadeInUp}`}>
-        <EventsContainer setEventFormValues={setEventFormValues} formRef={formRef} setCurrentAction={setCurrentAction}/>
+        <EventsContainer 
+          setEventFormValues={setEventFormValues} 
+          formRef={formRef} 
+          setCurrentAction={setCurrentAction} 
+          setInformationHelper={setInformationHelper}
+        />
         <div className={`flex flex-col gap-6 ${showDashboardBar ? '2xl:grid 2xl:grid-cols-2' : 'lg:grid lg:grid-cols-2'}`}>
           <InformationContainer
             headerColor={currentAction === 'create' ? 'bg-gray-800' : 'bg-blue-500'}
@@ -103,6 +109,7 @@ export default function Events() {
               currentAction={currentAction}
               setCurrentAction={setCurrentAction}
               setImg={setImg}
+              informationHelper={informationHelper}
             />
           </InformationContainer>
         </div>
@@ -116,9 +123,10 @@ type EventsContainerProps = {
   setEventFormValues: React.Dispatch<React.SetStateAction<EventType>>;
   formRef: RefObject<HTMLInputElement>;
   setCurrentAction: React.Dispatch<React.SetStateAction<'create' | 'edit'>>
+  setInformationHelper: React.Dispatch<React.SetStateAction<{ idEvent:number, eventType:number }>>
 }
 
-function EventsContainer ({ setEventFormValues, formRef, setCurrentAction }:EventsContainerProps) {
+function EventsContainer ({ setEventFormValues, formRef, setCurrentAction, setInformationHelper }:EventsContainerProps) {
 
   const { state } = useUIContext();
   const { showDashboardBar } = state;
@@ -209,12 +217,16 @@ function EventsContainer ({ setEventFormValues, formRef, setCurrentAction }:Even
               headerText={headerText} 
               key={index}
             >
-              {
-                isLoading 
-                ? 
-                <FontAwesomeIcon icon={faSpinner} className='fa-spin'/>
-                :
-                <EventsList data={data} setEventFormValues={setEventFormValues} formRef={formRef} setCurrentAction={setCurrentAction}/>
+              { isLoading 
+                ? <FontAwesomeIcon icon={faSpinner} className='fa-spin'/>
+                : 
+                <EventsList 
+                  data={data} 
+                  setEventFormValues={setEventFormValues} 
+                  formRef={formRef} 
+                  setCurrentAction={setCurrentAction}
+                  setInformationHelper={setInformationHelper}
+                />
               }
             </InformationContainer>
           )
@@ -229,13 +241,21 @@ type EventListProps = {
   setEventFormValues:React.Dispatch<React.SetStateAction<EventType>>;
   formRef:RefObject<HTMLInputElement>;
   setCurrentAction: React.Dispatch<React.SetStateAction<'create' | 'edit'>>;
+  setInformationHelper: React.Dispatch<React.SetStateAction<{ idEvent:number, eventType:number }>>
 }
 
-function EventsList ({ data, setEventFormValues, formRef, setCurrentAction }:EventListProps) {
+function EventsList ({ data, setEventFormValues, formRef, setCurrentAction, setInformationHelper }:EventListProps) {
   return (
     <div className='flex flex-col gap-6'>
       {data.map((event, index) => (
-        <EventCard key={index} event={event} setEventFormValues={setEventFormValues} formRef={formRef} setCurrentAction={setCurrentAction}/>
+        <EventCard 
+          key={index} 
+          event={event} 
+          setEventFormValues={setEventFormValues} 
+          formRef={formRef} 
+          setCurrentAction={setCurrentAction}
+          setInformationHelper={setInformationHelper}
+        />
       ))}
     </div>
   )
@@ -245,21 +265,33 @@ type EventCardProps = {
   event:EventType;
   setEventFormValues:React.Dispatch<React.SetStateAction<EventType>>
   formRef:RefObject<HTMLInputElement>;
-  setCurrentAction: React.Dispatch<React.SetStateAction<'create' | 'edit'>>;
-
+  setCurrentAction: React.Dispatch<React.SetStateAction<'create' | 'edit'>>
+  setInformationHelper: React.Dispatch<React.SetStateAction<{ idEvent:number, eventType:number }>>
 }
 
-function EventCard ({ event, setEventFormValues, formRef, setCurrentAction }:EventCardProps) {
+function EventCard ({ event, setEventFormValues, formRef, setCurrentAction, setInformationHelper }:EventCardProps) {
 
-  const { title, description, expositor } = event;
+  const { title, expositor } = event;
 
   return (
     <div className='flex flex-col border border-gray-200 rounded w-full'>
       <div 
         className='rounded-t'
-        style={{ width:'100%', backgroundImage:`url(${event.bgImage})`, height:150, backgroundPosition:'center', backgroundSize:'cover' }}
+        style={{ 
+          width:'100%', 
+          backgroundImage:`url(${event.bgImage})`, 
+          height:150, 
+          backgroundPosition:'center', 
+          backgroundSize:'cover' 
+        }}
       />
-      <div className='flex flex-col items-center' style={{ top:-30, position:'relative' }}>
+      <div 
+        className='flex flex-col items-center' 
+        style={{ 
+          top:-30, 
+          position:'relative' 
+        }}
+      >
         <img
           src={expositor.image}
           style={{ height:60, width:60, borderRadius:100 }}
@@ -267,7 +299,6 @@ function EventCard ({ event, setEventFormValues, formRef, setCurrentAction }:Eve
         />
         <div className='flex flex-col text-center items-center'>
           <h2>{title} - {expositor.name}</h2>
-          {/* <small className='w-8/12'>{description}</small> */}
           <div className='flex gap-3 text-gray-400'>
             <small>Día: {event.day}</small>
             <small>Hora: {event.hour}</small>
@@ -280,9 +311,11 @@ function EventCard ({ event, setEventFormValues, formRef, setCurrentAction }:Eve
             style={{ fontSize:12 }}
             action={() => {
               var date = new Date();
+              console.log(event.eventType);
               setCurrentAction('edit');
               setEventFormValues({ ...event, day:date.toString() });
               formRef.current?.focus();
+              setInformationHelper({ idEvent:event.id, eventType:event.eventType });
             }}
           />
         </div>
@@ -299,9 +332,10 @@ type NewEventFormProps = {
   currentAction: 'create' | 'edit';
   setCurrentAction: React.Dispatch<React.SetStateAction<'create' | 'edit'>>;
   setImg: React.Dispatch<React.SetStateAction<string>>;
+  informationHelper: { idEvent:number, eventType:number }
 }
 
-function NewEventForm ({ formRef, setEventFormValues, eventFormValues, handleInputs, currentAction, setCurrentAction, setImg }:NewEventFormProps) {
+function NewEventForm ({ formRef, setEventFormValues, eventFormValues, handleInputs, currentAction, setCurrentAction, setImg, informationHelper }:NewEventFormProps) {
 
   const { bgImage, day, title, description, idExpositor, eventType, hour } = eventFormValues; 
   const { switchAlert } = useUIContext();
@@ -312,14 +346,22 @@ function NewEventForm ({ formRef, setEventFormValues, eventFormValues, handleInp
     useSaveNewConferencia, 
     useSaveNewCurso, 
     useSaveNewPonencia, 
-    useSaveNewTaller 
+    useSaveNewTaller,
+    useDeleteTaller,
+    useDeleteConferencia,
+    useDeleteCurso,
+    useDeletePonencia
   } = useGetData();
 
-  const { data } = useGetExpositores();
+  const { data } = useGetExpositores(); 
   const { mutateAsync:saveTaller } = useSaveNewTaller();
   const { mutateAsync:saveConferencia } = useSaveNewConferencia();
   const { mutateAsync:saveCurso } = useSaveNewCurso();
   const { mutateAsync:savePonencia } = useSaveNewPonencia();
+  const { mutateAsync:deleteTaller } = useDeleteTaller();
+  const { mutateAsync:deleteConferencia } = useDeleteConferencia();
+  const { mutateAsync:deleteCurso } = useDeleteCurso();
+  const { mutateAsync:deletePonencia } = useDeletePonencia();
 
   function cleanForm () { setEventFormValues(initialState) }
 
@@ -378,7 +420,37 @@ function NewEventForm ({ formRef, setEventFormValues, eventFormValues, handleInp
     if (imageProcessed) setEventFormValues({ ...eventFormValues, bgImage:imageProcessed });
   }
 
-  function editEvent () {}
+  async function editEvent () {}
+
+  async function deleteEvent () {
+    try {
+      const request = getEventToDelete();
+      await request(informationHelper.idEvent);
+      switchAlert({ 
+        alert:'Ha sido eliminado el evento', 
+        color:'bg-red-600', 
+      });
+      window.scrollTo({ top:0, behavior:'smooth' });
+      setEventFormValues(initialState);
+    } catch (error:any) {
+      console.log(error);
+    }
+  }
+
+  function getEventToDelete () {
+    switch (informationHelper.eventType) {
+      case 1:
+        return deleteTaller;
+      case 2:
+        return deleteConferencia;
+      case 3:
+        return deleteCurso;
+      case 4:
+        return deletePonencia;
+      default: 
+        return deleteTaller;
+    }
+  }
   
   return (
     <NewElementForm 
@@ -387,7 +459,7 @@ function NewEventForm ({ formRef, setEventFormValues, eventFormValues, handleInp
       action={currentAction}
       setAction={setCurrentAction}
       cleanAction={() => cleanForm()}
-      deleteAction={() => {}}
+      deleteAction={() => deleteEvent()}
       deleteText='Eliminar evento'
     >
       <div className='flex flex-col'>
@@ -408,7 +480,7 @@ function NewEventForm ({ formRef, setEventFormValues, eventFormValues, handleInp
         >
           {data && data.map(({ name, id }) => <option key={id} value={id}>{name}</option>)}
         </select>
-        <small className='underline mt-2 cursor-pointer'>Agregar nuevo expositor</small>
+        {/* <small className='underline mt-2 cursor-pointer'>Agregar nuevo expositor</small> */}
       </div>
       <div className='flex flex-col'>
         <label>Tipo de evento</label>

@@ -3,7 +3,11 @@ import { useMutation, useQuery, useQueryClient } from 'react-query';
 
 // Endpoints
 import { 
+  deleteConferencia,
+  deleteCurso,
   deleteExpositor,
+  deletePonencia,
+  deleteTaller,
   editExpositorApi,
   getConferenciasApi,
   getCursosApi, 
@@ -121,6 +125,24 @@ export function useGetData () {
     })
   }
 
+
+  // Delete
+  function useDeleteTaller () {
+    return useMutation(deleteTaller);
+  }
+
+  function useDeleteConferencia () {
+    return useMutation(deleteConferencia);
+  }
+
+  function useDeleteCurso () {
+    return useMutation(deleteCurso);
+  }
+
+  function useDeletePonencia () {
+    return useMutation(deletePonencia);
+  }
+
   return {
     useEditExpositor,
     useSaveNewExpositor,
@@ -131,7 +153,11 @@ export function useGetData () {
     useSaveNewCurso,
     useSaveNewPonencia,
     useLoginUser,
-    useValidateToken
+    useValidateToken,
+    useDeleteTaller,
+    useDeleteConferencia,
+    useDeleteCurso,
+    useDeletePonencia
   }
 
 }

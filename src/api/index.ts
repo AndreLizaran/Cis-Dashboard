@@ -101,3 +101,20 @@ export function saveNewPonencia (data:CleanEventType) {
 export function saveNewCurso (data:CleanEventType) {
   return axiosInstance.post(`/cursos`, data);
 }
+
+// Eventos delete
+export function deleteTaller (id:number) {
+  return axiosInstance.delete(`/talleres/${id}`);
+}
+
+export function deleteConferencia (id:number) {
+  return axiosInstance.delete(`/conferencias/${id}` );
+}
+
+export function deletePonencia (id:number) {
+  return axiosInstance.delete(`/ponencias/${id}`);
+}
+
+export function deleteCurso (id:number) {
+  return axiosInstance.delete(`/cursos/${id}`);
+}
