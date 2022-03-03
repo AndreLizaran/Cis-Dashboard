@@ -1,6 +1,15 @@
 {
   "talleres": [
     {
+      "id": 1,
+      "idExpositor": 1,
+      "bgImage": "https://www.elegantthemes.com/blog/wp-content/uploads/2019/01/web-design-blog.png",
+      "title": "Event test #1",
+      "day": "17/02/2022",
+      "hour": "16:00",
+      "description": "Deserunt ut irure do dolore non.Do nisi nostrud do laborum sint adipisicing aliquip ut nulla."
+    },
+    {
       "id": 2,
       "idExpositor": 2,
       "bgImage": "https://www.propatel.com/wp-content/uploads/2019/09/coding-and-testing-programming-of-software.jpg",
@@ -39,6 +48,15 @@
   ],
   "cursos": [
     {
+      "id": 1,
+      "idExpositor": 5,
+      "bgImage": "https://www.elegantthemes.com/blog/wp-content/uploads/2019/01/web-design-blog.png",
+      "title": "Event test #1",
+      "day": "17/02/2022",
+      "hour": "16:00",
+      "description": "Deserunt ut irure do dolore non.Do nisi nostrud do laborum sint adipisicing aliquip ut nulla."
+    },
+    {
       "id": 3,
       "idExpositor": 5,
       "bgImage": "https://kinsta.com/wp-content/uploads/2020/04/code-review-tools.png",
@@ -46,9 +64,55 @@
       "day": "17/02/2022",
       "hour": "16:00",
       "description": "Deserunt ut irure do dolore non.Do nisi nostrud do laborum sint adipisicing aliquip ut nulla."
+    },
+    {
+      "id": 4,
+      "idExpositor": 5,
+      "bgImage": "https://static.techspot.com/images2/news/bigimage/2019/10/2019-10-25-image-5.jpg",
+      "title": "Event test #4",
+      "day": "17/02/2022",
+      "hour": "16:00",
+      "description": "Deserunt ut irure do dolore non.Do nisi nostrud do laborum sint adipisicing aliquip ut nulla."
+    },
+    {
+      "id": 5,
+      "idExpositor": 5,
+      "bgImage": "https://www.elegantthemes.com/blog/wp-content/uploads/2019/01/web-design-blog.png",
+      "title": "Event test #5",
+      "day": "17/02/2022",
+      "hour": "16:00",
+      "description": "Deserunt ut irure do dolore non.Do nisi nostrud do laborum sint adipisicing aliquip ut nulla."
     }
   ],
-  "ponencias": [],
+  "ponencias": [
+    {
+      "id": 3,
+      "idExpositor": 5,
+      "bgImage": "https://kinsta.com/wp-content/uploads/2020/04/code-review-tools.png",
+      "title": "Event test #3",
+      "day": "17/02/2022",
+      "hour": "16:00",
+      "description": "Deserunt ut irure do dolore non.Do nisi nostrud do laborum sint adipisicing aliquip ut nulla."
+    },
+    {
+      "id": 1,
+      "idExpositor": 5,
+      "bgImage": "https://www.elegantthemes.com/blog/wp-content/uploads/2019/01/web-design-blog.png",
+      "title": "Event test #1",
+      "day": "17/02/2022",
+      "hour": "16:00",
+      "description": "Deserunt ut irure do dolore non.Do nisi nostrud do laborum sint adipisicing aliquip ut nulla."
+    },
+    {
+      "id": 2,
+      "idExpositor": 5,
+      "bgImage": "https://static.techspot.com/images2/news/bigimage/2019/10/2019-10-25-image-5.jpg",
+      "title": "Event test #2",
+      "day": "17/02/2022",
+      "hour": "16:00",
+      "description": "Deserunt ut irure do dolore non.Do nisi nostrud do laborum sint adipisicing aliquip ut nulla."
+    }
+  ],
   "conferencias": [
     {
       "id": 4,

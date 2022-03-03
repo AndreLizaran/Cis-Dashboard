@@ -1,5 +1,5 @@
 // Modules
-import { RefObject, useRef, useState } from 'react';
+import { RefObject, SetStateAction, useEffect, useRef, useState } from 'react';
 import TimePicker from 'rc-time-picker';
 // @ts-ignore
 import DatePicker from "react-datepicker";
@@ -29,19 +29,13 @@ import NewElementForm from '../../components/NewElementForm';
 import InformationContainer from '../../components/InformationContainer';
 
 // Hooks
-import { 
-  useGetTalleres, 
-  useGetConferencias, 
-  useGetCursos, 
-  useGetPonencias, 
-  useGetData
-} from '../../hooks/useGetData';
+import { useGetData } from '../../hooks/useGetData';
 import useFormValues from '../../hooks/useFormValues';
 import useProcessImage from '../../hooks/useProcessImage';
 import { useUIContext } from '../../hooks/useCustomContext';
 
 // Classes
-import { fadeInUp, lightInput } from '../../classes';
+import { fadeIn, fadeInUp, lightInput } from '../../classes';
 
 // Types
 import { EventType } from '../../api';
@@ -61,78 +55,23 @@ const initialState:EventType = {
   eventType:1,
 }
 
+type InformationHelper = { idEvent:number, eventType:number };
+
 export default function Events() {
 
   const { state } = useUIContext();
   const { showDashboardBar } = state;
   const formRef = useRef<HTMLInputElement>(null);
-  const { 
-    handleInputs, 
-    inputValues:eventFormValues, 
-    setInputValues:setEventFormValues 
-  } = useFormValues(initialState);
   const [currentAction, setCurrentAction] = useState<'create' | 'edit'>('create');
-  const [img, setImg] = useState('');
   const [informationHelper, setInformationHelper] = useState({ idEvent:0, eventType:0 });
+  const [img, setImg] = useState('');
 
-  return (
-    <>
-      <div className='flex justify-between items-center mb-6 w-full' style={{ overflowY:'hidden' }}>
-        <H2>Eventos</H2>
-        <RoundedButton
-          color='red-600'
-          square={true}
-          icon={faPlus}
-          className={`${!showDashboardBar && 'mr-14'}`}
-          action={() => formRef.current?.focus()}
-        />
-      </div>
-      <div className={`flex flex-col ${fadeInUp}`}>
-        <EventsContainer 
-          setEventFormValues={setEventFormValues} 
-          formRef={formRef} 
-          setCurrentAction={setCurrentAction} 
-          setInformationHelper={setInformationHelper}
-        />
-        <div className={`flex flex-col gap-6 ${showDashboardBar ? '2xl:grid 2xl:grid-cols-2' : 'lg:grid lg:grid-cols-2'}`}>
-          <InformationContainer
-            headerColor={currentAction === 'create' ? 'bg-gray-800' : 'bg-blue-500'}
-            headerText={currentAction === 'create' ? 'Registrar nuevo evento' : 'Editar evento'}
-            headerIcon={faPlus}
-            maxHeight={false}
-          >
-            <NewEventForm 
-              formRef={formRef} 
-              setEventFormValues={setEventFormValues} 
-              eventFormValues={eventFormValues} 
-              handleInputs={handleInputs}
-              currentAction={currentAction}
-              setCurrentAction={setCurrentAction}
-              setImg={setImg}
-              informationHelper={informationHelper}
-            />
-          </InformationContainer>
-        </div>
-      </div>
-      {img && <ImageViewer img={img} setImg={setImg}/>}
-    </>
-  )
-}
-
-type EventsContainerProps = {
-  setEventFormValues: React.Dispatch<React.SetStateAction<EventType>>;
-  formRef: RefObject<HTMLInputElement>;
-  setCurrentAction: React.Dispatch<React.SetStateAction<'create' | 'edit'>>
-  setInformationHelper: React.Dispatch<React.SetStateAction<{ idEvent:number, eventType:number }>>
-}
-
-function EventsContainer ({ setEventFormValues, formRef, setCurrentAction, setInformationHelper }:EventsContainerProps) {
-
-  const { state } = useUIContext();
-  const { showDashboardBar } = state;
-  const { useGetExpositores } = useGetData();
-
-  const { data:dataExpositores, isLoading:isLoadingExpositores } = useGetExpositores();
+  const { 
+    useGetTalleres,
+    useGetConferencias,
+    useGetCursos,
+    useGetPonencias
+  } = useGetData();
 
   const { 
     isLoading:isLoadingTalleres,
@@ -154,111 +93,249 @@ function EventsContainer ({ setEventFormValues, formRef, setCurrentAction, setIn
     data:dataPonencias
   } = useGetPonencias();
 
+  const [
+    talleresInformation, 
+    setTalleresInformation
+  ] = useState<EventType[]>([]);
+
+  const [
+    conferenciasInformation, 
+    setConferenciasInformation
+  ] = useState<EventType[]>([]);
+
+  const [
+    cursosInformation, 
+    setCursosInformation
+  ] = useState<EventType[]>([]);
+
+  const [
+    ponenciasInformation, 
+    setPonenciasInformation
+  ] = useState<EventType[]>([]);
+
+  useEffect(() => {
+    if (!isLoadingTalleres && dataTalleres !== undefined) 
+      setTalleresInformation(dataTalleres);
+  }, [isLoadingTalleres]);
+
+  useEffect(() => {
+    if (!isLoadingConferencias && dataConferencias !== undefined) 
+      setConferenciasInformation(dataConferencias);
+  }, [isLoadingConferencias]);
+
+  useEffect(() => {
+    if (!isLoadingCursos && dataCursos !== undefined) 
+      setCursosInformation(dataCursos);
+  }, [isLoadingCursos]);
+
+  useEffect(() => {
+    if (!isLoadingPonencias && dataPonencias !== undefined) 
+      setPonenciasInformation(dataPonencias);
+  }, [isLoadingPonencias]);
+  
+
+  const talleres = {
+    isLoadingTalleres,
+    talleresInformation,
+    setTalleresInformation
+  }
+
+  const conferencias = {
+    isLoadingConferencias,
+    conferenciasInformation,
+    setConferenciasInformation
+  }
+
+  const cursos = {
+    isLoadingCursos,
+    cursosInformation,
+    setCursosInformation
+  }  
+
+  const ponencias = {
+    isLoadingPonencias,
+    ponenciasInformation,
+    setPonenciasInformation
+  }
+
+  const { 
+    handleInputs, 
+    inputValues:eventFormValues, 
+    setInputValues:setEventFormValues 
+  } = useFormValues(initialState);
+
+  return (
+    <>
+      <div className='flex justify-between items-center mb-6 w-full' style={{ overflowY:'hidden' }}>
+        <H2>Eventos</H2>
+        <RoundedButton
+          color='red-600'
+          square={true}
+          icon={faPlus}
+          className={`${!showDashboardBar && 'mr-14'}`}
+          action={() => formRef.current?.focus()}
+        />
+      </div>
+      <div className={`flex flex-col ${fadeIn}`}>
+        <EventsContainer 
+          setEventFormValues={setEventFormValues} 
+          formRef={formRef} 
+          setCurrentAction={setCurrentAction} 
+          setInformationHelper={setInformationHelper}
+          talleres={talleres}
+          conferencias={conferencias}
+          cursos={cursos}
+          ponencias={ponencias}
+        />
+        <div className={`flex flex-col gap-6 ${showDashboardBar ? '2xl:grid 2xl:grid-cols-2' : 'lg:grid lg:grid-cols-2'}`}>
+          <InformationContainer
+            headerColor={currentAction === 'create' ? 'bg-gray-800' : 'bg-blue-500'}
+            headerText={currentAction === 'create' ? 'Registrar nuevo evento' : 'Editar evento'}
+            headerIcon={faPlus}
+            maxHeight={false}
+          >
+            <NewEventForm 
+              formRef={formRef} 
+              setEventFormValues={setEventFormValues} 
+              eventFormValues={eventFormValues} 
+              handleInputs={handleInputs}
+              currentAction={currentAction}
+              setCurrentAction={setCurrentAction}
+              setImg={setImg}
+              informationHelper={informationHelper}
+              setInformationHelper={setInformationHelper}
+              talleres={talleres}
+              conferencias={conferencias}
+              cursos={cursos}
+              ponencias={ponencias}
+            />
+          </InformationContainer>
+        </div>
+      </div>
+      {img && <ImageViewer img={img} setImg={setImg}/>}
+    </>
+  )
+}
+
+type EventsContainerProps = {
+  setEventFormValues: React.Dispatch<React.SetStateAction<EventType>>;
+  formRef: RefObject<HTMLInputElement>;
+  setCurrentAction: React.Dispatch<React.SetStateAction<'create' | 'edit'>>
+  setInformationHelper: React.Dispatch<React.SetStateAction<InformationHelper>>
+  talleres: {
+    isLoadingTalleres: boolean,
+    talleresInformation: EventType[];
+  };
+  conferencias: {
+    isLoadingConferencias: boolean;
+    conferenciasInformation: EventType[];
+  };
+  cursos: {
+    isLoadingCursos: boolean;
+    cursosInformation: EventType[];
+  };
+  ponencias: {
+    isLoadingPonencias: boolean;
+    ponenciasInformation: EventType[];
+  };
+}
+
+function EventsContainer ({ 
+  setEventFormValues, 
+  formRef,
+  setCurrentAction, 
+  setInformationHelper,
+  talleres,
+  conferencias,
+  cursos,
+  ponencias
+}:EventsContainerProps) {
+
+  const { state } = useUIContext();
+  const { showDashboardBar } = state;
+  
   const infoContainers = [
     { 
       headerColor: 'bg-gray-800', 
       headerIcon: faToolbox, 
       headerText: 'Talleres',
-      data: dataTalleres || [],
-      isLoading: isLoadingTalleres,
-      eventType: 1
+      data: talleres.talleresInformation,
+      isLoading: talleres.isLoadingTalleres
     },
     { 
       headerColor: 'bg-gray-800', 
       headerIcon: faMicrophone, 
       headerText: 'Conferencias',
-      data: dataConferencias || [],
-      isLoading: isLoadingConferencias,
-      eventType: 2
+      data: conferencias.conferenciasInformation,
+      isLoading: conferencias.isLoadingConferencias
     },
     { 
       headerColor: 'bg-gray-800', 
       headerIcon: faCubes, 
       headerText: 'Cursos',
-      data: dataCursos || [],
-      isLoading: isLoadingCursos,
-      eventType: 3
+      data: cursos.cursosInformation,
+      isLoading: cursos.isLoadingCursos
     },
     { 
       headerColor: 'bg-gray-800', 
       headerIcon: faUserCheck, 
       headerText: 'Ponencias',
-      data: dataPonencias || [],
-      isLoading: isLoadingPonencias,
-      eventType: 4
+      data: ponencias.ponenciasInformation,
+      isLoading: ponencias.isLoadingPonencias
     },
   ]
 
-  if (isLoadingExpositores) return <></>
-  else {
-    return (
-      <div className={`flex flex-col gap-6 mb-6 sm:grid ${!showDashboardBar ? 'md:grid-cols-2 xl:grid-cols-3' : 'xl:grid-cols-2'}`}>
-        {infoContainers.map(({ headerColor, headerIcon, headerText, isLoading, data, eventType}, index) => {
-          data = data.map((evento) => {
-            evento = {
-              ...evento,
-              expositor: {
-                name:'',
-                image:''
-              },
-              eventType
-            }
-            let expositorInformation = dataExpositores?.filter((expositor) => expositor.id === evento.idExpositor) || [];
-            if (expositorInformation.length > 0) {
-              evento.expositor.name = expositorInformation[0].name; 
-              evento.expositor.image = expositorInformation[0].image; 
-            }
-            return evento;
-          });
-          return (
-            <InformationContainer
-              headerColor={headerColor}
-              headerIcon={headerIcon}
-              headerText={headerText} 
-              key={index}
-            >
-              { isLoading 
-                ? <FontAwesomeIcon icon={faSpinner} className='fa-spin'/>
-                : 
-                <EventsList 
-                  data={data} 
-                  setEventFormValues={setEventFormValues} 
-                  formRef={formRef} 
-                  setCurrentAction={setCurrentAction}
-                  setInformationHelper={setInformationHelper}
-                />
-              }
-            </InformationContainer>
-          )
-        })}
-      </div>
-    )
-  }
-}
-
-type EventListProps = {
-  data:EventType[];
-  setEventFormValues:React.Dispatch<React.SetStateAction<EventType>>;
-  formRef:RefObject<HTMLInputElement>;
-  setCurrentAction: React.Dispatch<React.SetStateAction<'create' | 'edit'>>;
-  setInformationHelper: React.Dispatch<React.SetStateAction<{ idEvent:number, eventType:number }>>
-}
-
-function EventsList ({ data, setEventFormValues, formRef, setCurrentAction, setInformationHelper }:EventListProps) {
   return (
-    <div className='flex flex-col gap-6'>
-      {data.map((event, index) => (
-        <EventCard 
-          key={index} 
-          event={event} 
-          setEventFormValues={setEventFormValues} 
-          formRef={formRef} 
-          setCurrentAction={setCurrentAction}
-          setInformationHelper={setInformationHelper}
-        />
+    <div className={`flex flex-col gap-6 mb-6 sm:grid ${!showDashboardBar ? 'md:grid-cols-2 xl:grid-cols-3' : 'xl:grid-cols-2'}`}>
+      {infoContainers.map(({ headerColor, headerIcon, headerText, data, isLoading}, index) => (
+        <InformationContainer
+          headerColor={headerColor}
+          headerIcon={headerIcon}
+          headerText={headerText} 
+          key={index}
+        >
+          <EventsList  
+            data={data} 
+            setEventFormValues={setEventFormValues} 
+            formRef={formRef} 
+            setCurrentAction={setCurrentAction}
+            setInformationHelper={setInformationHelper}
+            isLoading={isLoading}
+          />
+        </InformationContainer>
       ))}
     </div>
   )
+}
+
+type EventListProps = {
+  data: EventType[];
+  setEventFormValues:React.Dispatch<React.SetStateAction<EventType>>;
+  formRef:RefObject<HTMLInputElement>;
+  setCurrentAction: React.Dispatch<React.SetStateAction<'create' | 'edit'>>;
+  setInformationHelper: React.Dispatch<React.SetStateAction<{ idEvent:number, eventType:number }>>;
+  isLoading: boolean;
+}
+
+function EventsList ({ data, setEventFormValues, formRef, setCurrentAction, setInformationHelper, isLoading }:EventListProps) {
+
+  if (isLoading) return <FontAwesomeIcon icon={faSpinner} className='fa-spin'/>
+  else {
+    return (
+      <div className='flex flex-col gap-6'>
+        {data.map((event, index) => (
+          <EventCard 
+            key={index} 
+            event={event} 
+            setEventFormValues={setEventFormValues} 
+            formRef={formRef} 
+            setCurrentAction={setCurrentAction}
+            setInformationHelper={setInformationHelper}
+          />
+        ))}
+      </div>
+    )
+  }
 }
 
 type EventCardProps = {
@@ -311,7 +388,6 @@ function EventCard ({ event, setEventFormValues, formRef, setCurrentAction, setI
             style={{ fontSize:12 }}
             action={() => {
               var date = new Date();
-              console.log(event.eventType);
               setCurrentAction('edit');
               setEventFormValues({ ...event, day:date.toString() });
               formRef.current?.focus();
@@ -332,10 +408,41 @@ type NewEventFormProps = {
   currentAction: 'create' | 'edit';
   setCurrentAction: React.Dispatch<React.SetStateAction<'create' | 'edit'>>;
   setImg: React.Dispatch<React.SetStateAction<string>>;
-  informationHelper: { idEvent:number, eventType:number }
+  informationHelper: InformationHelper;
+  setInformationHelper: React.Dispatch<SetStateAction<InformationHelper>>;
+  talleres: {
+    setTalleresInformation: React.Dispatch<SetStateAction<EventType[]>>;
+    talleresInformation: EventType[];
+  };
+  conferencias: {
+    setConferenciasInformation: React.Dispatch<SetStateAction<EventType[]>>;
+    conferenciasInformation: EventType[];
+  };
+  cursos: {
+    setCursosInformation: React.Dispatch<SetStateAction<EventType[]>>;
+    cursosInformation: EventType[];
+  };
+  ponencias: {
+    setPonenciasInformation: React.Dispatch<SetStateAction<EventType[]>>;
+    ponenciasInformation: EventType[];
+  };
 }
 
-function NewEventForm ({ formRef, setEventFormValues, eventFormValues, handleInputs, currentAction, setCurrentAction, setImg, informationHelper }:NewEventFormProps) {
+function NewEventForm ({ 
+  formRef, 
+  setEventFormValues, 
+  eventFormValues, 
+  handleInputs, 
+  currentAction, 
+  setCurrentAction, 
+  setImg, 
+  informationHelper,
+  setInformationHelper,
+  talleres,
+  conferencias,
+  cursos,
+  ponencias,
+}:NewEventFormProps) {
 
   const { bgImage, day, title, description, idExpositor, eventType, hour } = eventFormValues; 
   const { switchAlert } = useUIContext();
@@ -362,8 +469,6 @@ function NewEventForm ({ formRef, setEventFormValues, eventFormValues, handleInp
   const { mutateAsync:deleteConferencia } = useDeleteConferencia();
   const { mutateAsync:deleteCurso } = useDeleteCurso();
   const { mutateAsync:deletePonencia } = useDeletePonencia();
-
-  function cleanForm () { setEventFormValues(initialState) }
 
   function saveEvent () {
     if (!validateEventInformation()) return;
@@ -395,8 +500,7 @@ function NewEventForm ({ formRef, setEventFormValues, eventFormValues, handleInp
         alert:'Evento creado',
         color:'bg-blue-600',
       });
-      setEventFormValues(initialState);
-      window.scrollTo({ top:0, behavior:'smooth' });
+      cleanFormAfterAction();
     } catch (error) {
       switchAlert({ 
         alert:'Ha ocurrido un error, inténtalo más tarde', 
@@ -420,7 +524,17 @@ function NewEventForm ({ formRef, setEventFormValues, eventFormValues, handleInp
     if (imageProcessed) setEventFormValues({ ...eventFormValues, bgImage:imageProcessed });
   }
 
-  async function editEvent () {}
+  async function editEvent () {
+    try {
+      switchAlert({ 
+        alert:'Ha sido editado el evento', 
+        color:'bg-blue-600', 
+      });
+      cleanFormAfterAction();
+    } catch (error:any) {
+      console.log(error);
+    }
+  }
 
   async function deleteEvent () {
     try {
@@ -430,10 +544,31 @@ function NewEventForm ({ formRef, setEventFormValues, eventFormValues, handleInp
         alert:'Ha sido eliminado el evento', 
         color:'bg-red-600', 
       });
-      window.scrollTo({ top:0, behavior:'smooth' });
-      setEventFormValues(initialState);
+      removeElementFromEvents();
+      cleanFormAfterAction();
     } catch (error:any) {
       console.log(error);
+    }
+  }
+
+  function removeElementFromEvents () {
+    switch (informationHelper.eventType) {
+      case 1:
+        let newTalleres = talleres.talleresInformation.filter((event) => event.id !== informationHelper.idEvent);
+        talleres.setTalleresInformation(newTalleres);
+        break;
+      case 2:
+        let newConferencias = conferencias.conferenciasInformation.filter((event) => event.id !== informationHelper.idEvent);
+        conferencias.setConferenciasInformation(newConferencias);
+        break;
+      case 3:
+        let newCursos = cursos.cursosInformation.filter((event) => event.id !== informationHelper.idEvent);
+        cursos.setCursosInformation(newCursos);
+        break;
+      case 4:
+        let newPonencias = ponencias.ponenciasInformation.filter((event) => event.id !== informationHelper.idEvent);
+        ponencias.setPonenciasInformation(newPonencias);
+        break;
     }
   }
 
@@ -451,6 +586,16 @@ function NewEventForm ({ formRef, setEventFormValues, eventFormValues, handleInp
         return deleteTaller;
     }
   }
+
+  function getEventToEdit () {
+    
+  }
+
+  function cleanFormAfterAction () {
+    window.scrollTo({ top:0, behavior:'smooth' });
+    setEventFormValues(initialState);
+    setInformationHelper({ eventType:0, idEvent:0 });
+  }
   
   return (
     <NewElementForm 
@@ -458,7 +603,7 @@ function NewEventForm ({ formRef, setEventFormValues, eventFormValues, handleInp
       saveFunction={() => saveEvent()} 
       action={currentAction}
       setAction={setCurrentAction}
-      cleanAction={() => cleanForm()}
+      cleanAction={() => cleanFormAfterAction()}
       deleteAction={() => deleteEvent()}
       deleteText='Eliminar evento'
     >
@@ -468,8 +613,15 @@ function NewEventForm ({ formRef, setEventFormValues, eventFormValues, handleInp
       </div>
       <div className='flex flex-col'>
         <label>Descripción</label>
-        {/* @ts-ignore */}
-        <textarea className={lightInput} style={{ resize:'none' }} rows={4} value={description} name='description' onChange={handleInputs}/>
+        <textarea 
+          className={lightInput} 
+          style={{ resize:'none' }} 
+          rows={4} 
+          value={description} 
+          name='description' 
+          // @ts-ignore
+          onChange={handleInputs}
+        />
       </div>
       <div className='flex flex-col'>
         <label>Expositor</label>
@@ -480,7 +632,6 @@ function NewEventForm ({ formRef, setEventFormValues, eventFormValues, handleInp
         >
           {data && data.map(({ name, id }) => <option key={id} value={id}>{name}</option>)}
         </select>
-        {/* <small className='underline mt-2 cursor-pointer'>Agregar nuevo expositor</small> */}
       </div>
       <div className='flex flex-col'>
         <label>Tipo de evento</label>
