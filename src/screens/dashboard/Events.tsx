@@ -390,7 +390,14 @@ function EventCard ({ event, setEventFormValues, formRef, setCurrentAction, setI
         <div className='flex flex-col text-center items-center'>
           <h2>{title} - {expositor.name}</h2>
           <small>Día del evento: {event.day}</small>
-          <small>Hora: {event.hour.hour}:{event.hour.minute} </small>
+          <div className='flex gap-1'>
+            <small>Hora:</small>
+            <div className='flex'>
+              <small>{event.hour.hour <= 9 ? `0${event.hour.hour}` : event.hour.hour}</small>
+              <small>:</small>
+              <small>{event.hour.minute <= 9 ? `0${event.hour.minute}` : event.hour.minute}</small>
+            </div>
+          </div>
           <div className='flex gap-1'>
             <small>Estado del evento:</small>
             {eventState === 1 && <small className='text-blue-500'>En fecha</small>}
@@ -462,7 +469,7 @@ function NewEventForm ({
   ponencias,
 }:NewEventFormProps) {
 
-  const { bgImage, day, title, description, idExpositor, eventType, hour, eventState, } = eventFormValues; 
+  const { id, bgImage, day, title, description, idExpositor, eventType, hour, eventState, expositor } = eventFormValues; 
   const { switchAlert } = useUIContext();
   const { getImageFromFileInput } = useProcessImage();
   const [ dateHelper, setDateHelper ] = useState(new Date());
@@ -492,22 +499,22 @@ function NewEventForm ({
   function saveEvent () {
     if (!validateEventInformation()) return;
     try {
+      if (data === undefined) return;
+      let expositorInformation = data.filter((expositor) => expositor.id === idExpositor);
+      if (data.length === 0) return; 
       const eventObject:EventType = {
-        id:0,
+        id,
         idExpositor,
         bgImage,
         title,
         day,
-        hour: {
-          hour: 0,
-          minute: 0
-        },
+        hour,
         description,
         eventState, 
         eventType,
         expositor: {
-          name:'',
-          image:''
+          image:expositorInformation[0].image,
+          name:expositorInformation[0].name
         }
       }
       switch(eventType) {
@@ -542,7 +549,7 @@ function NewEventForm ({
   }
 
   function validateEventInformation () {
-    if (!bgImage || !description || !title || !day || !idExpositor || !eventType) {
+    if (!bgImage || !description || !title || !day || !idExpositor || !eventType || !hour.hour || !hour.minute || !eventType || !eventState) {
       switchAlert({ 
         alert:'Ingresa todos los datos del expositor', 
         color:'bg-red-600', 
@@ -619,10 +626,6 @@ function NewEventForm ({
     }
   }
 
-  function getEventToEdit () {
-    
-  }
-
   function cleanFormAfterAction () {
     window.scrollTo({ top:0, behavior:'smooth' });
     setEventFormValues(initialState);
@@ -631,8 +634,8 @@ function NewEventForm ({
   
   return (
     <NewElementForm 
+      saveFunction={currentAction === 'create' ? saveEvent : editEvent} 
       saveButtonText='Guardar evento' 
-      saveFunction={() => saveEvent()} 
       action={currentAction}
       setAction={setCurrentAction}
       cleanAction={() => cleanFormAfterAction()}
@@ -739,7 +742,7 @@ function NewEventForm ({
       <div className='flex flex-col'>
         <label className='mb-1'>Imagen del evento</label>
         <div className='flex gap-6'>
-          <InputFiles onChange={(files:any, event:any) => processImage(event)} style={{ width:'33%' }}>
+          <InputFiles onChange={(files:any, event:any) => {processImage(event); event.target.value = null}} style={{ width:'33%' }}>
             <RoundedButton color='blue-500' icon={faUpload} className='w-full'/>
           </InputFiles>
           {bgImage && <RoundedButton color='gray-300' icon={faImage} className='w-4/12' action={() => setImg(bgImage)}/>}

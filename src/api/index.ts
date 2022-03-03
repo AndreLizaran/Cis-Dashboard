@@ -109,6 +109,23 @@ export function saveNewCurso (data:CleanEventType) {
   return axiosInstance.post(`/cursos`, data);
 }
 
+// Eventos put
+export function editNewTaller (data:CleanEventType) {
+  return axiosInstance.put(`/talleres/${data.id}`, data);
+}
+
+export function editConferencia (data:CleanEventType) {
+  return axiosInstance.put(`/conferencias/${data.id}`, data);
+}
+
+export function editPonencia (data:CleanEventType) {
+  return axiosInstance.put(`/ponencias/${data.id}`, data);
+}
+
+export function editCurso (data:CleanEventType) {
+  return axiosInstance.put(`/cursos/${data.id}`, data);
+}
+
 // Eventos delete
 export function deleteTaller (id:number) {
   return axiosInstance.delete(`/talleres/${id}`);

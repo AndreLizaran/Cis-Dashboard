@@ -9,7 +9,11 @@ import {
   deleteExpositor,
   deletePonencia,
   deleteTaller,
+  editConferencia,
+  editCurso,
   editExpositorApi,
+  editNewTaller,
+  editPonencia,
   EventType,
   Expositor,
   getConferenciasApi,
@@ -25,30 +29,6 @@ import {
   saveNewTaller,
   validateTokenApi
 } from '../api';
-
-export function useGetTalleres() {
-  return useQuery('get-talleres', getTalleresApi, {
-    select: (data) => data.data
-  });
-}
-
-export function useGetConferencias() {
-  return useQuery('get-conferencias', getConferenciasApi, {
-    select: (data) => data.data
-  });
-}
-
-export function useGetCursos() {
-  return useQuery('get-cursos', getCursosApi, {
-    select: (data) => data.data
-  });
-}
-
-export function useGetPonencias() {
-  return useQuery('get-ponencias', getPonenciasApi, {
-    select: (data) => data.data
-  });
-}
 
 export function useGetData () {
 
@@ -151,6 +131,21 @@ export function useGetData () {
   }
 
   // Eventos PUT
+  function useEditTaller () {
+    return useMutation(editNewTaller);
+  }
+
+  function useEditConferencia () {
+    return useMutation(editConferencia);
+  }
+
+  function useEditCurso () {
+    return useMutation(editCurso);
+  }
+
+  function useEditPonencia () {
+    return useMutation(saveNewPonencia);
+  }
 
   // Eventos DELETE
   function useDeleteTaller () {
@@ -214,6 +209,10 @@ export function useGetData () {
     useGetConferencias,
     useGetCursos,
     useGetPonencias,
+    useEditTaller,
+    useEditConferencia,
+    useEditCurso,
+    useEditPonencia
   }
 
 }
