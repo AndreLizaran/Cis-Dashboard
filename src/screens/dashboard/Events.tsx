@@ -27,6 +27,7 @@ import ImageViewer from '../../components/ImageViewer';
 import RoundedButton from '../../components/RoundedButton';
 import NewElementForm from '../../components/NewElementForm';
 import InformationContainer from '../../components/InformationContainer';
+import SimpleAlert from '../../components/SimpleAlert';
 
 // Hooks
 import { useGetData } from '../../hooks/useGetData';
@@ -35,7 +36,7 @@ import useProcessImage from '../../hooks/useProcessImage';
 import { useUIContext } from '../../hooks/useCustomContext';
 
 // Classes
-import { fadeIn, fadeInUp, lightInput } from '../../classes';
+import { fadeIn, lightInput } from '../../classes';
 
 // Types
 import { EventType } from '../../api';
@@ -53,6 +54,7 @@ const initialState:EventType = {
     image:'',
   },
   eventType:1,
+  eventState:1
 }
 
 type InformationHelper = { idEvent:number, eventType:number };
@@ -323,6 +325,14 @@ function EventsList ({ data, setEventFormValues, formRef, setCurrentAction, setI
   else {
     return (
       <div className='flex flex-col gap-6'>
+        {
+          data.length === 0 
+          && 
+          <SimpleAlert 
+            color='border-2 border-red-500' 
+            textColor='text-red-500'
+          >No hay eventos de este tipo guardados</SimpleAlert> 
+        }
         {data.map((event, index) => (
           <EventCard 
             key={index} 
@@ -348,7 +358,7 @@ type EventCardProps = {
 
 function EventCard ({ event, setEventFormValues, formRef, setCurrentAction, setInformationHelper }:EventCardProps) {
 
-  const { title, expositor } = event;
+  const { title, expositor, eventState } = event;
 
   return (
     <div className='flex flex-col border border-gray-200 rounded w-full'>
@@ -376,11 +386,15 @@ function EventCard ({ event, setEventFormValues, formRef, setCurrentAction, setI
         />
         <div className='flex flex-col text-center items-center'>
           <h2>{title} - {expositor.name}</h2>
-          <div className='flex gap-3 text-gray-400'>
-            <small>Día: {event.day}</small>
-            <small>Hora: {event.hour}</small>
+          <small>Día del evento: {event.day}</small>
+          <small>Hora: {event.hour}</small>
+          <div className='flex gap-1 mb-3'>
+            <small>Estado del evento:</small>
+            {eventState === 1 && <small className='text-blue-500'>En fecha</small>}
+            {eventState === 2 && <small className='text-yellow-400'>Pospuesto</small>}
+            {eventState === 3 && <small className='text-red-400'>Cancelado</small>}
+            {eventState === 4 && <small className='text-gray-400'>Por agendar</small>}
           </div>
-          <small className='mb-3'>Asistentes: 100</small>
           <RoundedButton 
             color='gray-100' 
             icon={faPencil} 
@@ -444,7 +458,7 @@ function NewEventForm ({
   ponencias,
 }:NewEventFormProps) {
 
-  const { bgImage, day, title, description, idExpositor, eventType, hour } = eventFormValues; 
+  const { bgImage, day, title, description, idExpositor, eventType, hour, eventState } = eventFormValues; 
   const { switchAlert } = useUIContext();
   const { getImageFromFileInput } = useProcessImage();
   
@@ -644,6 +658,19 @@ function NewEventForm ({
           <option value={2}>Conferencia</option>
           <option value={3}>Curso</option>
           <option value={4}>Ponencia</option>
+        </select>
+      </div>
+      <div className='flex flex-col'>
+        <label>Estado del evento</label>
+        <select 
+          className={lightInput} 
+          value={eventState}
+          onChange={(event) => setEventFormValues({ ...eventFormValues, eventState:Number(event.target.value) })}
+        >
+          <option value={1}>En fecha</option>
+          <option value={2}>Pospuesto</option>
+          <option value={3}>Cancelado</option>
+          <option value={4}>Por agendar</option>
         </select>
       </div>
       <div className='flex flex-col'>

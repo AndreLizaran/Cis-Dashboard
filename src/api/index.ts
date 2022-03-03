@@ -13,6 +13,7 @@ export type EventType = {
   day:string;
   hour:string;
   eventType:number;
+  eventState:number
 }
 
 export type CleanEventType = {

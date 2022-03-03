@@ -7,7 +7,8 @@
       "title": "Event test #2",
       "day": "17/02/2022",
       "hour": "16:00",
-      "description": "Deserunt ut irure do dolore non.Do nisi nostrud do laborum sint adipisicing aliquip ut nulla."
+      "description": "Deserunt ut irure do dolore non.Do nisi nostrud do laborum sint adipisicing aliquip ut nulla.",
+      "eventState": 2
     },
     {
       "id": 3,
@@ -16,7 +17,8 @@
       "title": "Event test #3",
       "day": "17/02/2022",
       "hour": "16:00",
-      "description": "Deserunt ut irure do dolore non.Do nisi nostrud do laborum sint adipisicing aliquip ut nulla."
+      "description": "Deserunt ut irure do dolore non.Do nisi nostrud do laborum sint adipisicing aliquip ut nulla.",
+      "eventState": 1
     },
     {
       "id": 4,
@@ -25,7 +27,8 @@
       "title": "Event test #4",
       "day": "17/02/2022",
       "hour": "16:00",
-      "description": "Deserunt ut irure do dolore non.Do nisi nostrud do laborum sint adipisicing aliquip ut nulla."
+      "description": "Deserunt ut irure do dolore non.Do nisi nostrud do laborum sint adipisicing aliquip ut nulla.",
+      "eventState": 1
     },
     {
       "id": 5,
@@ -34,7 +37,8 @@
       "title": "Event test #5",
       "day": "17/02/2022",
       "hour": "16:00",
-      "description": "Deserunt ut irure do dolore non.Do nisi nostrud do laborum sint adipisicing aliquip ut nulla."
+      "description": "Deserunt ut irure do dolore non.Do nisi nostrud do laborum sint adipisicing aliquip ut nulla.",
+      "eventState": 3
     }
   ],
   "cursos": [
@@ -45,7 +49,8 @@
       "title": "Event test #3",
       "day": "17/02/2022",
       "hour": "16:00",
-      "description": "Deserunt ut irure do dolore non.Do nisi nostrud do laborum sint adipisicing aliquip ut nulla."
+      "description": "Deserunt ut irure do dolore non.Do nisi nostrud do laborum sint adipisicing aliquip ut nulla.",
+      "eventState": 4
     }
   ],
   "ponencias": [],
@@ -57,7 +62,8 @@
       "title": "Event test #4",
       "day": "17/02/2022",
       "hour": "16:00",
-      "description": "Deserunt ut irure do dolore non.Do nisi nostrud do laborum sint adipisicing aliquip ut nulla."
+      "description": "Deserunt ut irure do dolore non.Do nisi nostrud do laborum sint adipisicing aliquip ut nulla.",
+      "eventState": 1
     },
     {
       "id": 1,
@@ -66,7 +72,8 @@
       "title": "Event test #1",
       "day": "17/02/2022",
       "hour": "16:00",
-      "description": "Deserunt ut irure do dolore non.Do nisi nostrud do laborum sint adipisicing aliquip ut nulla."
+      "description": "Deserunt ut irure do dolore non.Do nisi nostrud do laborum sint adipisicing aliquip ut nulla.",
+      "eventState": 1
     },
     {
       "id": 2,
@@ -75,7 +82,8 @@
       "title": "Event test #2",
       "day": "17/02/2022",
       "hour": "16:00",
-      "description": "Deserunt ut irure do dolore non.Do nisi nostrud do laborum sint adipisicing aliquip ut nulla."
+      "description": "Deserunt ut irure do dolore non.Do nisi nostrud do laborum sint adipisicing aliquip ut nulla.",
+      "eventState": 2
     },
     {
       "id": 3,
@@ -85,7 +93,8 @@
       "title": "Event test #3",
       "day": "17/02/2022",
       "hour": "16:00",
-      "description": "Deserunt ut irure do dolore non.Do nisi nostrud do laborum sint adipisicing aliquip ut nulla."
+      "description": "Deserunt ut irure do dolore non.Do nisi nostrud do laborum sint adipisicing aliquip ut nulla.",
+      "eventState": 3
     },
     {
       "id": 5,
@@ -94,7 +103,8 @@
       "title": "Event test #5",
       "day": "17/02/2022",
       "hour": "16:00",
-      "description": "Deserunt ut irure do dolore non.Do nisi nostrud do laborum sint adipisicing aliquip ut nulla."
+      "description": "Deserunt ut irure do dolore non.Do nisi nostrud do laborum sint adipisicing aliquip ut nulla.",
+      "eventState": 1
     }
   ],
   "expositores": [
