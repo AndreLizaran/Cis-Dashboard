@@ -19,7 +19,20 @@ export type EventType = {
   eventState:number
 }
 
-export type CleanEventType = {
+export type CleanEventPostType = {
+  idExpositor:number;
+  title:string;
+  bgImage:string;
+  description:string;
+  day:string;
+  hour:{
+    hour:number,
+    minute:number
+  };
+  eventState:number;
+}
+
+export type CleanEventPutType = {
   id:number;
   idExpositor:number;
   title:string;
@@ -30,6 +43,7 @@ export type CleanEventType = {
     hour:number,
     minute:number
   };
+  eventState:number;
 }
 
 export type Expositor = {
@@ -93,36 +107,36 @@ export function getPonenciasApi () {
 }
 
 // Eventos post
-export function saveNewTaller (data:CleanEventType) {
+export function saveNewTaller (data:CleanEventPostType) {
   return axiosInstance.post(`/talleres`, data);
 }
 
-export function saveNewConferencia (data:CleanEventType) {
+export function saveNewConferencia (data:CleanEventPostType) {
   return axiosInstance.post(`/conferencias`, data);
 }
 
-export function saveNewPonencia (data:CleanEventType) {
+export function saveNewPonencia (data:CleanEventPostType) {
   return axiosInstance.post(`/ponencias`, data);
 }
 
-export function saveNewCurso (data:CleanEventType) {
+export function saveNewCurso (data:CleanEventPostType) {
   return axiosInstance.post(`/cursos`, data);
 }
 
 // Eventos put
-export function editNewTaller (data:CleanEventType) {
+export function editNewTaller (data:CleanEventPutType) {
   return axiosInstance.put(`/talleres/${data.id}`, data);
 }
 
-export function editConferencia (data:CleanEventType) {
+export function editConferencia (data:CleanEventPutType) {
   return axiosInstance.put(`/conferencias/${data.id}`, data);
 }
 
-export function editPonencia (data:CleanEventType) {
+export function editPonencia (data:CleanEventPutType) {
   return axiosInstance.put(`/ponencias/${data.id}`, data);
 }
 
-export function editCurso (data:CleanEventType) {
+export function editCurso (data:CleanEventPutType) {
   return axiosInstance.put(`/cursos/${data.id}`, data);
 }
 

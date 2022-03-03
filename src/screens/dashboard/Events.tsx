@@ -47,10 +47,10 @@ const initialState:EventType = {
   title:'',
   description:'',
   bgImage:'',
-  day: '',
+  day: new Date().toLocaleDateString("en-ES"),
   hour: {
-    hour:1,
-    minute:1 
+    hour:12,
+    minute:0 
   },
   expositor: {
     name:'',
@@ -469,7 +469,7 @@ function NewEventForm ({
   ponencias,
 }:NewEventFormProps) {
 
-  const { id, bgImage, day, title, description, idExpositor, eventType, hour, eventState, expositor } = eventFormValues; 
+  const { bgImage, day, title, description, idExpositor, eventType, hour, eventState } = eventFormValues; 
   const { switchAlert } = useUIContext();
   const { getImageFromFileInput } = useProcessImage();
   const [ dateHelper, setDateHelper ] = useState(new Date());
@@ -502,36 +502,40 @@ function NewEventForm ({
       if (data === undefined) return;
       let expositorInformation = data.filter((expositor) => expositor.id === idExpositor);
       if (data.length === 0) return; 
+
       const eventObject:EventType = {
-        id,
-        idExpositor,
-        bgImage,
-        title,
-        day,
-        hour,
-        description,
-        eventState, 
-        eventType,
+        ...eventFormValues,
         expositor: {
           image:expositorInformation[0].image,
           name:expositorInformation[0].name
         }
       }
+
+      const objectForDb = {
+        idExpositor,
+        title, 
+        description,
+        hour,
+        bgImage,
+        day,
+        eventState
+      }
+
       switch(eventType) {
         case 1:
-          saveTaller(eventObject);
+          saveTaller(objectForDb);
           talleres.setTalleresInformation([...talleres.talleresInformation, eventObject]);
           break;
         case 2:
-          saveConferencia(eventObject);
+          saveConferencia(objectForDb);
           conferencias.setConferenciasInformation([...conferencias.conferenciasInformation, eventObject]);
           break;
         case 3:
-          saveCurso(eventObject);
+          saveCurso(objectForDb);
           cursos.setCursosInformation([ ...cursos.cursosInformation, eventObject ]);
           break;
         case 4:
-          savePonencia(eventObject);
+          savePonencia(objectForDb);
           ponencias.setPonenciasInformation([ ...ponencias.ponenciasInformation, eventObject ]);
           break;
       }
@@ -549,7 +553,7 @@ function NewEventForm ({
   }
 
   function validateEventInformation () {
-    if (!bgImage || !description || !title || !day || !idExpositor || !eventType || !hour.hour || !hour.minute || !eventType || !eventState) {
+    if (!bgImage || !description || !title || !day || !idExpositor || !eventType || !hour.hour || !eventType || !eventState) {
       switchAlert({ 
         alert:'Ingresa todos los datos del expositor', 
         color:'bg-red-600', 
@@ -565,6 +569,7 @@ function NewEventForm ({
 
   async function editEvent () {
     try {
+      // Funcionalidad por realizar, simulación
       switchAlert({ 
         alert:'Ha sido editado el evento', 
         color:'bg-blue-600', 
