@@ -1,6 +1,5 @@
 // Modules
 import { RefObject, SetStateAction, useEffect, useRef, useState } from 'react';
-import TimePicker from 'rc-time-picker';
 // @ts-ignore
 import DatePicker from "react-datepicker";
 // @ts-ignore
@@ -17,7 +16,8 @@ import {
   faUpload,
   faPencil,
   faImage,
-  faTimes
+  faTimes,
+  faMinus
 } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
@@ -48,7 +48,10 @@ const initialState:EventType = {
   description:'',
   bgImage:'',
   day: '',
-  hour:'',
+  hour: {
+    hour:1,
+    minute:1 
+  },
   expositor: {
     name:'',
     image:'',
@@ -189,7 +192,7 @@ export default function Events() {
           cursos={cursos}
           ponencias={ponencias}
         />
-        <div className={`flex flex-col gap-6 ${showDashboardBar ? '2xl:grid 2xl:grid-cols-2' : 'lg:grid lg:grid-cols-2'}`}>
+        <div className={`flex flex-col gap-6 ${showDashboardBar ? '' : 'lg:grid lg:grid-cols-2'}`}>
           <InformationContainer
             headerColor={currentAction === 'create' ? 'bg-gray-800' : 'bg-blue-500'}
             headerText={currentAction === 'create' ? 'Registrar nuevo evento' : 'Editar evento'}
@@ -329,7 +332,7 @@ function EventsList ({ data, setEventFormValues, formRef, setCurrentAction, setI
           data.length === 0 
           && 
           <SimpleAlert 
-            color='border-2 border-red-500' 
+            color='border border-red-500' 
             textColor='text-red-500'
           >No hay eventos de este tipo guardados</SimpleAlert> 
         }
@@ -387,14 +390,15 @@ function EventCard ({ event, setEventFormValues, formRef, setCurrentAction, setI
         <div className='flex flex-col text-center items-center'>
           <h2>{title} - {expositor.name}</h2>
           <small>Día del evento: {event.day}</small>
-          <small>Hora: {event.hour}</small>
-          <div className='flex gap-1 mb-3'>
+          <small>Hora: {event.hour.hour}:{event.hour.minute} </small>
+          <div className='flex gap-1'>
             <small>Estado del evento:</small>
             {eventState === 1 && <small className='text-blue-500'>En fecha</small>}
             {eventState === 2 && <small className='text-yellow-400'>Pospuesto</small>}
             {eventState === 3 && <small className='text-red-400'>Cancelado</small>}
             {eventState === 4 && <small className='text-gray-400'>Por agendar</small>}
           </div>
+          <small className='mb-3'>Asistentes: 100</small>
           <RoundedButton 
             color='gray-100' 
             icon={faPencil} 
@@ -458,9 +462,10 @@ function NewEventForm ({
   ponencias,
 }:NewEventFormProps) {
 
-  const { bgImage, day, title, description, idExpositor, eventType, hour, eventState } = eventFormValues; 
+  const { bgImage, day, title, description, idExpositor, eventType, hour, eventState, } = eventFormValues; 
   const { switchAlert } = useUIContext();
   const { getImageFromFileInput } = useProcessImage();
+  const [ dateHelper, setDateHelper ] = useState(new Date());
   
   const { 
     useGetExpositores, 
@@ -487,27 +492,40 @@ function NewEventForm ({
   function saveEvent () {
     if (!validateEventInformation()) return;
     try {
-      const eventObject = {
+      const eventObject:EventType = {
         id:0,
         idExpositor,
         bgImage,
         title,
         day,
-        hour,
-        description
+        hour: {
+          hour: 0,
+          minute: 0
+        },
+        description,
+        eventState, 
+        eventType,
+        expositor: {
+          name:'',
+          image:''
+        }
       }
       switch(eventType) {
         case 1:
           saveTaller(eventObject);
+          talleres.setTalleresInformation([...talleres.talleresInformation, eventObject]);
           break;
         case 2:
           saveConferencia(eventObject);
+          conferencias.setConferenciasInformation([...conferencias.conferenciasInformation, eventObject]);
           break;
         case 3:
           saveCurso(eventObject);
+          cursos.setCursosInformation([ ...cursos.cursosInformation, eventObject ]);
           break;
         case 4:
           savePonencia(eventObject);
+          ponencias.setPonenciasInformation([ ...ponencias.ponenciasInformation, eventObject ]);
           break;
       }
       switchAlert({
@@ -677,21 +695,46 @@ function NewEventForm ({
         <label>Fecha</label>
         <DatePicker 
           className={lightInput} 
-          selected={new Date} 
-          onChange={(date:Date) => setEventFormValues({ ...eventFormValues, day:date.toString() })} 
+          selected={dateHelper} 
+          onChange={(date:Date) => {
+            setEventFormValues({ ...eventFormValues, day:date.toLocaleDateString("en-ES") });
+            setDateHelper(date)
+          }} 
           locale="es"
           dateFormat="dd/MM/yyyy"
         />
       </div>
       <div className='flex flex-col'>
         <label>Hora</label>
-        <TimePicker 
-          className={lightInput} 
-          showSecond={false} 
-          onChange={(value) => {
-            setEventFormValues({ ...eventFormValues, hour:`${value.hour()}:${value.minutes()}`});
-          }}
-        />
+        <div className='flex gap-6'>
+          <input className={lightInput} disabled={true} readOnly value={hour.hour}/>
+          <RoundedButton 
+            color='blue-500' 
+            icon={faPlus} 
+            action={() => hour.hour <= 24 && setEventFormValues({ ...eventFormValues, hour:{ minute:hour.minute, hour: hour.hour + 1 }})}
+          />
+          <RoundedButton 
+            color='red-600' 
+            icon={faMinus}
+            action={() => hour.hour > 1 && setEventFormValues({ ...eventFormValues, hour:{ minute:hour.minute, hour: hour.hour - 1 }})}
+          />
+        </div>
+      </div>
+      <div className='flex flex-col'>
+        <label>Minuto</label>
+        <div className='flex gap-6'>
+          <input className={lightInput} disabled={true} readOnly value={hour.minute}/>
+          <RoundedButton 
+            color='blue-500' 
+            icon={faPlus}
+            action={() => hour.minute < 59 && setEventFormValues({ ...eventFormValues, hour:{ hour:hour.hour, minute: hour.minute + 1 }})}
+          />
+          <RoundedButton 
+            color='red-600' 
+            icon={faMinus}
+            action={() => hour.minute > 1 && setEventFormValues({ ...eventFormValues, hour:{ hour:hour.hour, minute: hour.minute - 1 }})}
+          />
+        </div>
       </div>
       <div className='flex flex-col'>
         <label className='mb-1'>Imagen del evento</label>

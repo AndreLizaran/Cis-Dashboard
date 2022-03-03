@@ -135,35 +135,19 @@ export function useGetData () {
 
   // Eventos POST
   function useSaveNewTaller () {
-    return useMutation(saveNewTaller, {
-      onSuccess: () => {
-        queryClient.invalidateQueries('save-taller');
-      }
-    })
+    return useMutation(saveNewTaller);
   }
 
   function useSaveNewConferencia () {
-    return useMutation(saveNewConferencia, {
-      onSuccess: () => {
-        queryClient.invalidateQueries('save-conferencia');
-      }
-    })
+    return useMutation(saveNewConferencia);
   }
 
   function useSaveNewCurso () {
-    return useMutation(saveNewCurso, {
-      onSuccess: () => {
-        queryClient.invalidateQueries('save-curso');
-      }
-    })
+    return useMutation(saveNewCurso);
   }
 
   function useSaveNewPonencia () {
-    return useMutation(saveNewPonencia, {
-      onSuccess: () => {
-        queryClient.invalidateQueries('save-ponencia');
-      }
-    })
+    return useMutation(saveNewPonencia);
   }
 
   // Eventos PUT

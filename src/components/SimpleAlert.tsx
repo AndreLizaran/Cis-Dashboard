@@ -8,6 +8,6 @@ type Props = {
 
 export default function SimpleAlert({ children, color, textColor }:Props) {
   return (
-    <span className={`${color} ${textColor} py-3 px-4 rounded text-center font-semibold`}>{children}</span>
+    <span className={`${color} ${textColor} py-3 px-4 rounded text-center`}>{children}</span>
   )
 }

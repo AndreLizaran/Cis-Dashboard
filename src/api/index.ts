@@ -11,7 +11,10 @@ export type EventType = {
   bgImage:string;
   description:string;
   day:string;
-  hour:string;
+  hour: {
+    hour: number,
+    minute:number
+  };
   eventType:number;
   eventState:number
 }
@@ -23,7 +26,10 @@ export type CleanEventType = {
   bgImage:string;
   description:string;
   day:string;
-  hour:string;
+  hour:{
+    hour:number,
+    minute:number
+  };
 }
 
 export type Expositor = {

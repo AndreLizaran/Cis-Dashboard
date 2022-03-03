@@ -29,7 +29,7 @@ import useProcessImage from '../../hooks/useProcessImage';
 import { useUIContext } from '../../hooks/useCustomContext';
 
 // Classes
-import { fadeInUp, lightInput } from '../../classes';
+import { fadeIn, lightInput } from '../../classes';
 
 const initialState = {
   id:0,
@@ -61,7 +61,7 @@ export default function Expositores() {
             action={() => formRef.current?.focus()}
           />
         </div>
-        <div className={`flex flex-col gap-6 ${showDashboardBar ? '2xl:grid 2xl:grid-cols-2' : 'lg:grid lg:grid-cols-2'} ${fadeInUp}`}>
+        <div className={`flex flex-col gap-6 ${showDashboardBar ? '2xl:grid 2xl:grid-cols-2' : 'lg:grid lg:grid-cols-2'} ${fadeIn}`}>
           <InformationContainer
             headerText='Expositores registrados'
             headerColor='bg-gray-800'
