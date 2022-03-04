@@ -183,7 +183,7 @@ export function useGetData () {
       let expositorInformation = dataExpositores?.filter((expositor) => expositor.id === evento.idExpositor) || [];
       if (expositorInformation.length > 0) {
         evento.expositor.name = expositorInformation[0].name; 
-        evento.expositor.image = expositorInformation[0].image; 
+        evento.expositor.image = expositorInformation[0].profileImage; 
       }
       return evento;
     })

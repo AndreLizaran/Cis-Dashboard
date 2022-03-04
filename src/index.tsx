@@ -1,7 +1,6 @@
 // Modules
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { ReactQueryDevtools } from 'react-query/devtools';
 import { QueryClientProvider, QueryClient } from 'react-query';
 
 // @ts-ignore
@@ -37,10 +36,6 @@ function AppState () {
       <UIState>
         <App />
       </UIState>
-      <ReactQueryDevtools 
-        initialIsOpen={false} 
-        position='bottom-right'
-      />
     </QueryClientProvider>
   )
 }

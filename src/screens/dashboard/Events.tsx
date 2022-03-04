@@ -2,8 +2,6 @@
 import { RefObject, SetStateAction, useEffect, useRef, useState } from 'react';
 // @ts-ignore
 import DatePicker from "react-datepicker";
-// @ts-ignore
-import InputFiles from 'react-input-files';
 
 // Icons
 import {
@@ -11,23 +9,21 @@ import {
   faPlus,
   faCubes,
   faMicrophone,
+  faPencil,
   faUserCheck,
   faSpinner,
-  faUpload,
-  faPencil,
-  faImage,
-  faTimes,
   faMinus
 } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 // Components
 import H2 from '../../components/H2';
+import FileButton from '../../components/FileButton';
+import SimpleAlert from '../../components/SimpleAlert';
 import ImageViewer from '../../components/ImageViewer';
 import RoundedButton from '../../components/RoundedButton';
 import NewElementForm from '../../components/NewElementForm';
 import InformationContainer from '../../components/InformationContainer';
-import SimpleAlert from '../../components/SimpleAlert';
 
 // Hooks
 import { useGetData } from '../../hooks/useGetData';
@@ -398,14 +394,14 @@ function EventCard ({ event, setEventFormValues, formRef, setCurrentAction, setI
               <small>{event.hour.minute <= 9 ? `0${event.hour.minute}` : event.hour.minute}</small>
             </div>
           </div>
-          <div className='flex gap-1'>
+          <div className='flex gap-1 mb-3'>
             <small>Estado del evento:</small>
             {eventState === 1 && <small className='text-blue-500'>En fecha</small>}
             {eventState === 2 && <small className='text-yellow-400'>Pospuesto</small>}
             {eventState === 3 && <small className='text-red-400'>Cancelado</small>}
             {eventState === 4 && <small className='text-gray-400'>Por agendar</small>}
           </div>
-          <small className='mb-3'>Asistentes: 100</small>
+          {/* <small className='mb-3'>Asistentes: 100</small> */}
           <RoundedButton 
             color='gray-100' 
             icon={faPencil} 
@@ -471,8 +467,10 @@ function NewEventForm ({
 
   const { bgImage, day, title, description, idExpositor, eventType, hour, eventState } = eventFormValues; 
   const { switchAlert } = useUIContext();
-  const { getImageFromFileInput } = useProcessImage();
   const [ dateHelper, setDateHelper ] = useState(new Date());
+  const [ isSavingNewEvent, setIsSavingNewEvent ] = useState(false);
+  const [ fileImage, setFileImage] = useState<File>();
+  const { saveImageOnFirebase } = useProcessImage();
   
   const { 
     useGetExpositores, 
@@ -496,31 +494,31 @@ function NewEventForm ({
   const { mutateAsync:deleteCurso } = useDeleteCurso();
   const { mutateAsync:deletePonencia } = useDeletePonencia();
 
-  function saveEvent () {
+  async function saveEvent () {
     if (!validateEventInformation()) return;
     try {
+      setIsSavingNewEvent(true);
       if (data === undefined) return;
       let expositorInformation = data.filter((expositor) => expositor.id === idExpositor);
       if (data.length === 0) return; 
-
+      const bgImageUrl = await saveImageOnFirebase(fileImage!, title);
       const eventObject:EventType = {
         ...eventFormValues,
         expositor: {
-          image:expositorInformation[0].image,
+          image:expositorInformation[0].profileImage,
           name:expositorInformation[0].name
-        }
+        },
+        bgImage:bgImageUrl!
       }
-
       const objectForDb = {
         idExpositor,
         title, 
         description,
         hour,
-        bgImage,
+        bgImage:bgImageUrl!,
         day,
         eventState
       }
-
       switch(eventType) {
         case 1:
           saveTaller(objectForDb);
@@ -544,27 +542,24 @@ function NewEventForm ({
         color:'bg-blue-600',
       });
       cleanFormAfterAction();
+      setIsSavingNewEvent(false);
     } catch (error) {
       switchAlert({ 
         alert:'Ha ocurrido un error, inténtalo más tarde', 
         color:'bg-red-600', 
       });
+      setIsSavingNewEvent(false);
     }
   }
 
   function validateEventInformation () {
-    if (!bgImage || !description || !title || !day || !idExpositor || !eventType || !hour.hour || !eventType || !eventState) {
+    if (!description || !title || !day || !idExpositor || !eventType || !hour.hour || !eventType || !eventState) {
       switchAlert({ 
         alert:'Ingresa todos los datos del expositor', 
         color:'bg-red-600', 
       });
       return false;
     } else return true;
-  }
-
-  async function processImage (event:any) {
-    const imageProcessed = await getImageFromFileInput(event) as string;
-    if (imageProcessed) setEventFormValues({ ...eventFormValues, bgImage:imageProcessed });
   }
 
   async function editEvent () {
@@ -636,7 +631,7 @@ function NewEventForm ({
     setEventFormValues(initialState);
     setInformationHelper({ eventType:0, idEvent:0 });
   }
-  
+
   return (
     <NewElementForm 
       saveFunction={currentAction === 'create' ? saveEvent : editEvent} 
@@ -646,6 +641,7 @@ function NewEventForm ({
       cleanAction={() => cleanFormAfterAction()}
       deleteAction={() => deleteEvent()}
       deleteText='Eliminar evento'
+      isLoading={isSavingNewEvent}
     >
       <div className='flex flex-col'>
         <label>Título</label>
@@ -697,6 +693,7 @@ function NewEventForm ({
           <option value={2}>Pospuesto</option>
           <option value={3}>Cancelado</option>
           <option value={4}>Por agendar</option>
+          <option value={5}>Concluido</option>
         </select>
       </div>
       <div className='flex flex-col'>
@@ -747,11 +744,7 @@ function NewEventForm ({
       <div className='flex flex-col'>
         <label className='mb-1'>Imagen del evento</label>
         <div className='flex gap-6'>
-          <InputFiles onChange={(files:any, event:any) => {processImage(event); event.target.value = null}} style={{ width:'33%' }}>
-            <RoundedButton color='blue-500' icon={faUpload} className='w-full'/>
-          </InputFiles>
-          {bgImage && <RoundedButton color='gray-300' icon={faImage} className='w-4/12' action={() => setImg(bgImage)}/>}
-          {bgImage && <RoundedButton color='gray-800' icon={faTimes} className='w-4/12' action={() => setEventFormValues({ ...eventFormValues, bgImage:'' })}/>}
+          <FileButton img={fileImage} setImg={setFileImage}/>
         </div>
       </div>
     </NewElementForm>

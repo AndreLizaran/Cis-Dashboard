@@ -46,13 +46,16 @@ export type CleanEventPutType = {
   eventState:number;
 }
 
-export type Expositor = {
-  id:number;
+export type ExpositorWithoutId = {
   name:string;
   description:string;
-  image:string;
-  bgImage:string;
+  profileImage:string;
+  coverImage:string;
 }
+
+export type Expositor = {
+  id:number;
+} & ExpositorWithoutId;
 
 export type Login = {
   email:string;
@@ -77,7 +80,7 @@ export function getExpositoresApi () {
   return axiosInstance.get<Expositor[]>('/expositores');
 }
 
-export function saveNewExpositorApi (data:Expositor ) {
+export function saveNewExpositorApi (data:ExpositorWithoutId ) {
   return axiosInstance.post('/expositores', data);
 }
 

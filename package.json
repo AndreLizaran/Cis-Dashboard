@@ -15,6 +15,7 @@
     "@types/react-dom": "^17.0.11",
     "animate.css": "^4.1.1",
     "axios": "^0.25.0",
+    "firebase": "^9.6.7",
     "json-server": "^0.17.0",
     "rc-time-picker": "^3.7.3",
     "react": "^17.0.2",
