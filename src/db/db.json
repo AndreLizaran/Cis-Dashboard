@@ -1,32 +1,46 @@
 {
   "expositores": [
     {
-      "description": "Frontend dev",
-      "name": "Julieta Sanchez",
-      "coverImage": "https://firebasestorage.googleapis.com/v0/b/cis-dashboard-fb2a7.appspot.com/o/Julieta%20Sanchez-cover-expositor-portada?alt=media&token=d6d63efb-2fbd-408c-bb66-80f4b88ff481",
-      "profileImage": "https://firebasestorage.googleapis.com/v0/b/cis-dashboard-fb2a7.appspot.com/o/Julieta%20Sanchez-profile-expositor-portada?alt=media&token=58595e07-4a32-4c51-8643-a3aae839021c",
+      "description": "Mobile dev",
+      "name": "Julio Rosas",
+      "coverImage": "https://firebasestorage.googleapis.com/v0/b/cis-dashboard-fb2a7.appspot.com/o/Julio%20Rosas-cover-expositor?alt=media&token=79c51d21-90c5-4ffb-addc-cb6d22700a1c",
+      "profileImage": "https://firebasestorage.googleapis.com/v0/b/cis-dashboard-fb2a7.appspot.com/o/Julio%20Rosas-profile-expositor?alt=media&token=fb795282-4507-4d1e-ac8f-cf2723b6be76",
       "id": 1
     },
     {
-      "description": "Backend dev",
-      "name": "Gustavo Rodriguez",
-      "coverImage": "https://firebasestorage.googleapis.com/v0/b/cis-dashboard-fb2a7.appspot.com/o/Gustavo%20Rodriguez-cover-expositor-portada?alt=media&token=617b18cd-8afd-4f23-82fb-cc90a67aa7a6",
-      "profileImage": "https://firebasestorage.googleapis.com/v0/b/cis-dashboard-fb2a7.appspot.com/o/Gustavo%20Rodriguez-profile-expositor-portada?alt=media&token=17211d5a-3626-4e3d-b6ff-4525b68dd1bb",
+      "description": "Project Manager",
+      "name": "Juliet Petiet",
+      "coverImage": "https://firebasestorage.googleapis.com/v0/b/cis-dashboard-fb2a7.appspot.com/o/Juliet%20Petiet-cover-expositor?alt=media&token=57be70fc-8cf0-4c4a-986d-98e2a931a321",
+      "profileImage": "https://firebasestorage.googleapis.com/v0/b/cis-dashboard-fb2a7.appspot.com/o/Juliet%20Petiet-profile-expositor?alt=media&token=2e8bf56c-21c4-48c3-9383-dd9c0d475680",
       "id": 2
     },
     {
-      "description": "Full stack dev",
-      "name": "André Fernandez",
-      "coverImage": "https://firebasestorage.googleapis.com/v0/b/cis-dashboard-fb2a7.appspot.com/o/Andr%C3%A9%20Fernandez-cover-expositor-portada?alt=media&token=43cc628c-eb3a-482c-af0d-0cca8c5cf199",
-      "profileImage": "https://firebasestorage.googleapis.com/v0/b/cis-dashboard-fb2a7.appspot.com/o/Andr%C3%A9%20Fernandez-profile-expositor-portada?alt=media&token=75d5e425-a2cd-4c76-b193-30c6be5c8295",
+      "description": "Backend dev",
+      "name": "George Smith",
+      "coverImage": "https://firebasestorage.googleapis.com/v0/b/cis-dashboard-fb2a7.appspot.com/o/George%20Smith-cover-expositor?alt=media&token=d2ae34ba-6401-4eef-8b37-301ac81d8431",
+      "profileImage": "https://firebasestorage.googleapis.com/v0/b/cis-dashboard-fb2a7.appspot.com/o/George%20Smith-profile-expositor?alt=media&token=075d42a1-7b33-4137-9ba0-8a651d1a7b9d",
       "id": 3
     },
     {
-      "description": "Marketing leader",
-      "name": "Erick Blanco",
-      "coverImage": "https://firebasestorage.googleapis.com/v0/b/cis-dashboard-fb2a7.appspot.com/o/Erick%20Blanco-cover-expositor-portada?alt=media&token=d065538b-09b6-49ea-a315-779c2143d32a",
-      "profileImage": "https://firebasestorage.googleapis.com/v0/b/cis-dashboard-fb2a7.appspot.com/o/Erick%20Blanco-profile-expositor-portada?alt=media&token=3d70270b-c2ee-43ea-a6eb-d3f6961ffad8",
+      "description": "Frontend dev",
+      "name": "Jill Wan",
+      "coverImage": "https://firebasestorage.googleapis.com/v0/b/cis-dashboard-fb2a7.appspot.com/o/Jill%20Wan-cover-expositor?alt=media&token=ce4622a4-47f0-41d0-9f65-5332b76547e4",
+      "profileImage": "https://firebasestorage.googleapis.com/v0/b/cis-dashboard-fb2a7.appspot.com/o/Jill%20Wan-profile-expositor?alt=media&token=de0eca77-629d-4cf9-ab65-b7d91eae02da",
       "id": 4
+    },
+    {
+      "description": "Java dev",
+      "name": "Julie Sanchez",
+      "coverImage": "https://firebasestorage.googleapis.com/v0/b/cis-dashboard-fb2a7.appspot.com/o/Julie%20Sanchez-cover-expositor?alt=media&token=cb402d16-f58b-4854-918e-e471dc1552da",
+      "profileImage": "https://firebasestorage.googleapis.com/v0/b/cis-dashboard-fb2a7.appspot.com/o/Julie%20Sanchez-profile-expositor?alt=media&token=25004992-561e-4104-9a49-70611e8cb8b7",
+      "id": 5
+    },
+    {
+      "description": "Fullstack dev",
+      "name": "Bradley Stain",
+      "coverImage": "https://firebasestorage.googleapis.com/v0/b/cis-dashboard-fb2a7.appspot.com/o/Bradley%20Stain-cover-expositor?alt=media&token=afd3042f-1836-4ecb-a216-8bb6967c6f1c",
+      "profileImage": "https://firebasestorage.googleapis.com/v0/b/cis-dashboard-fb2a7.appspot.com/o/Bradley%20Stain-profile-expositor?alt=media&token=c5edd3c0-b5ee-422c-98b9-3895a20e021b",
+      "id": 6
     }
   ],
   "talleres": [],

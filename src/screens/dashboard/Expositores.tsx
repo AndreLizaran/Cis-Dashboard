@@ -103,7 +103,7 @@ type NewExpositorFormProps = {
 
 function NewExpositorForm ({ formRef, currentAction, setCurrentAction, newExpositor, setNewExpositor }:NewExpositorFormProps) {
 
-  const { name, description, id } = newExpositor;
+  const { name, description, id, coverImage:coverSavedImage, profileImage:profileSavedImage } = newExpositor;
   const { switchAlert } = useUIContext();
   const [ coverImage, setCoverImage ] = useState<File>();
   const [ profileImage, setProfileImage ] = useState<File>();
@@ -139,6 +139,8 @@ function NewExpositorForm ({ formRef, currentAction, setCurrentAction, newExposi
       window.scrollTo({ top:0, behavior:'smooth' });
       setNewExpositor(initialState);
       setIsSavingNewExpositor(false);
+      setCoverImage(undefined);
+      setProfileImage(undefined);
     } catch (error:any) {
       switchAlert({ 
         alert:'Ha ocurrido un error, inténtalo más tarde', 
@@ -148,10 +150,37 @@ function NewExpositorForm ({ formRef, currentAction, setCurrentAction, newExposi
     }
   }
 
-  function editExpositor () {
+  async function editExpositor () {
     if (!validateExpositorInformation()) return;
     try {
-      mutateEdit(newExpositor)
+      setIsSavingNewExpositor(true);
+      if (profileImage && coverImage) {
+        const responseCoverImage = await saveImageOnFirebase(coverImage!, `${name}-cover-expositor`);
+        const responseProfileImage = await saveImageOnFirebase(profileImage!, `${name}-profile-expositor`);
+        mutateEdit({ 
+          ...newExpositor, 
+          profileImage: responseProfileImage,
+          coverImage: responseCoverImage
+        });
+        setCoverImage(undefined);
+        setProfileImage(undefined);
+      } else if (profileImage) {
+        const responseProfileImage = await saveImageOnFirebase(profileImage!, `${name}-profile-expositor`);
+        mutateEdit({ 
+          ...newExpositor, 
+          profileImage: responseProfileImage,
+        });
+        setProfileImage(undefined);
+      } else if (coverImage) {
+        const responseCoverImage = await saveImageOnFirebase(coverImage!, `${name}-cover-expositor`);
+        mutateEdit({ 
+          ...newExpositor, 
+          coverImage: responseCoverImage
+        });
+        setCoverImage(undefined);
+      } else {
+        mutateEdit(newExpositor);
+      }
       switchAlert({
         alert:'Expositor editado',
         color:'bg-blue-600',
@@ -159,11 +188,13 @@ function NewExpositorForm ({ formRef, currentAction, setCurrentAction, newExposi
       setNewExpositor(initialState);
       window.scrollTo({ top:0, behavior:'smooth' });
       setCurrentAction('create');
+      setIsSavingNewExpositor(false);
     } catch (error:any) {
       switchAlert({ 
         alert:'Ha ocurrido un error, inténtalo más tarde', 
         color:'bg-red-600', 
       });
+      setIsSavingNewExpositor(false);
     }
   }
 
@@ -186,7 +217,7 @@ function NewExpositorForm ({ formRef, currentAction, setCurrentAction, newExposi
   }
 
   function validateExpositorInformation () {
-    if (!name || !description || !coverImage || !profileImage) {
+    if (!name || !description || (!coverImage && !coverSavedImage) || (!profileImage && !profileSavedImage)) {
       switchAlert({ 
         alert:'Ingresa todos los datos del expositor', 
         color:'bg-red-600', 
@@ -272,7 +303,7 @@ type ExpositorCardProps = {
 }
 
 function ExpositorCard ({ expositor, setCurrentAction, formRef, setNewExpositor}:ExpositorCardProps) {
-  const { name, profileImage, description, coverImage } = expositor;
+  const { name, profileImage, description, coverImage, id } = expositor;
   return (
     <div className='rounded border border-gray-200 flex flex-col'>
       <div 

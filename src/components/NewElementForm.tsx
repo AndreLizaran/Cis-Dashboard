@@ -53,7 +53,6 @@ export default function NewElementForm({ children, saveButtonText, saveFunction,
               text={deleteText}
               color='red-600'
               type='button'
-              isLoading={isLoading}
               action={() => deleteAction()}
             />
           </>

@@ -15,7 +15,7 @@ export default function useProcessImage() {
     try {
       if (file === undefined) return '';
       const metadata = { contentType: file.type };
-      const storageRef = ref(storage, `${title}-portada`);
+      const storageRef = ref(storage, `${title}`);
       await uploadBytes(storageRef, file, metadata);
       const savedImage = await getDownloadURL(storageRef);
       return savedImage;
