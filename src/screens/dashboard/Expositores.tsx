@@ -12,7 +12,6 @@ import {
 import { Expositor } from '../../api';
 
 // Components
-import H2 from '../../components/H2'
 import FileButton from '../../components/FileButton';
 import ImageViewer from '../../components/ImageViewer';
 import RoundedButton from '../../components/RoundedButton'
@@ -25,7 +24,11 @@ import useProcessImage from '../../hooks/useProcessImage';
 import { useUIContext } from '../../hooks/useCustomContext';
 
 // Classes
-import { fadeInUp, lightInput } from '../../classes';
+import { fadeInUp } from '../../classes';
+import HeaderDashboardScreens from '../../components/HeaderDashboardScreens';
+import FormElement from '../../components/forms/FormElement';
+import useFormValues from '../../hooks/useFormValues';
+import BubbleImage from '../../components/cards/BubbleImage';
 
 const initialState:Expositor = {
   id:0,
@@ -35,29 +38,19 @@ const initialState:Expositor = {
   coverImage: ''
 }
 
-// Componente general
 export default function Expositores() {
 
   const { state } = useUIContext();
   const { showDashboardBar } = state;
   const [ sourceImageViewer, setSourceImageViewer ] = useState('');
-  const [ newExpositor, setNewExpositor ] = useState<Expositor>(initialState);
   const [ currentAction, setCurrentAction ] = useState<'create' | 'edit'>('create');
+  const { setInputValues, inputValues, handleInputs } = useFormValues(initialState);
   const formRef = useRef<HTMLInputElement>(null);
 
   return (
     <>
-      <div className='flex flex-col gap-6'>
-        <div className='flex justify-between items-center w-full' style={{ overflowY:'hidden' }}>
-          <H2>Expositores</H2>
-          <RoundedButton
-            color='red-600'
-            square={true}
-            icon={faPlus}
-            className={`${!showDashboardBar && 'mr-14'}`}
-            action={() => formRef.current?.focus()}
-          />
-        </div>
+      <div className='flex flex-col'>
+        <HeaderDashboardScreens action={() => formRef.current?.focus()} headerText='Expositores'/>
         <div className={`flex flex-col gap-6 ${showDashboardBar ? '2xl:grid 2xl:grid-cols-2' : 'lg:grid lg:grid-cols-2'} ${fadeInUp}`}>
           <InformationContainer
             headerText='Expositores registrados'
@@ -67,7 +60,7 @@ export default function Expositores() {
             <ExpositoresList 
               setCurrentAction={setCurrentAction}
               formRef={formRef}
-              setNewExpositor={setNewExpositor}
+              setNewExpositor={setInputValues}
             />
           </InformationContainer>
           <InformationContainer
@@ -81,8 +74,9 @@ export default function Expositores() {
               formRef={formRef}
               currentAction={currentAction}
               setCurrentAction={setCurrentAction}
-              newExpositor={newExpositor}
-              setNewExpositor={setNewExpositor}
+              newExpositor={inputValues}
+              setNewExpositor={setInputValues}
+              handleInputs={handleInputs}
             />
           </InformationContainer>
         </div>
@@ -99,11 +93,11 @@ type NewExpositorFormProps = {
   currentAction: 'create' | 'edit'
   setCurrentAction: Dispatch<SetStateAction<"create" | "edit">>
   newExpositor: Expositor
-  setNewExpositor: Dispatch<SetStateAction<Expositor>>
+  setNewExpositor: Dispatch<SetStateAction<Expositor>>;
+  handleInputs: any;
 }
 
-// Formulario
-function NewExpositorForm ({ formRef, currentAction, setCurrentAction, newExpositor, setNewExpositor, setSourceImageViewer }:NewExpositorFormProps) {
+function NewExpositorForm ({ formRef, currentAction, setCurrentAction, newExpositor, setNewExpositor, setSourceImageViewer, handleInputs }:NewExpositorFormProps) {
 
   const { name, description, id, coverImage:coverSavedImage, profileImage:profileSavedImage } = newExpositor;
   const { switchAlert } = useUIContext();
@@ -119,8 +113,8 @@ function NewExpositorForm ({ formRef, currentAction, setCurrentAction, newExposi
   } = useGetData();
 
   const { mutateAsync:mutateEdit } = useEditExpositor();
-  const { mutateAsync:mutateCreate } = useSaveNewExpositor();
   const { mutateAsync:mutateDelete } = useDeleteExpositor();
+  const { mutateAsync:mutateCreate } = useSaveNewExpositor();
 
   async function saveNewExpositor () {
     if (!validateExpositorInformation()) return;
@@ -138,11 +132,7 @@ function NewExpositorForm ({ formRef, currentAction, setCurrentAction, newExposi
         alert:'Nuevo expositor guardado',
         color:'bg-blue-600',
       });
-      window.scrollTo({ top:0, behavior:'smooth' });
-      setNewExpositor(initialState);
-      setIsSavingNewExpositor(false);
-      setCoverImage(undefined);
-      setProfileImage(undefined);
+      cleanForm();
     } catch (error:any) {
       switchAlert({ 
         alert:'Ha ocurrido un error, inténtalo más tarde', 
@@ -156,40 +146,15 @@ function NewExpositorForm ({ formRef, currentAction, setCurrentAction, newExposi
     if (!validateExpositorInformation()) return;
     try {
       setIsSavingNewExpositor(true);
-      if (profileImage && coverImage) {
-        const responseCoverImage = await saveImageOnFirebase(coverImage!, `${name}-cover-expositor`);
-        const responseProfileImage = await saveImageOnFirebase(profileImage!, `${name}-profile-expositor`);
-        mutateEdit({ 
-          ...newExpositor, 
-          profileImage: responseProfileImage,
-          coverImage: responseCoverImage
-        });
-        setCoverImage(undefined);
-        setProfileImage(undefined);
-      } else if (profileImage) {
-        const responseProfileImage = await saveImageOnFirebase(profileImage!, `${name}-profile-expositor`);
-        mutateEdit({ 
-          ...newExpositor, 
-          profileImage: responseProfileImage,
-        });
-        setProfileImage(undefined);
-      } else if (coverImage) {
-        const responseCoverImage = await saveImageOnFirebase(coverImage!, `${name}-cover-expositor`);
-        mutateEdit({ 
-          ...newExpositor, 
-          coverImage: responseCoverImage
-        });
-        setCoverImage(undefined);
-      } else {
-        mutateEdit(newExpositor);
-      }
+      if (profileImage && coverImage) editWithBothImages();
+      else if (profileImage) editWithProfileImage();
+      else if (coverImage) editWithCoverImage();
+      else mutateEdit(newExpositor); 
       switchAlert({
         alert:'Expositor editado',
         color:'bg-blue-600',
       });
-      setNewExpositor(initialState);
-      window.scrollTo({ top:0, behavior:'smooth' });
-      setCurrentAction('create');
+      cleanForm();
       setIsSavingNewExpositor(false);
     } catch (error:any) {
       switchAlert({ 
@@ -200,6 +165,32 @@ function NewExpositorForm ({ formRef, currentAction, setCurrentAction, newExposi
     }
   }
 
+  async function editWithBothImages () {
+    const responseCoverImage = await saveImageOnFirebase(coverImage!, `${name}-cover-expositor`);
+    const responseProfileImage = await saveImageOnFirebase(profileImage!, `${name}-profile-expositor`);
+    mutateEdit({ 
+      ...newExpositor, 
+      profileImage: responseProfileImage,
+      coverImage: responseCoverImage
+    });
+  }
+
+  async function editWithProfileImage () {
+    const responseProfileImage = await saveImageOnFirebase(profileImage!, `${name}-profile-expositor`);
+    mutateEdit({ 
+      ...newExpositor, 
+      profileImage: responseProfileImage,
+    });
+  }
+
+  async function editWithCoverImage () {
+    const responseCoverImage = await saveImageOnFirebase(coverImage!, `${name}-cover-expositor`);
+    mutateEdit({ 
+      ...newExpositor, 
+      coverImage: responseCoverImage
+    });
+  }
+
   async function deleteExpositor () {
     try {
       mutateDelete(id);
@@ -207,9 +198,7 @@ function NewExpositorForm ({ formRef, currentAction, setCurrentAction, newExposi
         alert:'Expositor eliminado', 
         color:'bg-red-600', 
       });
-      setNewExpositor(initialState);
-      window.scrollTo({ top:0, behavior:'smooth' });
-      setCurrentAction('create');
+      cleanForm();
     } catch (error:any) {
       switchAlert({ 
         alert:'Ha ocurrido un error, inténtalo más tarde', 
@@ -228,7 +217,13 @@ function NewExpositorForm ({ formRef, currentAction, setCurrentAction, newExposi
     } else return true;
   }
 
-  function cleanForm () { setNewExpositor(initialState) }
+  function cleanForm () { 
+    setNewExpositor(initialState);
+    window.scrollTo({ top:0, behavior:'smooth' });
+    setCurrentAction('create');
+    setCoverImage(undefined);
+    setProfileImage(undefined);
+  }
 
   return (
     <NewElementForm 
@@ -241,25 +236,22 @@ function NewExpositorForm ({ formRef, currentAction, setCurrentAction, newExposi
       deleteAction={() => deleteExpositor()}
       deleteText='Eliminar expositor'
     >
-      <div className='flex flex-col'>
-        <label>Nombre</label>
-        <input 
-          className={lightInput} 
-          type='text' value={name} 
-          ref={formRef}
-          onChange={(value) => setNewExpositor(prev => ({ ...prev, name:value.target.value }))}
-        />
-      </div>
-      <div className='flex flex-col'>
-        <label>Descripción</label>
-        <textarea 
-          className={lightInput} 
-          style={{ resize:'none' }}
-          rows={6}
-          value={description} 
-          onChange={(value) => setNewExpositor(prev => ({ ...prev, description:value.target.value }))} 
-        />
-      </div>
+      <FormElement
+        inputName='name'
+        inputOnChange={handleInputs}
+        inputValue={name}
+        isInputDisabled={false}
+        labelText='Nombre'
+        inputRef={formRef}
+      />
+      <FormElement
+        inputName='description'
+        inputOnChange={handleInputs}
+        inputValue={description}
+        isInputDisabled={false}
+        labelText='Descripción'
+        inputOrTextarea='textarea'
+      />
       <div className='flex flex-col'>
         <label className='mb-1'>Foto de perfil</label>
         <FileButton img={profileImage} setImg={setProfileImage} setSourceImageViewer={setSourceImageViewer}/>
@@ -305,7 +297,7 @@ type ExpositorCardProps = {
 }
 
 function ExpositorCard ({ expositor, setCurrentAction, formRef, setNewExpositor}:ExpositorCardProps) {
-  const { name, profileImage, description, coverImage, id } = expositor;
+  const { name, profileImage, description, coverImage } = expositor;
   return (
     <div className='rounded border border-gray-200 flex flex-col'>
       <div 
@@ -313,11 +305,7 @@ function ExpositorCard ({ expositor, setCurrentAction, formRef, setNewExpositor}
         style={{ width:'100%', backgroundImage:`url(${coverImage})`, height:150, backgroundPosition:'center', backgroundSize:'cover' }}
       />
       <div className='flex flex-col items-center' style={{ top:-30, position:'relative' }}>
-        <img
-          src={profileImage}
-          style={{ height:60, width:60, borderRadius:100 }}
-          className='border border-gray-400 self-center mb-3'
-        />
+        <BubbleImage imgSource={profileImage}/>
         <span>{name}</span>
         <small className='text-gray-400 mb-3'>{description}</small>
         <RoundedButton 

@@ -569,7 +569,6 @@ function NewEventForm ({
 
   async function editEvent () {
     try {
-      // Funcionalidad por realizar, simulación
       switchAlert({ 
         alert:'Ha sido editado el evento', 
         color:'bg-blue-600', 

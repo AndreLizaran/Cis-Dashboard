@@ -159,3 +159,9 @@ export function deletePonencia (id:number) {
 export function deleteCurso (id:number) {
   return axiosInstance.delete(`/cursos/${id}`);
 }
+
+// News 
+
+export function createNew (data:any) {
+  return axiosInstance.post(`/news`, data);
+}
