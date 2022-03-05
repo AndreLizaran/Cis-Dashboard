@@ -133,6 +133,7 @@ function NewExpositorForm ({ formRef, currentAction, setCurrentAction, newExposi
         color:'bg-blue-600',
       });
       cleanForm();
+      setIsSavingNewExpositor(false);
     } catch (error:any) {
       switchAlert({ 
         alert:'Ha ocurrido un error, inténtalo más tarde', 

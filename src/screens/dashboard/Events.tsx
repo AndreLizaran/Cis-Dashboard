@@ -36,6 +36,8 @@ import { fadeInUp, lightInput } from '../../classes';
 
 // Types
 import { EventType } from '../../api';
+import SelectElement from '../../components/forms/SelectElement';
+import FormElement from '../../components/forms/FormElement';
 
 const initialState:EventType = {
   id:0,
@@ -486,7 +488,7 @@ function NewEventForm ({
     useDeletePonencia
   } = useGetData();
 
-  const { data } = useGetExpositores(); 
+  const { data } = useGetExpositores();
   const { mutateAsync:saveTaller } = useSaveNewTaller();
   const { mutateAsync:saveConferencia } = useSaveNewConferencia();
   const { mutateAsync:saveCurso } = useSaveNewCurso();
@@ -648,110 +650,130 @@ function NewEventForm ({
       deleteText='Eliminar evento'
       isLoading={isSavingNewEvent}
     >
-      <div className='flex flex-col'>
-        <label>Título</label>
-        <input className={lightInput} ref={formRef} value={title} name='title' onChange={handleInputs}/>
-      </div>
-      <div className='flex flex-col'>
-        <label>Descripción</label>
-        <textarea 
-          className={lightInput} 
-          style={{ resize:'none' }} 
-          rows={4} 
-          value={description} 
-          name='description' 
-          // @ts-ignore
-          onChange={handleInputs}
-        />
-      </div>
-      <div className='flex flex-col'>
-        <label>Expositor</label>
-        <select 
-          className={lightInput}  
-          value={idExpositor}
-          onChange={(event) => setEventFormValues({ ...eventFormValues, idExpositor:Number(event.target.value) })}
-        >
-          {data && data.map(({ name, id }) => <option key={id} value={id}>{name}</option>)}
-        </select>
-      </div>
-      <div className='flex flex-col'>
-        <label>Tipo de evento</label>
-        <select 
-          className={lightInput} 
-          value={eventType}
-          onChange={(event) => setEventFormValues({ ...eventFormValues, eventType:Number(event.target.value) })}
-        >
-          <option value={1}>Taller</option>
-          <option value={2}>Conferencia</option>
-          <option value={3}>Curso</option>
-          <option value={4}>Ponencia</option>
-        </select>
-      </div>
-      <div className='flex flex-col'>
-        <label>Estado del evento</label>
-        <select 
-          className={lightInput} 
-          value={eventState}
-          onChange={(event) => setEventFormValues({ ...eventFormValues, eventState:Number(event.target.value) })}
-        >
-          <option value={1}>En fecha</option>
-          <option value={2}>Pospuesto</option>
-          <option value={3}>Cancelado</option>
-          <option value={4}>Por agendar</option>
-          <option value={5}>Concluido</option>
-        </select>
-      </div>
-      <div className='flex flex-col'>
-        <label>Fecha</label>
-        <DatePicker 
-          className={lightInput} 
-          selected={dateHelper} 
-          onChange={(date:Date) => {
-            setEventFormValues({ ...eventFormValues, day:date.toLocaleDateString("en-ES") });
-            setDateHelper(date)
-          }} 
-          locale="es"
-          dateFormat="dd/MM/yyyy"
-        />
-      </div>
-      <div className='flex flex-col'>
-        <label>Hora</label>
-        <div className='flex gap-6'>
-          <input className={lightInput} disabled={true} readOnly value={hour.hour}/>
-          <RoundedButton 
-            color='blue-500' 
-            icon={faPlus} 
-            action={() => hour.hour <= 24 && setEventFormValues({ ...eventFormValues, hour:{ minute:hour.minute, hour: hour.hour + 1 }})}
-          />
-          <RoundedButton 
-            color='red-600' 
-            icon={faMinus}
-            action={() => hour.hour > 1 && setEventFormValues({ ...eventFormValues, hour:{ minute:hour.minute, hour: hour.hour - 1 }})}
-          />
-        </div>
-      </div>
-      <div className='flex flex-col'>
-        <label>Minuto</label>
-        <div className='flex gap-6'>
-          <input className={lightInput} disabled={true} readOnly value={hour.minute}/>
-          <RoundedButton 
-            color='blue-500' 
-            icon={faPlus}
-            action={() => hour.minute < 59 && setEventFormValues({ ...eventFormValues, hour:{ hour:hour.hour, minute: hour.minute + 1 }})}
-          />
-          <RoundedButton 
-            color='red-600' 
-            icon={faMinus}
-            action={() => hour.minute > 1 && setEventFormValues({ ...eventFormValues, hour:{ hour:hour.hour, minute: hour.minute - 1 }})}
-          />
-        </div>
-      </div>
+      <FormElement
+        inputName='title'
+        inputOnChange={handleInputs}
+        inputValue={title}
+        isInputDisabled={false}
+        labelText='Título'
+        inputRef={formRef}
+      />
+      <FormElement
+        inputName='description'
+        inputOnChange={handleInputs}
+        inputValue={description}
+        isInputDisabled={false}
+        labelText='Descripción'
+        inputOrTextarea='textarea'
+      />
+      <EventTypeSelect/>
+      <EventStateSelect/> 
+      <ExpositoresSelect/>
+      <DateForm/>
+      <HourForm/>
+      <MinuteForm/>
       <div className='flex flex-col'>
         <label className='mb-1'>Imagen del evento</label>
         <div className='flex gap-6'>
           <FileButton img={coverImage} setImg={setCoverImage} setSourceImageViewer={setSourceImageViewer}/>
         </div>
       </div>
+
     </NewElementForm>
+  )
+}
+
+function ExpositoresSelect () {
+  const { useGetExpositores } = useGetData();
+  const { data } = useGetExpositores();
+  const [ expositores, setExpositores ] = useState<{ value:number, label:string }[]>([]);
+  useEffect(() => {
+    if (data !== undefined) {
+      const mappedExpositores = data.map((expositor) => ({ value:expositor.id, label: expositor.name }));
+      setExpositores(mappedExpositores);
+    }
+  }, [data]);
+  return <SelectElement values={expositores} labelText='Estado del evento' />
+}
+
+
+function EventStateSelect () {
+  const values = [
+    { value:1, label:'En fecha' },
+    { value:2, label:'Pospuesto' },
+    { value:3, label:'Cancelado' },
+    { value:4, label:'Por agendar' },
+    { value:5, label:'Concluido' },
+  ];
+  return <SelectElement values={values} labelText='Estado del evento' />
+}
+
+function EventTypeSelect () {
+  const values = [
+    { value:1, label:'Taller' },
+    { value:2, label:'Conferencia' },
+    { value:3, label:'Curso' },
+    { value:4, label:'Ponencia' },
+  ];
+  return <SelectElement values={values} labelText='Tipo de evento' />
+}
+
+function DateForm () {
+  return (
+    <div className='flex flex-col'>
+      <label>Fecha</label>
+      <DatePicker 
+        className={lightInput} 
+        // selected={dateHelper} 
+        // onChange={(date:Date) => {
+        //   setEventFormValues({ ...eventFormValues, day:date.toLocaleDateString("en-ES") });
+        //   setDateHelper(date)
+        // }} 
+        locale="es"
+        dateFormat="dd/MM/yyyy"
+      />
+    </div>
+  )
+}
+
+function HourForm () {
+  return (
+    <div className='flex flex-col'>
+      <label>Hora</label>
+      <div className='flex gap-6'>
+        <input className={lightInput} disabled={true} readOnly /* value={hour.hour} *//>
+        <RoundedButton 
+          color='blue-500' 
+          icon={faPlus} 
+          // action={() => hour.hour <= 24 && setEventFormValues({ ...eventFormValues, hour:{ minute:hour.minute, hour: hour.hour + 1 }})}
+        />
+        <RoundedButton 
+          color='red-600' 
+          icon={faMinus}
+          // action={() => hour.hour > 1 && setEventFormValues({ ...eventFormValues, hour:{ minute:hour.minute, hour: hour.hour - 1 }})}
+        />
+      </div>
+    </div>
+  )
+}
+
+function MinuteForm () {
+  return (
+    <div className='flex flex-col'>
+      <label>Minuto</label>
+      <div className='flex gap-6'>
+        <input className={lightInput} disabled={true} readOnly /* value={hour.minute} *//>
+        <RoundedButton 
+          color='blue-500' 
+          icon={faPlus}
+          // action={() => hour.minute < 59 && setEventFormValues({ ...eventFormValues, hour:{ hour:hour.hour, minute: hour.minute + 1 }})}
+        />
+        <RoundedButton 
+          color='red-600' 
+          icon={faMinus}
+          // action={() => hour.minute > 1 && setEventFormValues({ ...eventFormValues, hour:{ hour:hour.hour, minute: hour.minute - 1 }})}
+        />
+      </div>
+    </div>
   )
 }
