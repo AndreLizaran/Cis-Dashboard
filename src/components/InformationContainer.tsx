@@ -20,7 +20,7 @@ export default function InformationContainer({ children, headerColor, headerText
       </div>
       <div className='rounded-b bg-white p-6 drop-shadow'>
         <div 
-          className={`flex flex-col gap-6  overflow-y-auto scrollbar-thin scrollbar-thumb-gray-400 scrollbar-track-gray-200 ${maxHeight && 'pr-6'}`} 
+          className={`flex flex-col gap-6 overflow-y-auto scrollbar-thin scrollbar-thumb-gray-400 scrollbar-track-gray-200 ${maxHeight && 'pr-6'}`} 
           style={maxHeight ? { maxHeight:350 } : {}}
         >
           {children}

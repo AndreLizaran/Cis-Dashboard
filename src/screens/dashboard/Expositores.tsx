@@ -25,7 +25,7 @@ import useProcessImage from '../../hooks/useProcessImage';
 import { useUIContext } from '../../hooks/useCustomContext';
 
 // Classes
-import { fadeIn, lightInput } from '../../classes';
+import { fadeInUp, lightInput } from '../../classes';
 
 const initialState:Expositor = {
   id:0,
@@ -35,14 +35,15 @@ const initialState:Expositor = {
   coverImage: ''
 }
 
+// Componente general
 export default function Expositores() {
 
   const { state } = useUIContext();
   const { showDashboardBar } = state;
-  const [img, setImg] = useState('');
+  const [ sourceImageViewer, setSourceImageViewer ] = useState('');
+  const [ newExpositor, setNewExpositor ] = useState<Expositor>(initialState);
+  const [ currentAction, setCurrentAction ] = useState<'create' | 'edit'>('create');
   const formRef = useRef<HTMLInputElement>(null);
-  const [newExpositor, setNewExpositor] = useState<Expositor>(initialState);
-  const [currentAction, setCurrentAction] = useState<'create' | 'edit'>('create');
 
   return (
     <>
@@ -57,7 +58,7 @@ export default function Expositores() {
             action={() => formRef.current?.focus()}
           />
         </div>
-        <div className={`flex flex-col gap-6 ${showDashboardBar ? '2xl:grid 2xl:grid-cols-2' : 'lg:grid lg:grid-cols-2'} ${fadeIn}`}>
+        <div className={`flex flex-col gap-6 ${showDashboardBar ? '2xl:grid 2xl:grid-cols-2' : 'lg:grid lg:grid-cols-2'} ${fadeInUp}`}>
           <InformationContainer
             headerText='Expositores registrados'
             headerColor='bg-gray-800'
@@ -76,7 +77,7 @@ export default function Expositores() {
             maxHeight={false}
           >
             <NewExpositorForm 
-              setImg={setImg} 
+              setSourceImageViewer={setSourceImageViewer} 
               formRef={formRef}
               currentAction={currentAction}
               setCurrentAction={setCurrentAction}
@@ -86,22 +87,23 @@ export default function Expositores() {
           </InformationContainer>
         </div>
       </div>
-      {img && <ImageViewer img={img} setImg={setImg}/>}
+      {sourceImageViewer && <ImageViewer img={sourceImageViewer} setImg={setSourceImageViewer}/>}
     </>
   )
 }
 
 
 type NewExpositorFormProps = {
-  setImg:Dispatch<SetStateAction<string>>
-  formRef:RefObject<HTMLInputElement>
-  currentAction:'create' | 'edit'
+  setSourceImageViewer: Dispatch<SetStateAction<string>>
+  formRef: RefObject<HTMLInputElement>
+  currentAction: 'create' | 'edit'
   setCurrentAction: Dispatch<SetStateAction<"create" | "edit">>
   newExpositor: Expositor
   setNewExpositor: Dispatch<SetStateAction<Expositor>>
 }
 
-function NewExpositorForm ({ formRef, currentAction, setCurrentAction, newExpositor, setNewExpositor }:NewExpositorFormProps) {
+// Formulario
+function NewExpositorForm ({ formRef, currentAction, setCurrentAction, newExpositor, setNewExpositor, setSourceImageViewer }:NewExpositorFormProps) {
 
   const { name, description, id, coverImage:coverSavedImage, profileImage:profileSavedImage } = newExpositor;
   const { switchAlert } = useUIContext();
@@ -260,11 +262,11 @@ function NewExpositorForm ({ formRef, currentAction, setCurrentAction, newExposi
       </div>
       <div className='flex flex-col'>
         <label className='mb-1'>Foto de perfil</label>
-        <FileButton img={profileImage} setImg={setProfileImage}/>
+        <FileButton img={profileImage} setImg={setProfileImage} setSourceImageViewer={setSourceImageViewer}/>
       </div>
       <div className='flex flex-col'>
         <label className='mb-1'>Foto de portada</label>
-        <FileButton img={coverImage} setImg={setCoverImage}/>
+        <FileButton img={coverImage} setImg={setCoverImage} setSourceImageViewer={setSourceImageViewer}/>
       </div>
     </NewElementForm>
   )

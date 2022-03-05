@@ -41,10 +41,105 @@
       "coverImage": "https://firebasestorage.googleapis.com/v0/b/cis-dashboard-fb2a7.appspot.com/o/Bradley%20Stain-cover-expositor?alt=media&token=afd3042f-1836-4ecb-a216-8bb6967c6f1c",
       "profileImage": "https://firebasestorage.googleapis.com/v0/b/cis-dashboard-fb2a7.appspot.com/o/Bradley%20Stain-profile-expositor?alt=media&token=c5edd3c0-b5ee-422c-98b9-3895a20e021b",
       "id": 6
+    },
+    {
+      "description": "Backend dev",
+      "name": "Ben Smith",
+      "coverImage": "https://firebasestorage.googleapis.com/v0/b/cis-dashboard-fb2a7.appspot.com/o/Ben%20Smith-cover-expositor?alt=media&token=d52f4a04-e2f4-458c-9b36-af6c4927f693",
+      "profileImage": "https://firebasestorage.googleapis.com/v0/b/cis-dashboard-fb2a7.appspot.com/o/Ben%20Smith-profile-expositor?alt=media&token=9c2e1195-a43d-4461-b702-f26b3fd5ae56",
+      "id": 7
+    },
+    {
+      "description": "Mobile dev",
+      "name": "Olivia Whit",
+      "coverImage": "https://firebasestorage.googleapis.com/v0/b/cis-dashboard-fb2a7.appspot.com/o/Olivia%20White-cover-expositor?alt=media&token=83305816-c41c-474e-9234-6c2e9880deea",
+      "profileImage": "https://firebasestorage.googleapis.com/v0/b/cis-dashboard-fb2a7.appspot.com/o/Olivia%20White-profile-expositor?alt=media&token=2c0fa6d0-a7c3-4f5e-b3ac-fafa024130fc",
+      "id": 8
     }
   ],
-  "talleres": [],
+  "talleres": [
+    {
+      "idExpositor": 3,
+      "title": "Java and Sprint",
+      "description": "Demo description",
+      "hour": {
+        "minute": 3,
+        "hour": 15
+      },
+      "bgImage": "https://firebasestorage.googleapis.com/v0/b/cis-dashboard-fb2a7.appspot.com/o/Java%20and%20Sprint?alt=media&token=bd6286c2-a71d-4ad9-ac0a-c044cba7702a",
+      "day": "3/5/2022",
+      "eventState": 1,
+      "id": 1
+    },
+    {
+      "idExpositor": 2,
+      "title": "Node JS",
+      "description": "Demo description",
+      "hour": {
+        "hour": 12,
+        "minute": 0
+      },
+      "bgImage": "https://firebasestorage.googleapis.com/v0/b/cis-dashboard-fb2a7.appspot.com/o/Node%20JS?alt=media&token=c98a0e29-9236-4c43-a0e3-bc7682a70851",
+      "day": "3/24/2022",
+      "eventState": 4,
+      "id": 2
+    }
+  ],
   "conferencias": [],
-  "cursos": [],
-  "ponencias": []
+  "cursos": [
+    {
+      "idExpositor": 2,
+      "title": "React and JS",
+      "description": "Demo description",
+      "hour": {
+        "hour": 12,
+        "minute": 0
+      },
+      "bgImage": "https://firebasestorage.googleapis.com/v0/b/cis-dashboard-fb2a7.appspot.com/o/React%20and%20JS?alt=media&token=cb5e390b-be4e-4ef7-ba04-6e0266088d01",
+      "day": "3/4/2022",
+      "eventState": 1,
+      "id": 1
+    },
+    {
+      "idExpositor": 1,
+      "title": "React Native",
+      "description": "Demo description",
+      "hour": {
+        "minute": 10,
+        "hour": 17
+      },
+      "bgImage": "https://firebasestorage.googleapis.com/v0/b/cis-dashboard-fb2a7.appspot.com/o/React%20Native?alt=media&token=97c97028-797d-44c4-8a84-c1984458307e",
+      "day": "3/23/2022",
+      "eventState": 1,
+      "id": 2
+    },
+    {
+      "idExpositor": 4,
+      "title": "Typescript",
+      "description": "Demo description",
+      "hour": {
+        "hour": 12,
+        "minute": 0
+      },
+      "bgImage": "https://firebasestorage.googleapis.com/v0/b/cis-dashboard-fb2a7.appspot.com/o/Typescript?alt=media&token=b3fad23d-a8e2-4907-bfab-81334f82cc98",
+      "day": "3/30/2022",
+      "eventState": 1,
+      "id": 3
+    }
+  ],
+  "ponencias": [
+    {
+      "idExpositor": 6,
+      "title": "Web programming",
+      "description": "Demo description",
+      "hour": {
+        "hour": 12,
+        "minute": 0
+      },
+      "bgImage": "https://firebasestorage.googleapis.com/v0/b/cis-dashboard-fb2a7.appspot.com/o/Web%20programming?alt=media&token=a3c4e762-0ab8-476a-aa60-f23de33c157a",
+      "day": "3/4/2022",
+      "eventState": 1,
+      "id": 1
+    }
+  ]
 }

@@ -32,7 +32,7 @@ import useProcessImage from '../../hooks/useProcessImage';
 import { useUIContext } from '../../hooks/useCustomContext';
 
 // Classes
-import { fadeIn, lightInput } from '../../classes';
+import { fadeInUp, lightInput } from '../../classes';
 
 // Types
 import { EventType } from '../../api';
@@ -62,10 +62,10 @@ export default function Events() {
 
   const { state } = useUIContext();
   const { showDashboardBar } = state;
+  const [ currentAction, setCurrentAction ] = useState<'create' | 'edit'>('create');
+  const [ informationHelper, setInformationHelper ] = useState({ idEvent:0, eventType:0 });
+  const [ sourceImageViewer, setSourceImageViewer ] = useState('');
   const formRef = useRef<HTMLInputElement>(null);
-  const [currentAction, setCurrentAction] = useState<'create' | 'edit'>('create');
-  const [informationHelper, setInformationHelper] = useState({ idEvent:0, eventType:0 });
-  const [img, setImg] = useState('');
 
   const { 
     useGetTalleres,
@@ -177,7 +177,7 @@ export default function Events() {
           action={() => formRef.current?.focus()}
         />
       </div>
-      <div className={`flex flex-col ${fadeIn}`}>
+      <div className={`flex flex-col ${fadeInUp}`}>
         <EventsContainer 
           setEventFormValues={setEventFormValues} 
           formRef={formRef} 
@@ -202,18 +202,19 @@ export default function Events() {
               handleInputs={handleInputs}
               currentAction={currentAction}
               setCurrentAction={setCurrentAction}
-              setImg={setImg}
+              setImg={setSourceImageViewer}
               informationHelper={informationHelper}
               setInformationHelper={setInformationHelper}
               talleres={talleres}
               conferencias={conferencias}
               cursos={cursos}
               ponencias={ponencias}
+              setSourceImageViewer={setSourceImageViewer}
             />
           </InformationContainer>
         </div>
       </div>
-      {img && <ImageViewer img={img} setImg={setImg}/>}
+      {sourceImageViewer && <ImageViewer img={sourceImageViewer} setImg={setSourceImageViewer}/>}
     </>
   )
 }
@@ -447,6 +448,7 @@ type NewEventFormProps = {
     setPonenciasInformation: React.Dispatch<SetStateAction<EventType[]>>;
     ponenciasInformation: EventType[];
   };
+  setSourceImageViewer: React.Dispatch<React.SetStateAction<string>>;
 }
 
 function NewEventForm ({ 
@@ -455,21 +457,21 @@ function NewEventForm ({
   eventFormValues, 
   handleInputs, 
   currentAction, 
-  setCurrentAction, 
-  setImg, 
+  setCurrentAction,  
   informationHelper,
   setInformationHelper,
   talleres,
   conferencias,
   cursos,
   ponencias,
+  setSourceImageViewer
 }:NewEventFormProps) {
 
-  const { bgImage, day, title, description, idExpositor, eventType, hour, eventState } = eventFormValues; 
+  const { day, title, description, idExpositor, eventType, hour, eventState } = eventFormValues; 
   const { switchAlert } = useUIContext();
   const [ dateHelper, setDateHelper ] = useState(new Date());
   const [ isSavingNewEvent, setIsSavingNewEvent ] = useState(false);
-  const [ fileImage, setFileImage] = useState<File>();
+  const [ coverImage, setCoverImage] = useState<File>();
   const { saveImageOnFirebase } = useProcessImage();
   
   const { 
@@ -501,7 +503,7 @@ function NewEventForm ({
       if (data === undefined) return;
       let expositorInformation = data.filter((expositor) => expositor.id === idExpositor);
       if (data.length === 0) return; 
-      const bgImageUrl = await saveImageOnFirebase(fileImage!, title);
+      const bgImageUrl = await saveImageOnFirebase(coverImage!, title);
       const eventObject:EventType = {
         ...eventFormValues,
         expositor: {
@@ -543,6 +545,9 @@ function NewEventForm ({
       });
       cleanFormAfterAction();
       setIsSavingNewEvent(false);
+      setCoverImage(undefined);
+      setDateHelper(new Date)
+
     } catch (error) {
       switchAlert({ 
         alert:'Ha ocurrido un error, inténtalo más tarde', 
@@ -585,6 +590,7 @@ function NewEventForm ({
       });
       removeElementFromEvents();
       cleanFormAfterAction();
+      setCurrentAction('create');
     } catch (error:any) {
       console.log(error);
     }
@@ -744,7 +750,7 @@ function NewEventForm ({
       <div className='flex flex-col'>
         <label className='mb-1'>Imagen del evento</label>
         <div className='flex gap-6'>
-          <FileButton img={fileImage} setImg={setFileImage}/>
+          <FileButton img={coverImage} setImg={setCoverImage} setSourceImageViewer={setSourceImageViewer}/>
         </div>
       </div>
     </NewElementForm>
