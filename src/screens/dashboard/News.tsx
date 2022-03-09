@@ -2,6 +2,8 @@
 import { useState } from 'react';
 
 // Components
+import NewElementForm from '../../components/NewElementForm';
+import FormElement from '../../components/forms/FormElement';
 import InformationContainer from '../../components/InformationContainer';
 import HeaderDashboardScreens from '../../components/HeaderDashboardScreens';
 
@@ -12,9 +14,9 @@ import { faNewspaper } from '@fortawesome/free-solid-svg-icons';
 import { fadeInUp } from '../../classes';
 
 // Hooks
-import { useUIContext } from '../../hooks/useCustomContext';
-import FormElement from '../../components/forms/FormElement';
 import useFormValues from '../../hooks/useFormValues';
+import AnimationContainer from '../../components/shared/AnimationContainer';
+import GeneralContainer from '../../components/shared/GeneralContainer';
 
 type NewForm = {
   title: string;
@@ -36,16 +38,14 @@ const initialStateForm:NewForm = {
 
 export default function News() {
 
-  const { state } = useUIContext();
-
   return (
-    <div className='flex flex-col'>
+    <GeneralContainer>
       <HeaderDashboardScreens headerText='Noticias' action={() => {}}/>
-      <div className={`flex flex-col gap-6 ${fadeInUp}`}>
+      <AnimationContainer animation='fadeInUp'>
         <NewsContainers/>
         <FormNews/>
-      </div>
-    </div>
+      </AnimationContainer>
+    </GeneralContainer>
   )
 }
 
@@ -64,7 +64,8 @@ function NewsContainers () {
 function FormNews () {
 
   const { handleInputs, inputValues } = useFormValues(initialStateForm);
-  const { title, longDescription, shortDescription, type } = inputValues as NewForm;
+  const { title, longDescription, shortDescription } = inputValues as NewForm;
+  const [ currentAction, setCurrentAction ] = useState<'create' | 'edit'>('create');
 
   return (
     <InformationContainer
@@ -73,7 +74,17 @@ function FormNews () {
       headerText='Registrar nueva noticia'
       maxHeight={false}
     >
-      <form className='flex flex-col'>
+      <NewElementForm
+        saveButtonText='Guardar noticia'
+        deleteText='Eliminar noticia'
+        isLoading={false}
+        action={currentAction}
+        setAction={setCurrentAction}
+        saveFunction={() => {}}
+        editAction={() => {}}
+        cleanAction={() => {}}
+        deleteAction={() => {}}
+      >
         <FormElement 
           inputName='title' 
           inputOnChange={handleInputs} 
@@ -96,7 +107,7 @@ function FormNews () {
           labelText='Descripción larga' 
           inputOrTextarea='textarea'
         />
-      </form>
+      </NewElementForm>
     </InformationContainer>
   )
 }

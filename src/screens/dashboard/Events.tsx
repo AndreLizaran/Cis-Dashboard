@@ -182,31 +182,29 @@ export default function Events() {
           cursos={cursos}
           ponencias={ponencias}
         />
-        <div className={`flex flex-col gap-6 ${showDashboardBar ? '' : 'lg:grid lg:grid-cols-2'}`}>
-          <InformationContainer
-            headerColor={currentAction === 'create' ? 'bg-gray-800' : 'bg-blue-500'}
-            headerText={currentAction === 'create' ? 'Registrar nuevo evento' : 'Editar evento'}
-            headerIcon={faPlus}
-            maxHeight={false}
-          >
-            <NewEventForm 
-              formRef={formRef} 
-              setEventFormValues={setEventFormValues} 
-              eventFormValues={eventFormValues} 
-              handleInputs={handleInputs}
-              currentAction={currentAction}
-              setCurrentAction={setCurrentAction}
-              setImg={setSourceImageViewer}
-              informationHelper={informationHelper}
-              setInformationHelper={setInformationHelper}
-              talleres={talleres}
-              conferencias={conferencias}
-              cursos={cursos}
-              ponencias={ponencias}
-              setSourceImageViewer={setSourceImageViewer}
-            />
-          </InformationContainer>
-        </div>
+        <InformationContainer
+          headerColor={currentAction === 'create' ? 'bg-gray-800' : 'bg-blue-500'}
+          headerText={currentAction === 'create' ? 'Registrar nuevo evento' : 'Editar evento'}
+          headerIcon={faPlus}
+          maxHeight={false}
+        >
+          <NewEventForm 
+            formRef={formRef} 
+            setEventFormValues={setEventFormValues} 
+            eventFormValues={eventFormValues} 
+            handleInputs={handleInputs}
+            currentAction={currentAction}
+            setCurrentAction={setCurrentAction}
+            setImg={setSourceImageViewer}
+            informationHelper={informationHelper}
+            setInformationHelper={setInformationHelper}
+            talleres={talleres}
+            conferencias={conferencias}
+            cursos={cursos}
+            ponencias={ponencias}
+            setSourceImageViewer={setSourceImageViewer}
+          />
+        </InformationContainer>
       </div>
       {sourceImageViewer && <ImageViewer img={sourceImageViewer} setImg={setSourceImageViewer}/>}
     </>
@@ -282,7 +280,7 @@ function EventsContainer ({
   ]
 
   return (
-    <div className={`flex flex-col gap-6 mb-6 sm:grid ${!showDashboardBar ? 'md:grid-cols-2 xl:grid-cols-3' : 'xl:grid-cols-2'}`}>
+    <div className={`flex flex-col gap-6 mb-6 sm:grid ${!showDashboardBar ? 'md:grid-cols-2 2xl:grid-cols-4' : 'xl:grid-cols-2'}`}>
       {infoContainers.map(({ headerColor, headerIcon, headerText, data, isLoading}, index) => (
         <InformationContainer
           headerColor={headerColor}
@@ -638,9 +636,10 @@ function NewEventForm ({
       setAction={setCurrentAction}
       isLoading={isSavingNewEvent}
       // Actions
-      saveFunction={currentAction === 'create' ? saveEvent : editEvent} 
-      cleanAction={() => cleanFormAfterAction()}
-      deleteAction={() => deleteEvent()}
+      saveFunction={saveEvent} 
+      editAction={editEvent}
+      cleanAction={cleanFormAfterAction}
+      deleteAction={deleteEvent}
     >
       <FormElement
         inputName='title'

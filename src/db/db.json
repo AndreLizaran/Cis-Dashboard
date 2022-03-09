@@ -48,6 +48,13 @@
       "coverImage": "https://firebasestorage.googleapis.com/v0/b/cis-dashboard-fb2a7.appspot.com/o/Ben%20Smith-cover-expositor?alt=media&token=d52f4a04-e2f4-458c-9b36-af6c4927f693",
       "profileImage": "https://firebasestorage.googleapis.com/v0/b/cis-dashboard-fb2a7.appspot.com/o/Ben%20Smith-profile-expositor?alt=media&token=9c2e1195-a43d-4461-b702-f26b3fd5ae56",
       "id": 7
+    },
+    {
+      "description": "Demo",
+      "name": "Andre Lizaran",
+      "coverImage": "https://firebasestorage.googleapis.com/v0/b/cis-dashboard-fb2a7.appspot.com/o/Andre%20Lizaran-cover-expositor?alt=media&token=a2f45141-11ad-419c-ad81-a27b39b639b0",
+      "profileImage": "https://firebasestorage.googleapis.com/v0/b/cis-dashboard-fb2a7.appspot.com/o/Andre%20Lizaran-profile-expositor?alt=media&token=1d50edbd-b467-4a3f-81fd-4a85825aff09",
+      "id": 8
     }
   ],
   "talleres": [

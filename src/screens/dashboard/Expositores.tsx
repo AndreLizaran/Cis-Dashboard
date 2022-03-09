@@ -29,6 +29,8 @@ import { useUIContext } from '../../hooks/useCustomContext';
 
 // Classes
 import { fadeInUp } from '../../classes';
+import GeneralContainer from '../../components/shared/GeneralContainer';
+import AnimationContainer from '../../components/shared/AnimationContainer';
 
 const initialState:Expositor = {
   id:0,
@@ -49,9 +51,9 @@ export default function Expositores() {
 
   return (
     <>
-      <div className='flex flex-col'>
+      <GeneralContainer>
         <HeaderDashboardScreens action={() => formRef.current?.focus()} headerText='Expositores'/>
-        <div className={`flex flex-col gap-6 ${showDashboardBar ? '2xl:grid 2xl:grid-cols-2' : 'lg:grid lg:grid-cols-2'} ${fadeInUp}`}>
+        <AnimationContainer animation='fadeInUp'> 
           <InformationContainer
             headerText='Expositores registrados'
             headerColor='bg-gray-800'
@@ -79,8 +81,8 @@ export default function Expositores() {
               handleInputs={handleInputs}
             />
           </InformationContainer>
-        </div>
-      </div>
+        </AnimationContainer>
+      </GeneralContainer>
       {sourceImageViewer && <ImageViewer img={sourceImageViewer} setImg={setSourceImageViewer}/>}
     </>
   )
@@ -231,12 +233,13 @@ function NewExpositorForm ({ formRef, currentAction, setCurrentAction, newExposi
       saveButtonText='Guardar expositor' 
       deleteText='Eliminar expositor'
       action={currentAction}
-      isLoading={isSavingNewExpositor}  
       setAction={setCurrentAction}
+      isLoading={isSavingNewExpositor}  
       // Actions
-      saveFunction={currentAction === 'create' ? saveNewExpositor : editExpositor} 
-      cleanAction={() => cleanForm()}
-      deleteAction={() => deleteExpositor()}
+      saveFunction={saveNewExpositor} 
+      editAction={editExpositor}
+      cleanAction={cleanForm}
+      deleteAction={deleteExpositor}
     >
       <FormElement
         inputName='name'
@@ -281,7 +284,7 @@ function ExpositoresList ({ setCurrentAction, formRef, setNewExpositor }:Exposit
   const { state:{ showDashboardBar }} = useUIContext();
   const { data } = useGetExpositores();
   return (
-    <div className={`flex flex-col gap-6 ${!showDashboardBar ? 'md:grid md:grid-cols-2 lg:flex 2xl:grid' : 'lg:grid lg:grid-cols-2 2xl:flex'}`}>
+    <div className={`flex flex-col gap-6 ${!showDashboardBar ? 'md:grid md:grid-cols-2 2xl:grid-cols-4' : 'lg:grid lg:grid-cols-2'}`}>
       {data?.map((expositor, index) => (
         <ExpositorCard 
           expositor={expositor} 
