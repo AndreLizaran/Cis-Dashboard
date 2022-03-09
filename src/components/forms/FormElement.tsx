@@ -23,7 +23,8 @@ export default function FormElement({
   inputName,
   inputOnChange,
   isInputDisabled,
-  moreMarginBottom
+  moreMarginBottom,
+  inputRef
 }:Props) {
   return (
     <div className='flex flex-col'>
@@ -38,6 +39,7 @@ export default function FormElement({
           onChange={inputOnChange}
           disabled={isInputDisabled}
           autoComplete='off'
+          ref={inputRef}
         />
         :
         <textarea

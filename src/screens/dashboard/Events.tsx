@@ -561,6 +561,7 @@ function NewEventForm ({
 
   async function editEvent () {
     try {
+      formRef.current?.focus();
       switchAlert({ 
         alert:'Ha sido editado el evento', 
         color:'bg-blue-600', 
@@ -631,14 +632,15 @@ function NewEventForm ({
 
   return (
     <NewElementForm 
-      saveFunction={currentAction === 'create' ? saveEvent : editEvent} 
       saveButtonText='Guardar evento' 
+      deleteText='Eliminar evento'
       action={currentAction}
       setAction={setCurrentAction}
+      isLoading={isSavingNewEvent}
+      // Actions
+      saveFunction={currentAction === 'create' ? saveEvent : editEvent} 
       cleanAction={() => cleanFormAfterAction()}
       deleteAction={() => deleteEvent()}
-      deleteText='Eliminar evento'
-      isLoading={isSavingNewEvent}
     >
       <FormElement
         inputName='title'
@@ -668,20 +670,25 @@ function NewEventForm ({
         eventFormValues={eventFormValues} 
         setEventFormValues={setEventFormValues}
       />
-      <DateForm
-        eventFormValues={eventFormValues} 
-        setEventFormValues={setEventFormValues}
-        dateHelper={dateHelper} 
-        setDateHelper={setDateHelper}
-      />
-      <HourForm 
-        eventFormValues={eventFormValues} 
-        setEventFormValues={setEventFormValues}
-      />
-      <MinuteForm
-        eventFormValues={eventFormValues} 
-        setEventFormValues={setEventFormValues}
-      />
+      { 
+        (eventState !== 3 && eventState !== 4 && eventState !== 5) &&
+        <>
+          <DateForm
+            eventFormValues={eventFormValues} 
+            setEventFormValues={setEventFormValues}
+            dateHelper={dateHelper} 
+            setDateHelper={setDateHelper}
+          /> 
+          <HourForm 
+            eventFormValues={eventFormValues} 
+            setEventFormValues={setEventFormValues}
+          />
+          <MinuteForm
+            eventFormValues={eventFormValues} 
+            setEventFormValues={setEventFormValues}
+          />
+        </>
+      }
       <FileButtonElement 
         labelText='Imagen del evento' 
         img={coverImage} 
@@ -698,18 +705,22 @@ type ExpositoresSelectProps = {
 }
 
 function ExpositoresSelect ({ eventFormValues, setEventFormValues }:ExpositoresSelectProps) {
+
   const { useGetExpositores } = useGetData();
   const { data } = useGetExpositores();
   const [ expositores, setExpositores ] = useState<{ value:number, label:string }[]>([]);
-  function onChange (e:React.FormEvent<HTMLOptionElement>) {
+
+  function onChange (e:React.ChangeEvent<HTMLSelectElement>) {
     setEventFormValues({ ...eventFormValues, idExpositor: Number(e.currentTarget.value) })
   }
+
   useEffect(() => {
     if (data !== undefined) {
       const mappedExpositores = data.map((expositor) => ({ value:expositor.id, label: expositor.name }));
       setExpositores(mappedExpositores);
     }
   }, [data]);
+
   return <SelectElement values={expositores} labelText='Estado del evento' onChange={onChange}/>
 }
 
@@ -726,7 +737,7 @@ function EventStateSelect ({ eventFormValues, setEventFormValues }:EventStateSel
     { value:4, label:'Por agendar' },
     { value:5, label:'Concluido' },
   ];
-  function onChange (e:React.FormEvent<HTMLOptionElement>) {
+  function onChange (e:React.ChangeEvent<HTMLSelectElement>) {
     setEventFormValues({ ...eventFormValues, eventState: Number(e.currentTarget.value) });
   }
   return <SelectElement values={values} labelText='Estado del evento' onChange={onChange}/>
@@ -744,7 +755,8 @@ function EventTypeSelect ({ eventFormValues, setEventFormValues }:EventTypeSelec
     { value:3, label:'Curso' },
     { value:4, label:'Ponencia' },
   ];
-  function onChange (e:React.FormEvent<HTMLOptionElement>) {
+  function onChange (e:React.ChangeEvent<HTMLSelectElement>) {
+    console.log(e.currentTarget.value);
     setEventFormValues({ ...eventFormValues, eventType: Number(e.currentTarget.value) });
   }
   return <SelectElement values={values} labelText='Tipo de evento' onChange={onChange}/>

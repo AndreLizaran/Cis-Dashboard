@@ -91,7 +91,47 @@
       "id": 4
     }
   ],
-  "conferencias": [],
+  "conferencias": [
+    {
+      "idExpositor": 1,
+      "title": "PHP",
+      "description": "Demo",
+      "hour": {
+        "minute": 0,
+        "hour": 20
+      },
+      "bgImage": "https://firebasestorage.googleapis.com/v0/b/cis-dashboard-fb2a7.appspot.com/o/PHP?alt=media&token=9322d95c-e53b-42d6-be20-a65efefcdf1c",
+      "day": "3/16/2022",
+      "eventState": 1,
+      "id": 5
+    },
+    {
+      "idExpositor": 1,
+      "title": "Python",
+      "description": "Demo",
+      "hour": {
+        "hour": 12,
+        "minute": 0
+      },
+      "bgImage": "https://firebasestorage.googleapis.com/v0/b/cis-dashboard-fb2a7.appspot.com/o/Python?alt=media&token=378d591d-aad9-41b3-b1f5-3a40bbde05cb",
+      "day": "3/18/2022",
+      "eventState": 1,
+      "id": 6
+    },
+    {
+      "idExpositor": 3,
+      "title": "Flask",
+      "description": "Demo",
+      "hour": {
+        "hour": 20,
+        "minute": 10
+      },
+      "bgImage": "https://firebasestorage.googleapis.com/v0/b/cis-dashboard-fb2a7.appspot.com/o/Flask?alt=media&token=b0989324-0a36-4c6a-9a8a-ee32cb8abc98",
+      "day": "3/27/2022",
+      "eventState": 1,
+      "id": 7
+    }
+  ],
   "cursos": [
     {
       "idExpositor": 2,
@@ -146,6 +186,19 @@
       "day": "3/4/2022",
       "eventState": 1,
       "id": 1
+    },
+    {
+      "idExpositor": 7,
+      "title": "Java ",
+      "description": "Demo",
+      "hour": {
+        "hour": 12,
+        "minute": 0
+      },
+      "bgImage": "https://firebasestorage.googleapis.com/v0/b/cis-dashboard-fb2a7.appspot.com/o/Java%20?alt=media&token=33be0202-567a-41a5-9d68-58ab2dab89d3",
+      "day": "3/8/2022",
+      "eventState": 1,
+      "id": 2
     }
   ]
 }
