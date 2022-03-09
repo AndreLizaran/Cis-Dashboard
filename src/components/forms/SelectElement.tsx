@@ -2,11 +2,15 @@
 import { lightInput } from '../../classes';
 
 type Props = {
-  values: { value:number, label:string }[];
   labelText:string;
+  values: { value:number, label:string }[];
 }
 
-export default function SelectElement({ values, labelText }:Props) {
+// @Author: André Lizarán
+// @Date: 08/03/2022
+// @Description: Componente select
+
+export default function SelectElement({ labelText, values }:Props) {
   return (
     <div className='flex flex-col'>
       <label>{labelText}</label>

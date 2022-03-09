@@ -11,7 +11,7 @@ import { faImage, faTimes, faUpload } from '@fortawesome/free-solid-svg-icons';
 import InputFiles from 'react-input-files';
 
 type Props = {
-  img:File | undefined;
+  img: File | undefined;
   setImg: React.Dispatch<SetStateAction<File | undefined>>
   setSourceImageViewer: React.Dispatch<SetStateAction<string>>
 }
@@ -21,9 +21,7 @@ export default function FileButton({ img, setImg, setSourceImageViewer }:Props) 
   function getImageToShow () {
     const reader = new FileReader();
     reader.readAsDataURL(img!);
-    reader.onload = () => {
-      if (typeof reader.result === 'string') setSourceImageViewer(reader.result);
-    }
+    reader.onload = () => (typeof reader.result === 'string') && setSourceImageViewer(reader.result); 
   }
 
   return (

@@ -12,23 +12,23 @@ import {
 import { Expositor } from '../../api';
 
 // Components
-import FileButton from '../../components/FileButton';
 import ImageViewer from '../../components/ImageViewer';
 import RoundedButton from '../../components/RoundedButton'
 import NewElementForm from '../../components/NewElementForm';
+import FormElement from '../../components/forms/FormElement';
+import BubbleImage from '../../components/cards/BubbleImage';
 import InformationContainer from '../../components/InformationContainer';
+import FileButtonElement from '../../components/forms/FileButtonElement';
+import HeaderDashboardScreens from '../../components/HeaderDashboardScreens';
 
 // Hooks
 import { useGetData } from '../../hooks/useGetData';
+import useFormValues from '../../hooks/useFormValues';
 import useProcessImage from '../../hooks/useProcessImage';
 import { useUIContext } from '../../hooks/useCustomContext';
 
 // Classes
 import { fadeInUp } from '../../classes';
-import HeaderDashboardScreens from '../../components/HeaderDashboardScreens';
-import FormElement from '../../components/forms/FormElement';
-import useFormValues from '../../hooks/useFormValues';
-import BubbleImage from '../../components/cards/BubbleImage';
 
 const initialState:Expositor = {
   id:0,
@@ -147,7 +147,7 @@ function NewExpositorForm ({ formRef, currentAction, setCurrentAction, newExposi
     if (!validateExpositorInformation()) return;
     try {
       setIsSavingNewExpositor(true);
-      if (profileImage && coverImage) editWithBothImages();
+      if (profileImage && coverImage) await editWithBothImages();
       else if (profileImage) editWithProfileImage();
       else if (coverImage) editWithCoverImage();
       else mutateEdit(newExpositor); 
@@ -229,13 +229,14 @@ function NewExpositorForm ({ formRef, currentAction, setCurrentAction, newExposi
   return (
     <NewElementForm 
       saveButtonText='Guardar expositor' 
-      saveFunction={currentAction === 'create' ? saveNewExpositor : editExpositor} 
-      isLoading={isSavingNewExpositor} 
+      deleteText='Eliminar expositor'
       action={currentAction}
+      isLoading={isSavingNewExpositor}  
       setAction={setCurrentAction}
+      // Actions
+      saveFunction={currentAction === 'create' ? saveNewExpositor : editExpositor} 
       cleanAction={() => cleanForm()}
       deleteAction={() => deleteExpositor()}
-      deleteText='Eliminar expositor'
     >
       <FormElement
         inputName='name'
@@ -253,14 +254,18 @@ function NewExpositorForm ({ formRef, currentAction, setCurrentAction, newExposi
         labelText='Descripción'
         inputOrTextarea='textarea'
       />
-      <div className='flex flex-col'>
-        <label className='mb-1'>Foto de perfil</label>
-        <FileButton img={profileImage} setImg={setProfileImage} setSourceImageViewer={setSourceImageViewer}/>
-      </div>
-      <div className='flex flex-col'>
-        <label className='mb-1'>Foto de portada</label>
-        <FileButton img={coverImage} setImg={setCoverImage} setSourceImageViewer={setSourceImageViewer}/>
-      </div>
+      <FileButtonElement 
+        labelText='Foto de perfil' 
+        img={profileImage} 
+        setImg={setProfileImage} 
+        setSourceImageViewer={setSourceImageViewer}
+      />
+      <FileButtonElement 
+        labelText='Foto de portada' 
+        img={coverImage} 
+        setImg={setCoverImage} 
+        setSourceImageViewer={setSourceImageViewer}
+      />
     </NewElementForm>
   )
 }

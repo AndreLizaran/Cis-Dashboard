@@ -1,5 +1,5 @@
+// Modules
 import { RefObject } from 'react'
-import { lightInput } from '../../classes';
 
 type Props = {
   labelText: string;
@@ -32,7 +32,7 @@ export default function FormElement({
         inputOrTextarea === 'input' 
         ? 
         <input 
-          className={`${lightInput} ${moreMarginBottom ? 'mb-6' : 'mb-4'}`} 
+          className={`rounded border border-gray-400 px-4 py-2 text-md mt-1 focus:outline-none w-full ${moreMarginBottom ? 'mb-6' : 'mb-4'}`} 
           value={inputValue} 
           name={inputName} 
           onChange={inputOnChange}
@@ -41,7 +41,7 @@ export default function FormElement({
         />
         :
         <textarea
-          className={`${lightInput} ${moreMarginBottom ? 'mb-6' : 'mb-4'}`} 
+          className={`rounded border border-gray-400 px-4 py-2 text-md mt-1 focus:outline-none w-full ${moreMarginBottom ? 'mb-6' : 'mb-4'}`} 
           value={inputValue} 
           name={inputName} 
           onChange={inputOnChange}

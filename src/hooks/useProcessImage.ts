@@ -7,6 +7,10 @@ import { storage } from '../utils/firebase';
 // Hooks
 import { useUIContext } from './useCustomContext';
 
+// @Author: André Lizarán
+// @Date: 05/03/2022
+// @Description: Hook para el guardado de imágenes en firebase
+
 export default function useProcessImage() {
 
   const { switchAlert } = useUIContext();
