@@ -38,6 +38,8 @@ import { fadeInUp, lightInput } from '../../classes';
 import { EventType } from '../../api';
 import SelectElement from '../../components/forms/SelectElement';
 import FormElement from '../../components/forms/FormElement';
+import HeaderDashboardScreens from '../../components/HeaderDashboardScreens';
+import FileButtonElement from '../../components/forms/FileButtonElement';
 
 const initialState:EventType = {
   id:0,
@@ -136,7 +138,6 @@ export default function Events() {
       setPonenciasInformation(dataPonencias);
   }, [isLoadingPonencias]);
   
-
   const talleres = {
     isLoadingTalleres,
     talleresInformation,
@@ -169,16 +170,7 @@ export default function Events() {
 
   return (
     <>
-      <div className='flex justify-between items-center mb-6 w-full' style={{ overflowY:'hidden' }}>
-        <H2>Eventos</H2>
-        <RoundedButton
-          color='red-600'
-          square={true}
-          icon={faPlus}
-          className={`${!showDashboardBar && 'mr-14'}`}
-          action={() => formRef.current?.focus()}
-        />
-      </div>
+      <HeaderDashboardScreens headerText='Eventos' action={() => formRef.current?.focus()}/>
       <div className={`flex flex-col ${fadeInUp}`}>
         <EventsContainer 
           setEventFormValues={setEventFormValues} 
@@ -404,7 +396,6 @@ function EventCard ({ event, setEventFormValues, formRef, setCurrentAction, setI
             {eventState === 3 && <small className='text-red-400'>Cancelado</small>}
             {eventState === 4 && <small className='text-gray-400'>Por agendar</small>}
           </div>
-          {/* <small className='mb-3'>Asistentes: 100</small> */}
           <RoundedButton 
             color='gray-100' 
             icon={faPencil} 
@@ -469,7 +460,7 @@ function NewEventForm ({
   setSourceImageViewer
 }:NewEventFormProps) {
 
-  const { day, title, description, idExpositor, eventType, hour, eventState } = eventFormValues; 
+  const { day, title, description, idExpositor, eventType, hour, eventState, bgImage } = eventFormValues; 
   const { switchAlert } = useUIContext();
   const [ dateHelper, setDateHelper ] = useState(new Date());
   const [ isSavingNewEvent, setIsSavingNewEvent ] = useState(false);
@@ -549,7 +540,6 @@ function NewEventForm ({
       setIsSavingNewEvent(false);
       setCoverImage(undefined);
       setDateHelper(new Date)
-
     } catch (error) {
       switchAlert({ 
         alert:'Ha ocurrido un error, inténtalo más tarde', 
@@ -560,9 +550,9 @@ function NewEventForm ({
   }
 
   function validateEventInformation () {
-    if (!description || !title || !day || !idExpositor || !eventType || !hour.hour || !eventType || !eventState) {
+    if (!description || !title || !day || !idExpositor || !eventType || !hour.hour || !eventType || !eventState || (!coverImage && !bgImage)) {
       switchAlert({ 
-        alert:'Ingresa todos los datos del expositor', 
+        alert:'Ingresa todos los datos del evento', 
         color:'bg-red-600', 
       });
       return false;
@@ -666,38 +656,69 @@ function NewEventForm ({
         labelText='Descripción'
         inputOrTextarea='textarea'
       />
-      <EventTypeSelect/>
-      <EventStateSelect/> 
-      <ExpositoresSelect/>
-      <DateForm/>
-      <HourForm/>
-      <MinuteForm/>
-      <div className='flex flex-col'>
-        <label className='mb-1'>Imagen del evento</label>
-        <div className='flex gap-6'>
-          <FileButton img={coverImage} setImg={setCoverImage} setSourceImageViewer={setSourceImageViewer}/>
-        </div>
-      </div>
-
+      <EventTypeSelect 
+        eventFormValues={eventFormValues} 
+        setEventFormValues={setEventFormValues}
+      />
+      <EventStateSelect 
+        eventFormValues={eventFormValues} 
+        setEventFormValues={setEventFormValues}
+      /> 
+      <ExpositoresSelect 
+        eventFormValues={eventFormValues} 
+        setEventFormValues={setEventFormValues}
+      />
+      <DateForm
+        eventFormValues={eventFormValues} 
+        setEventFormValues={setEventFormValues}
+        dateHelper={dateHelper} 
+        setDateHelper={setDateHelper}
+      />
+      <HourForm 
+        eventFormValues={eventFormValues} 
+        setEventFormValues={setEventFormValues}
+      />
+      <MinuteForm
+        eventFormValues={eventFormValues} 
+        setEventFormValues={setEventFormValues}
+      />
+      <FileButtonElement 
+        labelText='Imagen del evento' 
+        img={coverImage} 
+        setImg={setCoverImage} 
+        setSourceImageViewer={setSourceImageViewer}
+      />
     </NewElementForm>
   )
 }
 
-function ExpositoresSelect () {
+type ExpositoresSelectProps = {
+  eventFormValues: EventType;
+  setEventFormValues: React.Dispatch<SetStateAction<EventType>>;
+}
+
+function ExpositoresSelect ({ eventFormValues, setEventFormValues }:ExpositoresSelectProps) {
   const { useGetExpositores } = useGetData();
   const { data } = useGetExpositores();
   const [ expositores, setExpositores ] = useState<{ value:number, label:string }[]>([]);
+  function onChange (e:React.FormEvent<HTMLOptionElement>) {
+    setEventFormValues({ ...eventFormValues, idExpositor: Number(e.currentTarget.value) })
+  }
   useEffect(() => {
     if (data !== undefined) {
       const mappedExpositores = data.map((expositor) => ({ value:expositor.id, label: expositor.name }));
       setExpositores(mappedExpositores);
     }
   }, [data]);
-  return <SelectElement values={expositores} labelText='Estado del evento' />
+  return <SelectElement values={expositores} labelText='Estado del evento' onChange={onChange}/>
 }
 
+type EventStateSelectProps = {
+  eventFormValues: EventType;
+  setEventFormValues: React.Dispatch<SetStateAction<EventType>>;
+}
 
-function EventStateSelect () {
+function EventStateSelect ({ eventFormValues, setEventFormValues }:EventStateSelectProps) {
   const values = [
     { value:1, label:'En fecha' },
     { value:2, label:'Pospuesto' },
@@ -705,30 +726,48 @@ function EventStateSelect () {
     { value:4, label:'Por agendar' },
     { value:5, label:'Concluido' },
   ];
-  return <SelectElement values={values} labelText='Estado del evento' />
+  function onChange (e:React.FormEvent<HTMLOptionElement>) {
+    setEventFormValues({ ...eventFormValues, eventState: Number(e.currentTarget.value) });
+  }
+  return <SelectElement values={values} labelText='Estado del evento' onChange={onChange}/>
 }
 
-function EventTypeSelect () {
+type EventTypeSelecProps = {
+  eventFormValues: EventType;
+  setEventFormValues: React.Dispatch<SetStateAction<EventType>>;
+}
+
+function EventTypeSelect ({ eventFormValues, setEventFormValues }:EventTypeSelecProps) {
   const values = [
     { value:1, label:'Taller' },
     { value:2, label:'Conferencia' },
     { value:3, label:'Curso' },
     { value:4, label:'Ponencia' },
   ];
-  return <SelectElement values={values} labelText='Tipo de evento' />
+  function onChange (e:React.FormEvent<HTMLOptionElement>) {
+    setEventFormValues({ ...eventFormValues, eventType: Number(e.currentTarget.value) });
+  }
+  return <SelectElement values={values} labelText='Tipo de evento' onChange={onChange}/>
 }
 
-function DateForm () {
+type DateFormProps = {
+  eventFormValues: EventType;
+  setEventFormValues: React.Dispatch<SetStateAction<EventType>>;
+  dateHelper: Date
+  setDateHelper: React.Dispatch<SetStateAction<Date>>;
+}
+
+function DateForm ({ eventFormValues, setEventFormValues, dateHelper, setDateHelper }:DateFormProps) {
   return (
     <div className='flex flex-col'>
       <label>Fecha</label>
       <DatePicker 
         className={lightInput} 
-        // selected={dateHelper} 
-        // onChange={(date:Date) => {
-        //   setEventFormValues({ ...eventFormValues, day:date.toLocaleDateString("en-ES") });
-        //   setDateHelper(date)
-        // }} 
+        selected={dateHelper} 
+        onChange={(date:Date) => {
+          setEventFormValues({ ...eventFormValues, day:date.toLocaleDateString("en-ES") });
+          setDateHelper(date)
+        }} 
         locale="es"
         dateFormat="dd/MM/yyyy"
       />
@@ -736,42 +775,66 @@ function DateForm () {
   )
 }
 
-function HourForm () {
+type HourFormProps = {
+  eventFormValues: EventType;
+  setEventFormValues: React.Dispatch<SetStateAction<EventType>>;
+}
+
+function HourForm ({ eventFormValues, setEventFormValues }:HourFormProps) {
+  const { hour } = eventFormValues;
   return (
     <div className='flex flex-col'>
       <label>Hora</label>
       <div className='flex gap-6'>
-        <input className={lightInput} disabled={true} readOnly /* value={hour.hour} *//>
+        <input className={lightInput} disabled={true} readOnly value={hour.hour}/>
         <RoundedButton 
           color='blue-500' 
           icon={faPlus} 
-          // action={() => hour.hour <= 24 && setEventFormValues({ ...eventFormValues, hour:{ minute:hour.minute, hour: hour.hour + 1 }})}
+          action={() => 
+            hour.hour <= 24 && 
+            setEventFormValues({ ...eventFormValues, hour:{ minute:hour.minute, hour: hour.hour + 1 }})
+          }
         />
         <RoundedButton 
           color='red-600' 
           icon={faMinus}
-          // action={() => hour.hour > 1 && setEventFormValues({ ...eventFormValues, hour:{ minute:hour.minute, hour: hour.hour - 1 }})}
+          action={() => 
+            hour.hour > 1 && 
+            setEventFormValues({ ...eventFormValues, hour:{ minute:hour.minute, hour: hour.hour - 1 }})
+          }
         />
       </div>
     </div>
   )
 }
 
-function MinuteForm () {
+type MinuteFormProps = {
+  eventFormValues: EventType;
+  setEventFormValues: React.Dispatch<SetStateAction<EventType>>;
+}
+
+function MinuteForm ({ eventFormValues, setEventFormValues }:MinuteFormProps) {
+  const { hour } = eventFormValues;
   return (
     <div className='flex flex-col'>
       <label>Minuto</label>
       <div className='flex gap-6'>
-        <input className={lightInput} disabled={true} readOnly /* value={hour.minute} *//>
+        <input className={lightInput} disabled={true} readOnly value={hour.minute} />
         <RoundedButton 
           color='blue-500' 
           icon={faPlus}
-          // action={() => hour.minute < 59 && setEventFormValues({ ...eventFormValues, hour:{ hour:hour.hour, minute: hour.minute + 1 }})}
+          action={
+            () => hour.minute < 59 && 
+            setEventFormValues({ ...eventFormValues, hour:{ hour:hour.hour, minute: hour.minute + 1 }})
+          }
         />
         <RoundedButton 
           color='red-600' 
           icon={faMinus}
-          // action={() => hour.minute > 1 && setEventFormValues({ ...eventFormValues, hour:{ hour:hour.hour, minute: hour.minute - 1 }})}
+          action={
+            () => hour.minute > 1 &&
+            setEventFormValues({ ...eventFormValues, hour:{ hour:hour.hour, minute: hour.minute - 1 }})
+          }
         />
       </div>
     </div>

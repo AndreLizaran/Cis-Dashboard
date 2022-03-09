@@ -76,6 +76,19 @@
       "day": "3/24/2022",
       "eventState": 4,
       "id": 2
+    },
+    {
+      "idExpositor": 1,
+      "title": "prueba",
+      "description": "prueba",
+      "hour": {
+        "hour": 12,
+        "minute": 0
+      },
+      "bgImage": "https://firebasestorage.googleapis.com/v0/b/cis-dashboard-fb2a7.appspot.com/o/prueba?alt=media&token=e8771441-e382-43fc-860c-90ba25cdb48c",
+      "day": "3/8/2022",
+      "eventState": 1,
+      "id": 4
     }
   ],
   "conferencias": [],
