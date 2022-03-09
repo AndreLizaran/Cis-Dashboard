@@ -10,6 +10,7 @@ type Props = {
   inputOnChange: any;
   isInputDisabled: boolean;
   moreMarginBottom?: boolean
+  type?: 'text' | 'email' | 'number' | 'password'
 }
 
 // @Author: André Lizarán
@@ -24,7 +25,8 @@ export default function FormElement({
   inputOnChange,
   isInputDisabled,
   moreMarginBottom,
-  inputRef
+  inputRef,
+  type = 'text'
 }:Props) {
   return (
     <div className='flex flex-col'>
@@ -40,6 +42,7 @@ export default function FormElement({
           disabled={isInputDisabled}
           autoComplete='off'
           ref={inputRef}
+          type={type}
         />
         :
         <textarea

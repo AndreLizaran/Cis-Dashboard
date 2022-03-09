@@ -1,16 +1,14 @@
 // Modules
 import { useState } from 'react';
-
-// Classes
-import { lightInput } from '../classes';
+import { useNavigate } from 'react-router-dom';
 
 // Components
 import RoundedButton from '../components/RoundedButton';
+import FormElement from '../components/forms/FormElement';
 
 // Hooks
-import useFormValues from '../hooks/useFormValues';
 import { useGetData } from '../hooks/useGetData';
-import { useNavigate } from 'react-router-dom';
+import useFormValues from '../hooks/useFormValues';
 
 export default function Login() {
   return (
@@ -110,34 +108,30 @@ function LoginForm () {
   return (
     <form className='flex flex-col' onSubmit={(e) => { e.preventDefault(); login(); }}>
       {error500 && <ErrorAlert/>}
-      <label>Correo</label>   
-      <input 
-        className={`${lightInput}`} 
-        value={email} 
-        onChange={handleInputs} 
-        autoComplete='off' 
+      <FormElement 
+        labelText='Correo' 
+        inputName='email' 
+        inputOnChange={handleInputs} 
+        inputValue={email} 
+        isInputDisabled={isLoading} 
         type='email'
-        name='email'
-        disabled={isLoading}
       />
       {errorEmail && <small className='text-red-500 mt-1'>{errorEmail}</small>}
-      <label className='mt-4'>Contraseña</label> 
-      <input 
-        className={`${lightInput}`} 
-        value={password} 
-        onChange={handleInputs} 
-        autoComplete='off'
+      <FormElement 
+        labelText='Contraseña' 
+        inputName='password' 
+        inputOnChange={handleInputs} 
+        inputValue={password} 
+        isInputDisabled={isLoading} 
         type='password'
-        name='password'
-        disabled={isLoading}
-      /> 
+      />
       {errorPassword && <small className='text-red-500 mt-1'>{errorPassword}</small>}
       <RoundedButton 
         color='blue-500' 
         text='Iniciar sesión'
         style={{ alignSelf:'start' }}
         type='submit'
-        className='mt-6'
+        className='mt-2'
         isLoading={isLoading}
       />
     </form>

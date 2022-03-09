@@ -40,11 +40,11 @@ export default function DashboardBar() {
         setCurrentScreen(1);
         break;
       case 2:
-        setDashboardScreen('news');
+        setDashboardScreen('expositores');
         setCurrentScreen(2);
         break;
       case 3:
-        setDashboardScreen('expositores');
+        setDashboardScreen('news');
         setCurrentScreen(3);
         break;
     }
